@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
@@ -66,6 +66,34 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const provider = new firebase.auth.GoogleAuthProvider();
+
+function onRedirectResult(callback) {
+  firebase
+    .auth()
+    .getRedirectResult()
+    .then(function (result) {
+      console.log(result);
+      if (result.credential) {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        var token = result.credential.accessToken;
+        // ...
+      }
+      // The signed-in user info.
+      var user = result.user;
+    })
+    .catch(function (error) {
+      // Handle Errors here.
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      // The email of the user's account used.
+      var email = error.email;
+      // The firebase.auth.AuthCredential type that was used.
+      var credential = error.credential;
+      // ...
+    });
+}
+
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -73,19 +101,31 @@ export default function SignIn() {
   const [failure, setFailure] = useState(false);
   const classes = useStyles();
 
+  useEffect(() => {
+    const unsubscribe = onRedirectResult();
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
   function onSignIn(email, password) {
     setIsLoading(true);
-    // firebase
-    //   .auth()
-    //   .signInWithEmailAndPassword(email, password)
-    //   .then(function () {
-    //     setIsLoading(false);
-    //     setFailure(false);
-    //   })
-    //   .catch(function (error) {
-    //     setIsLoading(false);
-    //     setFailure(true);
-    //  });
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(email, password)
+      .then(function () {
+        setIsLoading(false);
+        setFailure(false);
+      })
+      .catch(function (error) {
+        setIsLoading(false);
+        setFailure(true);
+      });
+  }
+
+  function onGoogleSignIn() {
+    setIsLoading(true);
+    firebase.auth().signInWithRedirect(provider);
   }
 
   return (
@@ -171,18 +211,32 @@ export default function SignIn() {
               <ScaleLoader color={"#61aaa3"} />
             </div>
           ) : (
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-              onClick={() => {
-                onSignIn(email, password);
-              }}
-            >
-              Sign In
-            </Button>
+            <div>
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+                onClick={() => {
+                  onSignIn(email, password);
+                }}
+              >
+                Sign In
+              </Button>
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+                onClick={() => {
+                  onGoogleSignIn();
+                }}
+              >
+                Sign in with Google
+              </Button>
+            </div>
           )}
 
           <Grid

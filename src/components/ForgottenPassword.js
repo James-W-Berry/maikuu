@@ -190,29 +190,6 @@ export default function ForgottenPassword() {
               </Button>
             )
           )}
-          <Grid
-            container
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              marginTop: "30px",
-            }}
-          >
-            <Grid item>
-              <NavLink
-                className={classes.text}
-                variant="body2"
-                style={{
-                  textDecoration: "none",
-                }}
-                to="/signin"
-              >
-                {"Remembered? Sign in"}
-              </NavLink>
-            </Grid>
-          </Grid>
         </form>
       </div>
     </Container>

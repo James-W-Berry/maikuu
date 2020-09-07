@@ -15,17 +15,17 @@ const UserContext = React.createContext({});
 const UserProvider = UserContext.Provider;
 
 function onAuthStateChange(callback) {
-  // firebase.auth().onAuthStateChanged((user) => {
-  //   if (user) {
-  // callback({ loggedIn: true, email: user.email, isLoading: false });
-  // } else {
-  //   callback({ loggedIn: false, isLoading: false });
-  // }
-  //});
+  firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+      callback({ loggedIn: true, email: user.email, isLoading: false });
+    } else {
+      callback({ loggedIn: false, isLoading: false });
+    }
+  });
 }
 
 function App() {
-  const [user, setUser] = useState({ loggedIn: false, isLoading: false });
+  const [user, setUser] = useState({ loggedIn: false, isLoading: true });
 
   useEffect(() => {
     const unsubscribe = onAuthStateChange(setUser);
@@ -46,7 +46,6 @@ function App() {
         >
           <Switch location={location}>
             <Route path="/home" exact component={LandingPage} />
-            <Route path="/signin" component={SignIn} />
             <Route path="/signup" component={SignUp} />
             <Route path="/forgotpassword" component={ForgottenPassword} />
             <Redirect to="/home" />
@@ -88,7 +87,7 @@ function App() {
           width: "100vw",
         }}
       >
-        <ScaleLoader color={"#e54750"} />
+        <ScaleLoader color={"#61aaa3"} />
       </div>
     );
   }
