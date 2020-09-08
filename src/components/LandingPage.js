@@ -14,7 +14,8 @@ import firebase from "../firebase";
 import "firebase/auth";
 import ScaleLoader from "react-spinners/ScaleLoader";
 import TextField from "@material-ui/core/TextField";
-
+import { ButtonBase } from "@material-ui/core";
+import google from "../assets/google.png";
 const defaultOptions = {
   loop: true,
   autoplay: true,
@@ -28,9 +29,8 @@ const useStyles = makeStyles((theme) => ({
   title: {
     fontFamily: "BadScript",
     fontSize: "60px",
-    padding: "0 30px",
+    paddingTop: "20%",
     color: "#f7f7f5",
-    marginTop: "20px",
   },
   heading: {
     fontFamily: "BadScript",
@@ -67,9 +67,14 @@ const useStyles = makeStyles((theme) => ({
   },
   form: {
     width: "100%", // Fix IE 11 issue.
-    marginTop: "20vh",
+    // marginTop: "20vh",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
   },
   submit: {
+    width: "50%",
     margin: theme.spacing(6, 0, 2),
     "&:hover": {
       color: "#f7f7f5",
@@ -78,6 +83,15 @@ const useStyles = makeStyles((theme) => ({
     fontFamily: "BadScript",
     backgroundColor: "#61aaa3",
     color: "#f7f7f5",
+  },
+  googleSubmit: {
+    width: "50%",
+    margin: theme.spacing(6, 0, 2),
+    backgroundColor: "#FFFFFF00",
+    "&:hover": {
+      color: "#f7f7f5",
+      backgroundColor: "#FFFFFF00",
+    },
   },
   loader: {
     margin: theme.spacing(6, 0, 2),
@@ -150,8 +164,25 @@ export default function LandingPage() {
 
   return (
     <div className={classes.paper}>
-      <Grid container spacing={5} style={{ height: "100vh" }}>
-        <Grid item xl={6} lg={6} md={6} s={12} xs={12}>
+      <Grid
+        container
+        spacing={5}
+        style={{
+          height: "100vh",
+          width: "100vw",
+          padding: "0px",
+          margin: "0px",
+        }}
+      >
+        <Grid
+          item
+          xl={6}
+          lg={6}
+          md={6}
+          s={12}
+          xs={12}
+          style={{ padding: "0px" }}
+        >
           <div
             style={{
               flex: "1",
@@ -160,22 +191,17 @@ export default function LandingPage() {
               zIndex: "1",
               width: "100%",
               height: "100%",
+              minHeight: "50vh",
+              alignItems: "center",
             }}
           >
-            <Lottie
-              options={defaultOptions}
-              height={"100%"}
-              width={"100%"}
-              style={{
-                padding: "0px",
-                position: "absolute",
-                zIndex: "2",
-              }}
-            />
             <Typography
               className={classes.title}
               style={{
-                position: "relative",
+                position: "absolute",
+                width: "100%",
+                padding: "0px",
+                top: "10%",
                 zIndex: "3",
                 textAlign: "center",
                 userSelect: "none",
@@ -183,10 +209,35 @@ export default function LandingPage() {
             >
               Maikuu
             </Typography>
+
+            <Lottie
+              options={defaultOptions}
+              height={"80%"}
+              width={"100%"}
+              style={{
+                top: "20%",
+                position: "absolute",
+                zIndex: "2",
+              }}
+            />
           </div>
         </Grid>
 
-        <Grid item xl={4} lg={4} md={4} s={12} xs={12}>
+        <Grid
+          item
+          xl={6}
+          lg={6}
+          md={6}
+          s={12}
+          xs={12}
+          style={{
+            display: "flex",
+            flex: 4,
+            flexDirection: "column",
+            justifyContent: "center",
+            padding: "0px",
+          }}
+        >
           <form className={classes.form} noValidate>
             <TextField
               className={classes.textInput}
@@ -195,7 +246,7 @@ export default function LandingPage() {
               }}
               margin="normal"
               required
-              fullWidth
+              style={{ width: "80%" }}
               name="email"
               label="Email Address"
               type="email"
@@ -210,7 +261,7 @@ export default function LandingPage() {
               className={classes.textInput}
               margin="normal"
               required
-              fullWidth
+              style={{ width: "80%" }}
               name="password"
               label="Password"
               type="password"
@@ -254,10 +305,16 @@ export default function LandingPage() {
                 <ScaleLoader color={"#61aaa3"} />
               </div>
             ) : (
-              <div>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
                 <Button
                   type="submit"
-                  fullWidth
                   variant="contained"
                   color="primary"
                   className={classes.submit}
@@ -269,15 +326,15 @@ export default function LandingPage() {
                 </Button>
                 <Button
                   type="submit"
-                  fullWidth
                   variant="contained"
                   color="primary"
-                  className={classes.submit}
+                  className={classes.googleSubmit}
+                  style={{ padding: "0px" }}
                   onClick={() => {
                     onGoogleSignIn();
                   }}
                 >
-                  Sign in with Google
+                  <img src={google} width="100%" alt="Sign in with Google" />
                 </Button>
               </div>
             )}
@@ -337,7 +394,5 @@ export default function LandingPage() {
         </Grid>
       </Grid>
     </div>
-
-    // </Container>
   );
 }

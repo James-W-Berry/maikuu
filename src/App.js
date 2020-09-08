@@ -99,7 +99,7 @@ function App() {
           backgroundColor: "#252a2e",
         }}
       >
-        <BrowserRouter>{AuthRoutes()}</BrowserRouter>;
+        <BrowserRouter>{AuthRoutes()}</BrowserRouter>
       </div>
     );
   }
