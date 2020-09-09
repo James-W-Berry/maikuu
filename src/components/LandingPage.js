@@ -14,7 +14,7 @@ import firebase from "../firebase";
 import "firebase/auth";
 import ScaleLoader from "react-spinners/ScaleLoader";
 import TextField from "@material-ui/core/TextField";
-import { ButtonBase } from "@material-ui/core";
+import { ButtonBase, Divider } from "@material-ui/core";
 import google from "../assets/google.png";
 const defaultOptions = {
   loop: true,
@@ -33,31 +33,31 @@ const useStyles = makeStyles((theme) => ({
     color: "#f7f7f5",
   },
   heading: {
-    fontFamily: "BadScript",
+    fontFamily: "AvenirNext",
     color: "#f7f7f5",
   },
   text: {
-    fontFamily: "BadScript",
-    color: "#61aaa3",
+    fontFamily: "AvenirNext",
+    color: "#f7f7f5",
     "&:hover": {
-      color: "#f7f7f5",
+      color: "#a6a085",
     },
   },
   textInput: {
     "& label ": {
       color: "#f7f7f5",
-      fontFamily: "BadScript",
+      fontFamily: "AvenirNext",
     },
     "& label.Mui-focused": {
-      fontFamily: "BadScript",
+      fontFamily: "AvenirNext",
       color: "#f7f7f580",
     },
     "& .MuiInput-underline:after": {
-      borderBottomColor: "#61aaa3",
+      borderBottomColor: "#a6a085",
     },
   },
   input: {
-    fontFamily: "BadScript",
+    fontFamily: "AvenirNext",
     color: "#f7f7f5",
   },
   paper: {
@@ -67,7 +67,6 @@ const useStyles = makeStyles((theme) => ({
   },
   form: {
     width: "100%", // Fix IE 11 issue.
-    // marginTop: "20vh",
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
@@ -75,13 +74,12 @@ const useStyles = makeStyles((theme) => ({
   },
   submit: {
     width: "50%",
-    margin: theme.spacing(6, 0, 2),
     "&:hover": {
       color: "#f7f7f5",
-      backgroundColor: "#61aaa380",
+      backgroundColor: "#59574a80",
     },
-    fontFamily: "BadScript",
-    backgroundColor: "#61aaa3",
+    fontFamily: "AvenirNext",
+    backgroundColor: "#59574a",
     color: "#f7f7f5",
   },
   googleSubmit: {
@@ -95,6 +93,11 @@ const useStyles = makeStyles((theme) => ({
   },
   loader: {
     margin: theme.spacing(6, 0, 2),
+  },
+  divider: {
+    background: "#ffffff",
+    width: "60%",
+    marginTop: "10%",
   },
 }));
 
@@ -246,9 +249,9 @@ export default function LandingPage() {
               }}
               margin="normal"
               required
-              style={{ width: "80%" }}
+              style={{ width: "50%" }}
               name="email"
-              label="Email Address"
+              label="Email"
               type="email"
               id="email"
               autoComplete="email"
@@ -261,7 +264,7 @@ export default function LandingPage() {
               className={classes.textInput}
               margin="normal"
               required
-              style={{ width: "80%" }}
+              style={{ width: "50%" }}
               name="password"
               label="Password"
               type="password"
@@ -285,7 +288,7 @@ export default function LandingPage() {
               >
                 <Typography
                   className={classes.heading}
-                  style={{ color: "#61aaa3" }}
+                  style={{ color: "#f2f2eb" }}
                   component="h1"
                   variant="body2"
                 >
@@ -302,14 +305,14 @@ export default function LandingPage() {
                   justifyContent: "center",
                 }}
               >
-                <ScaleLoader color={"#61aaa3"} />
+                <ScaleLoader color={"#59574a"} />
               </div>
             ) : (
               <div
                 style={{
                   display: "flex",
                   flexDirection: "column",
-                  justifyContent: "center",
+                  //justifyContent: "center",
                   alignItems: "center",
                 }}
               >
@@ -318,18 +321,22 @@ export default function LandingPage() {
                   variant="contained"
                   color="primary"
                   className={classes.submit}
+                  style={{ marginTop: "20px" }}
                   onClick={() => {
                     onSignIn(email, password);
                   }}
                 >
                   Sign In
                 </Button>
+
+                <Typography className={classes.text}>or</Typography>
+
                 <Button
                   type="submit"
                   variant="contained"
                   color="primary"
                   className={classes.googleSubmit}
-                  style={{ padding: "0px" }}
+                  style={{ padding: "0px", marginTop: "0px" }}
                   onClick={() => {
                     onGoogleSignIn();
                   }}
@@ -338,6 +345,8 @@ export default function LandingPage() {
                 </Button>
               </div>
             )}
+
+            <Divider variant="middle" classes={{ root: classes.divider }} />
 
             <Grid
               container
@@ -376,13 +385,13 @@ export default function LandingPage() {
           <Box style={{ marginTop: "100px" }} mt={5}>
             <Typography
               variant="body2"
-              style={{ fontFamily: "BadScript", color: "#f7f7f5" }}
+              style={{ fontFamily: "AvenirNext", color: "#f7f7f5" }}
               align="center"
             >
               {"Copyright © "}
               <Link
                 className={classes.text}
-                style={{ textDecoration: "none" }}
+                style={{ textDecoration: "none", fontFamily: "BadScript" }}
                 href="https://www.maikuu.app"
               >
                 Maikuu

@@ -4,7 +4,6 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
 import logo from "../assets/logo.png";
-
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
@@ -12,34 +11,35 @@ import ScaleLoader from "react-spinners/ScaleLoader";
 import firebase from "../firebase";
 import "firebase/auth";
 import { NavLink } from "react-router-dom";
+import randomName from "human-readable-ids";
 
 const useStyles = makeStyles((theme) => ({
   heading: {
-    fontFamily: "BadScript",
+    fontFamily: "AvenirNext",
     color: "#f7f7f5",
   },
   text: {
-    fontFamily: "BadScript",
-    color: "#61aaa3",
+    fontFamily: "AvenirNext",
+    color: "#f7f7f5",
     "&:hover": {
-      color: "#f7f7f5",
+      color: "#a6a085",
     },
   },
   textInput: {
     "& label ": {
       color: "#f7f7f5",
-      fontFamily: "BadScript",
+      fontFamily: "AvenirNext",
     },
     "& label.Mui-focused": {
-      fontFamily: "BadScript",
+      fontFamily: "AvenirNext",
       color: "#f7f7f580",
     },
     "& .MuiInput-underline:after": {
-      borderBottomColor: "#61aaa3",
+      borderBottomColor: "#a6a085",
     },
   },
   input: {
-    fontFamily: "BadScript",
+    fontFamily: "AvenirNext",
     color: "#f7f7f5",
   },
   paper: {
@@ -50,16 +50,15 @@ const useStyles = makeStyles((theme) => ({
   },
   form: {
     width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
   },
   submit: {
     margin: theme.spacing(6, 0, 2),
     "&:hover": {
       color: "#f7f7f5",
-      backgroundColor: "#61aaa380",
+      backgroundColor: "#59574a80",
     },
-    fontFamily: "BadScript",
-    backgroundColor: "#61aaa3",
+    fontFamily: "AvenirNext",
+    backgroundColor: "#59574a",
     color: "#f7f7f5",
   },
   loader: {
@@ -124,7 +123,7 @@ export default function SignUp() {
           Sign up
         </Typography>
         <form className={classes.form} noValidate>
-          <Grid container spacing={2}>
+          <Grid container>
             <Grid item xs={12}>
               <TextField
                 className={classes.textInput}
@@ -136,6 +135,7 @@ export default function SignUp() {
                 type="username"
                 id="userName"
                 label="User name"
+                defaultValue={randomName.hri.random()}
                 InputProps={{
                   className: classes.input,
                 }}
@@ -194,7 +194,7 @@ export default function SignUp() {
             >
               <Typography
                 className={classes.heading}
-                style={{ color: "#61aaa3" }}
+                style={{ color: "#f7f7f5" }}
                 component="h1"
                 variant="body2"
               >
@@ -211,7 +211,7 @@ export default function SignUp() {
                 justifyContent: "center",
               }}
             >
-              <ScaleLoader color={"#61aaa3"} />
+              <ScaleLoader color={"#59574a"} />
             </div>
           ) : (
             <Button

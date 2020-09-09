@@ -10,6 +10,7 @@
     "@testing-library/user-event": "^7.1.2",
     "firebase": "^7.19.1",
     "framer-motion": "^2.6.6",
+    "human-readable-ids": "^1.0.4",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-lottie": "^1.2.3",

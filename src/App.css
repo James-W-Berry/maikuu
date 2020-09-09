@@ -21,6 +21,12 @@
     url(./assets/BadScript-Regular.ttf) format("truetype");
 }
 
+@font-face {
+  font-family: "AvenirNext";
+  src: local("AvenirNext"),
+    url(./assets/AvenirNextLTPro-Regular.otf) format("opentype");
+}
+
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
