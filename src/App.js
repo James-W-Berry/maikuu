@@ -4,7 +4,6 @@ import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import Main from "./components/Main";
 import firebase from "./firebase";
 import "firebase/auth";
-import SignIn from "./components/SignIn";
 import SignUp from "./components/SignUp";
 import LandingPage from "./components/LandingPage";
 import ForgottenPassword from "./components/ForgottenPassword";
@@ -87,7 +86,7 @@ function App() {
           width: "100vw",
         }}
       >
-        <ScaleLoader color={"#61aaa3"} />
+        <ScaleLoader color={"#A0C4F2"} />
       </div>
     );
   }

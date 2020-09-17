@@ -16,20 +16,12 @@ import ScaleLoader from "react-spinners/ScaleLoader";
 import TextField from "@material-ui/core/TextField";
 import { ButtonBase, Divider } from "@material-ui/core";
 import google from "../assets/google.png";
-const defaultOptions = {
-  loop: true,
-  autoplay: true,
-  animationData: waveAnimation.default,
-  rendererSettings: {
-    preserveAspectRatio: "none",
-  },
-};
+import beach from "../assets/beach.mp4";
 
 const useStyles = makeStyles((theme) => ({
   title: {
     fontFamily: "BadScript",
     fontSize: "60px",
-    paddingTop: "20%",
     color: "#f7f7f5",
   },
   heading: {
@@ -40,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
     fontFamily: "AvenirNext",
     color: "#f7f7f5",
     "&:hover": {
-      color: "#a6a085",
+      color: "#A0C4F2",
     },
   },
   textInput: {
@@ -50,10 +42,10 @@ const useStyles = makeStyles((theme) => ({
     },
     "& label.Mui-focused": {
       fontFamily: "AvenirNext",
-      color: "#f7f7f580",
+      color: "#f7f7f5",
     },
     "& .MuiInput-underline:after": {
-      borderBottomColor: "#a6a085",
+      borderBottomColor: "#A0C4F2",
     },
   },
   input: {
@@ -62,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
   },
   paper: {
     flexGrow: 1,
-    height: "100vh",
+    height: "150%",
     width: "100vw",
   },
   form: {
@@ -76,20 +68,21 @@ const useStyles = makeStyles((theme) => ({
     width: "50%",
     "&:hover": {
       color: "#f7f7f5",
-      backgroundColor: "#59574a80",
+      backgroundColor: "#384A5980",
     },
     fontFamily: "AvenirNext",
-    backgroundColor: "#59574a",
+    backgroundColor: "#384A59",
     color: "#f7f7f5",
   },
   googleSubmit: {
     width: "50%",
     margin: theme.spacing(6, 0, 2),
-    backgroundColor: "#FFFFFF00",
+    backgroundColor: "#f7f7f5",
     "&:hover": {
       color: "#f7f7f5",
-      backgroundColor: "#FFFFFF00",
+      backgroundColor: "#f7f7f580",
     },
+    color: "#f7f7f5",
   },
   loader: {
     margin: theme.spacing(6, 0, 2),
@@ -167,6 +160,24 @@ export default function LandingPage() {
 
   return (
     <div className={classes.paper}>
+      <video
+        style={{
+          flex: 1,
+          width: "100%",
+          height: "100%",
+          position: "absolute",
+          zIndex: "0",
+          objectFit: "cover",
+          opacity: "50%",
+        }}
+        autoPlay
+        muted
+        loop
+        id="beach"
+        src={beach}
+        type="video/mp4"
+      />
+
       <Grid
         container
         spacing={5}
@@ -194,7 +205,6 @@ export default function LandingPage() {
               zIndex: "1",
               width: "100%",
               height: "100%",
-              minHeight: "50vh",
               alignItems: "center",
             }}
           >
@@ -204,7 +214,7 @@ export default function LandingPage() {
                 position: "absolute",
                 width: "100%",
                 padding: "0px",
-                top: "10%",
+                top: "40%",
                 zIndex: "3",
                 textAlign: "center",
                 userSelect: "none",
@@ -212,17 +222,6 @@ export default function LandingPage() {
             >
               Maikuu
             </Typography>
-
-            <Lottie
-              options={defaultOptions}
-              height={"80%"}
-              width={"100%"}
-              style={{
-                top: "20%",
-                position: "absolute",
-                zIndex: "2",
-              }}
-            />
           </div>
         </Grid>
 
@@ -235,10 +234,11 @@ export default function LandingPage() {
           xs={12}
           style={{
             display: "flex",
-            flex: 4,
             flexDirection: "column",
             justifyContent: "center",
+            alignItems: "center",
             padding: "0px",
+            zIndex: "1",
           }}
         >
           <form className={classes.form} noValidate>
@@ -305,7 +305,7 @@ export default function LandingPage() {
                   justifyContent: "center",
                 }}
               >
-                <ScaleLoader color={"#59574a"} />
+                <ScaleLoader color={"#A0C4F2"} />
               </div>
             ) : (
               <div
@@ -336,7 +336,11 @@ export default function LandingPage() {
                   variant="contained"
                   color="primary"
                   className={classes.googleSubmit}
-                  style={{ padding: "0px", marginTop: "0px" }}
+                  style={{
+                    padding: "0px",
+                    marginTop: "0px",
+                    margin: "0px",
+                  }}
                   onClick={() => {
                     onGoogleSignIn();
                   }}
@@ -345,61 +349,70 @@ export default function LandingPage() {
                 </Button>
               </div>
             )}
-
-            <Divider variant="middle" classes={{ root: classes.divider }} />
-
-            <Grid
-              container
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                marginTop: "30px",
-              }}
-            >
-              <Grid item xs>
-                <NavLink
-                  className={classes.text}
-                  style={{
-                    textDecoration: "none",
-                  }}
-                  to="/forgotpassword"
-                >
-                  Forgot password?
-                </NavLink>
-              </Grid>
-              <Grid item xs>
-                <NavLink
-                  className={classes.text}
-                  style={{
-                    textDecoration: "none",
-                  }}
-                  to="/signup"
-                >
-                  {"Don't have an account? Sign Up"}
-                </NavLink>
-              </Grid>
-            </Grid>
           </form>
-          <Box style={{ marginTop: "100px" }} mt={5}>
-            <Typography
-              variant="body2"
-              style={{ fontFamily: "AvenirNext", color: "#f7f7f5" }}
-              align="center"
-            >
-              {"Copyright © "}
-              <Link
+
+          <Divider
+            variant="middle"
+            classes={{ root: classes.divider }}
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          />
+
+          <Grid
+            container
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              marginTop: "30px",
+              zIndex: "1",
+            }}
+          >
+            <Grid item xs>
+              <NavLink
                 className={classes.text}
-                style={{ textDecoration: "none", fontFamily: "BadScript" }}
-                href="https://www.maikuu.app"
+                style={{
+                  textDecoration: "none",
+                }}
+                to="/forgotpassword"
               >
-                Maikuu
-              </Link>{" "}
-              {new Date().getFullYear()}
-              {"."}
-            </Typography>
-          </Box>
+                Forgot password?
+              </NavLink>
+            </Grid>
+            <Grid item xs>
+              <NavLink
+                className={classes.text}
+                style={{
+                  textDecoration: "none",
+                }}
+                to="/signup"
+              >
+                {"Don't have an account? Sign Up"}
+              </NavLink>
+            </Grid>
+
+            <Box style={{ marginTop: "100px" }} mt={5}>
+              <Typography
+                variant="body2"
+                style={{ fontFamily: "AvenirNext", color: "#f7f7f5" }}
+                align="center"
+              >
+                {"Copyright © "}
+                <Link
+                  className={classes.text}
+                  style={{ textDecoration: "none", fontFamily: "BadScript" }}
+                  href="https://www.maikuu.app"
+                >
+                  Maikuu
+                </Link>{" "}
+                {new Date().getFullYear()}
+                {"."}
+              </Typography>
+            </Box>
+          </Grid>
         </Grid>
       </Grid>
     </div>
