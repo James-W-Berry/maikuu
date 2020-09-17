@@ -1,3 +1,3 @@
 # Maikuu
 
-![Maikuu](src/assets/logo.png)
+![Maikuu](src/assets/logo_blue.png)
