@@ -9,6 +9,7 @@ import LandingPage from "./components/LandingPage";
 import ForgottenPassword from "./components/ForgottenPassword";
 import ScaleLoader from "react-spinners/ScaleLoader";
 import { motion } from "framer-motion";
+import beach from "./assets/beach.mp4";
 
 const UserContext = React.createContext({});
 const UserProvider = UserContext.Provider;
@@ -98,6 +99,25 @@ function App() {
           backgroundColor: "#252a2e",
         }}
       >
+        <video
+          style={{
+            flex: 1,
+            minWidth: "100%",
+            width: "100%",
+            minHeight: "100%",
+            height: "100%",
+            position: "absolute",
+            zIndex: "0",
+            objectFit: "cover",
+            opacity: "50%",
+          }}
+          autoPlay
+          muted
+          loop
+          id="beach"
+          src={beach}
+          type="video/mp4"
+        />
         <BrowserRouter>{AuthRoutes()}</BrowserRouter>
       </div>
     );
@@ -109,6 +129,23 @@ function App() {
           backgroundColor: "#252a2e",
         }}
       >
+        <video
+          style={{
+            flex: 1,
+            width: "100%",
+            height: "100%",
+            position: "absolute",
+            zIndex: "0",
+            objectFit: "cover",
+            opacity: "50%",
+          }}
+          autoPlay
+          muted
+          loop
+          id="beach"
+          src={beach}
+          type="video/mp4"
+        />
         <BrowserRouter>{FeatureRoutes()}</BrowserRouter>
       </div>
     </UserProvider>
