@@ -3,6 +3,7 @@ import { Button, Typography } from "@material-ui/core";
 import LogoutIcon from "@material-ui/icons/ExitToApp";
 import firebase from "../firebase";
 import HaikuBuilder from "./HaikuBuilder";
+import Banner from "./Banner";
 import colors from "../assets/colors";
 
 function logout() {
@@ -19,12 +20,13 @@ function Main() {
       style={{
         display: "flex",
         flexDirection: "column",
-        justifyContent: "center",
+        justifyContent: "flexStart",
         alignItems: "center",
         width: "100vw",
         height: "100vh",
       }}
     >
+      <Banner />
       <HaikuBuilder />
       <Button
         style={{

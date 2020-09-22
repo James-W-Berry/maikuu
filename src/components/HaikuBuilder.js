@@ -54,7 +54,8 @@ export default function HaikuBuilder() {
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
-          width: "75vw",
+          height: "50vh",
+          width: "100vw",
         }}
       >
         <div
