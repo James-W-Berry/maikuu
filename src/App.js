@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
-import Main from "./components/Main";
+import Feed from "./components/Feed";
+import Compose from "./components/Compose";
+import Collections from "./components/Collections";
 import firebase from "./firebase";
 import "firebase/auth";
 import SignUp from "./components/SignUp";
@@ -10,6 +12,8 @@ import ForgottenPassword from "./components/ForgottenPassword";
 import ScaleLoader from "react-spinners/ScaleLoader";
 import { motion } from "framer-motion";
 import beach from "./assets/beach.mp4";
+import Banner from "./components/Banner";
+import colors from "./assets/colors";
 
 const UserContext = React.createContext({});
 const UserProvider = UserContext.Provider;
@@ -58,19 +62,24 @@ function App() {
   const FeatureRoutes = () => (
     <Route
       render={({ location }) => (
-        <motion.div
-          id="content"
-          key={location.pathname}
-          animate={{
-            opacity: [0, 1.0],
-          }}
-          transition={{ duration: 1 }}
-        >
-          <Switch location={location}>
-            <Route path="/feed" component={Main} />
-            <Redirect to="/feed" />
-          </Switch>
-        </motion.div>
+        <div>
+          <Banner />
+          <motion.div
+            id="content"
+            key={location.pathname}
+            animate={{
+              opacity: [0.9, 1.0],
+            }}
+            transition={{ duration: 1 }}
+          >
+            <Switch location={location}>
+              <Route path="/feed" component={Feed} />
+              <Route path="/compose" component={Compose} />
+              <Route path="/collections" component={Collections} />
+              <Redirect to="/feed" />
+            </Switch>
+          </motion.div>
+        </div>
       )}
     />
   );

@@ -7,13 +7,13 @@ import colors from "../assets/colors";
 
 const useStyles = makeStyles((theme) => ({
   submit: {
-    backgroundColor: colors.blue,
-    color: colors.white,
+    backgroundColor: colors.maikuu4,
+    color: colors.maikuu0,
     marginTop: "30px",
   },
   disabledSubmit: {
-    backgroundColor: colors.lightBlue,
-    color: colors.white,
+    backgroundColor: colors.maikuu3,
+    color: colors.maikuu0,
     marginTop: "30px",
   },
   fiveLine: {

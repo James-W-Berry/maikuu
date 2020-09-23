@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import colors from "../assets/colors";
 import logo from "../assets/logo.png";
 import { makeStyles } from "@material-ui/core/styles";
 import { NavLink } from "react-router-dom";
+import { Button, Typography } from "@material-ui/core";
+import LogoutIcon from "@material-ui/icons/ExitToApp";
+import firebase from "../firebase";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -24,8 +27,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+function logout() {
+  firebase.auth().signOut();
+}
+
 export default function Banner() {
   const classes = useStyles();
+
+  const requestLogout = useCallback(() => {
+    logout();
+  }, []);
 
   return (
     <div
@@ -33,13 +44,14 @@ export default function Banner() {
         display: "flex",
         flexDirection: "row",
         height: "15vh",
+        minHeight: "80px",
         width: "100vw",
         alignItems: "center",
-        backgroundColor: colors.almostBlack,
+        backgroundColor: colors.maikuu0,
       }}
     >
       <img
-        style={{ marginLeft: "20px", height: "8vh", width: "8vh" }}
+        style={{ marginLeft: "20px", height: "60px", width: "60px" }}
         alt="logo"
         src={logo}
       />
@@ -80,6 +92,26 @@ export default function Banner() {
         >
           Collections
         </NavLink>
+      </div>
+      <div
+        style={{
+          display: "flex",
+          width: "27vw",
+          flexDirection: "row",
+          justifyContent: "flex-end",
+          alignItems: "center",
+        }}
+      >
+        <Button
+          style={{
+            backgroundColor: colors.darkBlue,
+            color: colors.white,
+          }}
+          onClick={requestLogout}
+        >
+          <Typography>Logout</Typography>
+          <LogoutIcon />
+        </Button>
       </div>
     </div>
   );
