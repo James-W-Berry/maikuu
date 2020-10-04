@@ -9,7 +9,7 @@ import "firebase/auth";
 import SignUp from "./components/SignUp";
 import LandingPage from "./components/LandingPage";
 import ForgottenPassword from "./components/ForgottenPassword";
-import ScaleLoader from "react-spinners/ScaleLoader";
+import PuffLoader from "react-spinners/PuffLoader";
 import { motion } from "framer-motion";
 import beach from "./assets/beach.mp4";
 import Banner from "./components/Banner";
@@ -96,7 +96,7 @@ function App() {
           width: "100vw",
         }}
       >
-        <ScaleLoader color={"#A0C4F2"} />
+        <PuffLoader color={"#A0C4F2"} />
       </div>
     );
   }

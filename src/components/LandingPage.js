@@ -8,7 +8,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { NavLink } from "react-router-dom";
 import firebase from "../firebase";
 import "firebase/auth";
-import ScaleLoader from "react-spinners/ScaleLoader";
+import PuffLoader from "react-spinners/PuffLoader";
 import TextField from "@material-ui/core/TextField";
 import { Divider } from "@material-ui/core";
 import google from "../assets/google.png";
@@ -289,7 +289,7 @@ export default function LandingPage() {
                     justifyContent: "center",
                   }}
                 >
-                  <ScaleLoader color={"#A0C4F2"} />
+                  <PuffLoader color={"#A0C4F2"} />
                 </div>
               ) : (
                 <div

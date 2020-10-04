@@ -6,7 +6,7 @@ import logo from "../assets/logo.png";
 import logoBlue from "../assets/logo_blue.png";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-import ScaleLoader from "react-spinners/ScaleLoader";
+import PuffLoader from "react-spinners/PuffLoader";
 import firebase from "../firebase";
 import "firebase/auth";
 import { NavLink } from "react-router-dom";
@@ -210,7 +210,7 @@ export default function ForgottenPassword() {
                 justifyContent: "center",
               }}
             >
-              <ScaleLoader color={"#A0C4F2"} />
+              <PuffLoader color={"#A0C4F2"} />
             </div>
           ) : (
             !success &&
