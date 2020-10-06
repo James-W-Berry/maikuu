@@ -3,16 +3,32 @@ import { makeStyles, GridList, GridListTile } from "@material-ui/core";
 import colors from "../assets/colors";
 import firebase from "../firebase";
 import { useState } from "react";
-import PetalIcon from "../assets/petal.png";
+import Card from "@material-ui/core/Card";
+import CardActions from "@material-ui/core/CardActions";
+import CardContent from "@material-ui/core/CardContent";
+import Typography from "@material-ui/core/Typography";
+import FavoriteIcon from "@material-ui/icons/Favorite";
+import IconButton from "@material-ui/core/IconButton";
 
 const useStyles = makeStyles((theme) => ({
+  gridList: {
+    marginTop: "10px",
+    // width: "100%",
+    // height: "100%",
+  },
+  root: {
+    minWidth: 275,
+  },
+  bullet: {
+    display: "inline-block",
+    margin: "0 2px",
+    transform: "scale(0.8)",
+  },
   title: {
-    fontFamily: "BadScript",
-    color: colors.maikuu4,
-    userSelect: "none",
-    fontSize: "30px",
-    marginTop: "15px",
-    marginLeft: "15px",
+    fontSize: 14,
+  },
+  pos: {
+    marginBottom: 12,
   },
 }));
 
@@ -20,8 +36,6 @@ const SORT_OPTIONS = {
   LIKES_ASC: { column: "likes", direction: "asc" },
   LIKES_DESC: { column: "likes", direction: "desc" },
 };
-
-async function usePosts(sortBy) {}
 
 export default function Main() {
   const classes = useStyles();
@@ -41,7 +55,6 @@ export default function Main() {
           retrievedPosts.push({ id: doc.id, ...doc.data() });
         });
         setPosts(retrievedPosts);
-        console.log(retrievedPosts);
       })
       .catch(function (error) {
         console.log("Error getting documents: ", error);
@@ -50,33 +63,44 @@ export default function Main() {
 
   function createFeedPost(post) {
     return (
-      <div key={post.id}>
-        <GridListTile
-          key={post.id}
-          style={{
-            backgroundColor: "#252a2e",
-            marginBottom: "1px",
-          }}
-          button={true}
-          onClick={() => {
-            console.log(post);
-          }}
-        >
-          <div>
-            <img
-              style={{ height: "30px", width: "30px" }}
-              alt="post"
-              src={PetalIcon}
-            />{" "}
-            <div style={{ display: "flex", flexDirection: "column" }}>
-              <span>{post.title}</span>
-              <span>{post.body}</span>
-              <span>{post.author}</span>
-              <span>{`${post.likes} likes`}</span>
+      <GridListTile key={post.id} style={{ minHeight: "250px" }}>
+        <Card className={classes.root}>
+          <CardContent>
+            <Typography color="textSecondary" gutterBottom>
+              {post.title}
+            </Typography>
+            <Typography variant="h5" component="h2">
+              {post.line_1}
+            </Typography>
+            <Typography variant="h5" component="h2">
+              {post.line_2}
+            </Typography>
+            <Typography variant="h5" component="h2">
+              {post.line_3}
+            </Typography>
+            <Typography className={classes.title} color="textSecondary">
+              {`-${post.author}`}
+            </Typography>
+          </CardContent>
+          <CardActions>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <IconButton aria-label="add to favorites">
+                <FavoriteIcon />
+              </IconButton>
+              <Typography className={classes.title} color="textSecondary">
+                {post.likes}
+              </Typography>
             </div>
-          </div>
-        </GridListTile>
-      </div>
+          </CardActions>
+        </Card>
+      </GridListTile>
     );
   }
 
@@ -90,10 +114,14 @@ export default function Main() {
         alignItems: "center",
         width: "100vw",
         height: "85vh",
-        backgroundColor: colors.maikuu2,
       }}
     >
-      <GridList cellHeight={160} className={classes.gridList} cols={1}>
+      <GridList
+        spacing={4}
+        style={{ margin: "10px" }}
+        className={classes.gridList}
+        cols={1}
+      >
         {posts.map((post) => createFeedPost(post))}
       </GridList>
     </div>
