@@ -1,5 +1,12 @@
 import React, { useEffect } from "react";
-import { makeStyles, GridList, GridListTile } from "@material-ui/core";
+import {
+  makeStyles,
+  GridList,
+  GridListTile,
+  Container,
+  CssBaseline,
+  Grid,
+} from "@material-ui/core";
 import colors from "../assets/colors";
 import firebase from "../firebase";
 import { useState } from "react";
@@ -18,6 +25,12 @@ const useStyles = makeStyles((theme) => ({
   },
   root: {
     minWidth: 275,
+  },
+  paper: {
+    marginTop: theme.spacing(2),
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
   },
   bullet: {
     display: "inline-block",
@@ -105,25 +118,33 @@ export default function Main() {
   }
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flex: 1,
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        width: "100vw",
-        height: "85vh",
-      }}
-    >
-      <GridList
-        spacing={4}
-        style={{ margin: "10px" }}
-        className={classes.gridList}
-        cols={1}
-      >
-        {posts.map((post) => createFeedPost(post))}
-      </GridList>
+    <div>
+      <Container component="main" xl={12} lg={12} md={12}>
+        <CssBaseline />
+        <div className={classes.paper}>
+          <Grid
+            container
+            spacing={5}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Grid item xl={12} lg={12} md={12}>
+              <GridList
+                spacing={4}
+                style={{ margin: "10px" }}
+                className={classes.gridList}
+                cols={1}
+              >
+                {posts.map((post) => createFeedPost(post))}
+              </GridList>
+            </Grid>
+          </Grid>
+        </div>
+      </Container>
     </div>
   );
 }
