@@ -8,7 +8,7 @@ body,
 
 .App {
   text-align: center;
-  background-color: #252a2e;
+  background-color: #f6feff;
 }
 
 .App-logo {
@@ -102,10 +102,10 @@ select:-webkit-autofill:focus {
   display: flex;
   justify-content: center;
   height: 100vh;
-  background-color: #252a2e;
+  background-color: #d7e1ec;
 }
 
 .main-container {
   flex: 1;
-  background-color: #252a2e;
+  background-color: #d7e1ec;
 }

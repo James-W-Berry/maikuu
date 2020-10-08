@@ -62,7 +62,7 @@ function App() {
   const FeatureRoutes = () => (
     <Route
       render={({ location }) => (
-        <div>
+        <div style={{ display: "flex", flexDirection: "column" }}>
           <Banner />
           <motion.div
             id="content"
@@ -71,6 +71,7 @@ function App() {
               opacity: [0.9, 1.0],
             }}
             transition={{ duration: 1 }}
+            style={{ marginTop: "60px" }}
           >
             <Switch location={location}>
               <Route path="/feed" component={Feed} />
@@ -88,7 +89,7 @@ function App() {
     return (
       <div
         style={{
-          backgroundColor: "#252a2e",
+          backgroundColor: colors.maikuu4,
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -105,7 +106,7 @@ function App() {
     return (
       <div
         style={{
-          backgroundColor: "#252a2e",
+          backgroundColor: colors.maikuu4,
         }}
       >
         <video
@@ -142,8 +143,7 @@ function App() {
           height: "100%",
           position: "absolute",
           zIndex: "0",
-          backgroundColor: "#ffffff",
-          backgroundImage: "linear-gradient(315deg, #ffffff 0%, #d7e1ec 74%)",
+          backgroundColor: colors.maikuu5,
         }}
       >
         <BrowserRouter>{FeatureRoutes()}</BrowserRouter>

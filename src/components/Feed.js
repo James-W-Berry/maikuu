@@ -6,6 +6,7 @@ import {
   Container,
   CssBaseline,
   Grid,
+  Divider,
 } from "@material-ui/core";
 import colors from "../assets/colors";
 import firebase from "../firebase";
@@ -18,19 +19,21 @@ import FavoriteIcon from "@material-ui/icons/Favorite";
 import IconButton from "@material-ui/core/IconButton";
 
 const useStyles = makeStyles((theme) => ({
-  gridList: {
-    marginTop: "10px",
-    // width: "100%",
-    // height: "100%",
-  },
   root: {
-    minWidth: 275,
-  },
-  paper: {
-    marginTop: theme.spacing(2),
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
+    justifyContent: "center",
+  },
+  gridTile: {
+    width: "fitContent",
+    height: "100% !important",
+  },
+  paper: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    background: colors.maikuu5,
   },
   bullet: {
     display: "inline-block",
@@ -39,9 +42,21 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     fontSize: 14,
+    textAlign: "center",
   },
   pos: {
     marginBottom: 12,
+  },
+  post: {
+    align: "center",
+    textAlign: "center",
+  },
+  divider: {
+    border: "none",
+    height: "1px",
+    backgroundColor: "#12121C15",
+    margin: 0,
+    flexShrink: 0,
   },
 }));
 
@@ -76,21 +91,43 @@ export default function Main() {
 
   function createFeedPost(post) {
     return (
-      <GridListTile key={post.id} style={{ minHeight: "250px" }}>
+      <GridListTile key={post.id} className={classes.gridTile}>
         <Card className={classes.root}>
-          <CardContent>
-            <Typography color="textSecondary" gutterBottom>
+          <CardContent className={classes.root}>
+            <Typography
+              color="textSecondary"
+              gutterBottom
+              className={classes.post}
+            >
               {post.title}
             </Typography>
-            <Typography variant="h5" component="h2">
+            <Typography
+              gutterBottom
+              variant="h5"
+              component="h2"
+              className={classes.post}
+            >
               {post.line_1}
             </Typography>
-            <Typography variant="h5" component="h2">
+
+            <Typography
+              gutterBottom
+              variant="h5"
+              component="h2"
+              className={classes.post}
+            >
               {post.line_2}
             </Typography>
-            <Typography variant="h5" component="h2">
+
+            <Typography
+              gutterBottom
+              variant="h5"
+              component="h2"
+              className={classes.post}
+            >
               {post.line_3}
             </Typography>
+
             <Typography className={classes.title} color="textSecondary">
               {`-${post.author}`}
             </Typography>
@@ -124,7 +161,6 @@ export default function Main() {
         <div className={classes.paper}>
           <Grid
             container
-            spacing={5}
             style={{
               display: "flex",
               flexDirection: "column",
@@ -134,9 +170,13 @@ export default function Main() {
           >
             <Grid item xl={12} lg={12} md={12}>
               <GridList
-                spacing={4}
-                style={{ margin: "10px" }}
-                className={classes.gridList}
+                style={{
+                  margin: "10px",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
                 cols={1}
               >
                 {posts.map((post) => createFeedPost(post))}

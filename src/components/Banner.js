@@ -39,20 +39,6 @@ const useStyles = makeStyles((theme) => ({
     color: "#f7f7f5",
     flexGrow: 1,
   },
-  bannerOption: {
-    fontFamily: "AvenirNext",
-    color: "#f7f7f5",
-    userSelect: "none",
-    fontSize: "16px",
-    paddingLeft: "2.5vw",
-    paddingRight: "2.5vw",
-  },
-  paper: {
-    marginTop: theme.spacing(2),
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-  },
   appbar: {
     background: colors.maikuu0,
   },
@@ -151,139 +137,35 @@ export default function Banner() {
   );
 
   return (
-    // <div
-    //   style={{
-    //     display: "flex",
-    //     flexDirection: "row",
-    //     height: "15vh",
-    //     minHeight: "80px",
-    //     width: "100vw",
-    //     alignItems: "center",
-    //     backgroundColor: colors.maikuu0,
-    //   }}
-    // >
     <div className="root">
-      <AppBar className={classes.appbar} position="static">
+      <AppBar className={classes.appbar} position="fixed">
         <Toolbar>
-          <IconButton
-            key="menu"
-            edge="start"
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="menu"
+          <SwipeableDrawer
+            anchor={"menu"}
+            open={state["menu"]}
+            onClose={toggleDrawer("menu", false)}
+            onOpen={toggleDrawer("menu", true)}
           >
-            <MenuIcon onClick={toggleDrawer("menu", true)} />
-            <React.Fragment key={"menu"}>
-              <SwipeableDrawer
-                anchor={"menu"}
-                open={state["menu"]}
-                onClose={toggleDrawer("menu", false)}
-                onOpen={toggleDrawer("menu", true)}
-              >
-                {list("menu")}
-              </SwipeableDrawer>
-            </React.Fragment>
-          </IconButton>
+            {list("menu")}
+          </SwipeableDrawer>
+          <React.Fragment key={"menu"}>
+            <IconButton
+              key="menu"
+              edge="start"
+              className={classes.menuButton}
+              color="inherit"
+              aria-label="menu"
+              onClick={toggleDrawer("menu", true)}
+            >
+              <MenuIcon />
+            </IconButton>
+          </React.Fragment>
           <Typography variant="h6" className={classes.title}>
             Maikuu
           </Typography>
           <Button color="inherit">Login</Button>
         </Toolbar>
       </AppBar>
-      {/* {["left", "right", "top", "bottom"].map((anchor) => (
-        <React.Fragment key={anchor}>
-          <Button onClick={toggleDrawer(anchor, true)}>{anchor}</Button>
-          <SwipeableDrawer
-            anchor={anchor}
-            open={state[anchor]}
-            onClose={toggleDrawer(anchor, false)}
-            onOpen={toggleDrawer(anchor, true)}
-          >
-            {list(anchor)}
-          </SwipeableDrawer>
-        </React.Fragment>
-      ))} */}
-      {/* <Container component="main" xl={12} lg={12} md={12}>
-        <CssBaseline />
-        <div className={classes.paper}>
-          <Grid
-            container
-            spacing={5}
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Grid item xl={12} lg={12} md={12}>
-              <img
-                style={{ marginLeft: "20px", height: "60px", width: "60px" }}
-                alt="logo"
-                src={logo}
-              />
-              <span className={classes.title}>Maikuu</span>
-              <div
-                style={{
-                  display: "flex",
-                  width: "44vw",
-                  flexDirection: "row",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <NavLink
-                  className={classes.bannerOption}
-                  style={{
-                    textDecoration: "none",
-                  }}
-                  to="/feed"
-                >
-                  Feed
-                </NavLink>
-                <NavLink
-                  className={classes.bannerOption}
-                  style={{
-                    textDecoration: "none",
-                  }}
-                  to="/compose"
-                >
-                  Compose
-                </NavLink>
-                <NavLink
-                  className={classes.bannerOption}
-                  style={{
-                    textDecoration: "none",
-                  }}
-                  to="/collections"
-                >
-                  Collections
-                </NavLink>
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  width: "27vw",
-                  flexDirection: "row",
-                  justifyContent: "flex-end",
-                  alignItems: "center",
-                }}
-              >
-                <Button
-                  style={{
-                    backgroundColor: colors.darkBlue,
-                    color: colors.white,
-                  }}
-                  onClick={requestLogout}
-                >
-                  <Typography>Logout</Typography>
-                  <LogoutIcon />
-                </Button>
-              </div>
-            </Grid>
-          </Grid>
-        </div>
-      </Container> */}
     </div>
   );
 }

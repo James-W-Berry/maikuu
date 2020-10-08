@@ -12,6 +12,7 @@ const colors = {
   maikuu2: "#202432",
   maikuu3: "#252C3C",
   maikuu4: "#F6FEFF",
+  maikuu5: "#d7e1ec",
 };
 
 export default colors;
