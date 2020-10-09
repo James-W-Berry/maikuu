@@ -10,6 +10,8 @@ import PuffLoader from "react-spinners/PuffLoader";
 import firebase from "../firebase";
 import "firebase/auth";
 import { NavLink } from "react-router-dom";
+import beach from "../assets/beach.mp4";
+import colors from "../assets/colors";
 
 const useStyles = makeStyles((theme) => ({
   heading: {
@@ -108,125 +110,151 @@ export default function ForgottenPassword() {
   }
 
   return (
-    <div className={classes.container}>
-      <div className={classes.paper}>
-        <NavLink
-          className={classes.text}
-          style={{
-            textDecoration: "none",
-          }}
-          to="/home"
-        >
-          <img
-            src={logoSrc}
-            onMouseOver={() => setLogoSrc(logoBlue)}
-            onMouseOut={() => setLogoSrc(logo)}
-            alt=""
-            height="80"
-            width="80"
-            className={classes.logo}
-          />
-        </NavLink>
-        <Typography className={classes.heading} component="h1" variant="h5">
-          Forgotten Password
-        </Typography>
-        <form className={classes.form} noValidate>
-          <Grid container spacing={2}>
-            <Grid
-              item
-              xs={12}
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                padding: "0px",
-                zIndex: "1",
-              }}
-            >
-              <TextField
-                className={classes.textInput}
-                InputProps={{
-                  className: classes.input,
+    <div
+      style={{
+        backgroundColor: colors.maikuu4,
+        marginTop: "-60px",
+      }}
+    >
+      <video
+        style={{
+          flex: 1,
+          minWidth: "100%",
+          width: "100%",
+          minHeight: "100%",
+          height: "100%",
+          position: "absolute",
+          zIndex: "0",
+          objectFit: "cover",
+          opacity: "100%",
+        }}
+        autoPlay
+        muted
+        loop
+        id="beach"
+        src={beach}
+        type="video/mp4"
+      />
+      <div className={classes.container}>
+        <div className={classes.paper}>
+          <NavLink
+            className={classes.text}
+            style={{
+              textDecoration: "none",
+            }}
+            to="/signin"
+          >
+            <img
+              src={logoSrc}
+              onMouseOver={() => setLogoSrc(logoBlue)}
+              onMouseOut={() => setLogoSrc(logo)}
+              alt=""
+              height="80"
+              width="80"
+              className={classes.logo}
+            />
+          </NavLink>
+          <Typography className={classes.heading} component="h1" variant="h5">
+            Forgotten Password
+          </Typography>
+          <form className={classes.form} noValidate>
+            <Grid container spacing={2}>
+              <Grid
+                item
+                xs={12}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  padding: "0px",
+                  zIndex: "1",
                 }}
-                margin="normal"
-                required
-                fullWidth
-                autoFocus
-                name="email"
-                label="Email to send reset link"
-                type="email"
-                id="email"
-                autoComplete="email"
-                onChange={(event) => {
-                  setEmail(event.target.value);
-                }}
-              />
+              >
+                <TextField
+                  className={classes.textInput}
+                  InputProps={{
+                    className: classes.input,
+                  }}
+                  margin="normal"
+                  required
+                  fullWidth
+                  autoFocus
+                  name="email"
+                  label="Email to send reset link"
+                  type="email"
+                  id="email"
+                  autoComplete="email"
+                  onChange={(event) => {
+                    setEmail(event.target.value);
+                  }}
+                />
+              </Grid>
             </Grid>
-          </Grid>
-          {success && (
-            <div
-              className={classes.loader}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Typography
-                className={classes.heading}
-                component="h1"
-                variant="body2"
-              >
-                Check your email for the reset link
-              </Typography>
-            </div>
-          )}
-          {failure && (
-            <div
-              className={classes.loader}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Typography
-                className={classes.heading}
-                style={{ color: "#f7f7f5" }}
-                component="h1"
-                variant="body2"
-              >
-                {`No user found, please check the entered email`}
-              </Typography>
-            </div>
-          )}
-          {isLoading ? (
-            <div
-              className={classes.loader}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <PuffLoader color={"#A0C4F2"} />
-            </div>
-          ) : (
-            !success &&
-            email.length > 0 && (
-              <Button
-                variant="contained"
-                className={classes.submit}
-                onClick={() => {
-                  onResetPassword(email);
+            {success && (
+              <div
+                className={classes.loader}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                 }}
               >
-                Reset Password
-              </Button>
-            )
-          )}
-        </form>
+                <Typography
+                  className={classes.heading}
+                  component="h1"
+                  variant="body2"
+                >
+                  Check your email for the reset link
+                </Typography>
+              </div>
+            )}
+            {failure && (
+              <div
+                className={classes.loader}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Typography
+                  className={classes.heading}
+                  style={{ color: "#f7f7f5" }}
+                  component="h1"
+                  variant="body2"
+                >
+                  {`No user found, please check the entered email`}
+                </Typography>
+              </div>
+            )}
+            {isLoading ? (
+              <div
+                className={classes.loader}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <PuffLoader color={"#A0C4F2"} />
+              </div>
+            ) : (
+              !success &&
+              email.length > 0 && (
+                <Button
+                  variant="contained"
+                  className={classes.submit}
+                  onClick={() => {
+                    onResetPassword(email);
+                  }}
+                >
+                  Reset Password
+                </Button>
+              )
+            )}
+          </form>
+        </div>
       </div>
     </div>
   );

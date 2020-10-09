@@ -6,7 +6,7 @@ import {
   Container,
   CssBaseline,
   Grid,
-  Divider,
+  Tooltip,
 } from "@material-ui/core";
 import colors from "../assets/colors";
 import firebase from "../firebase";
@@ -65,10 +65,11 @@ const SORT_OPTIONS = {
   LIKES_DESC: { column: "likes", direction: "desc" },
 };
 
-export default function Main() {
+export default function Main(props) {
   const classes = useStyles();
   const [sortBy, setSortBy] = useState("LIKES_DESC");
   const [posts, setPosts] = useState([]);
+  const user = props.user;
 
   useEffect(() => {
     let retrievedPosts = [];
@@ -132,23 +133,49 @@ export default function Main() {
               {`-${post.author}`}
             </Typography>
           </CardContent>
-          <CardActions>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <IconButton aria-label="add to favorites">
-                <FavoriteIcon />
-              </IconButton>
-              <Typography className={classes.title} color="textSecondary">
-                {post.likes}
-              </Typography>
-            </div>
-          </CardActions>
+          {user?.loggedIn ? (
+            <CardActions>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <IconButton aria-label="add to favorites">
+                  <FavoriteIcon />
+                </IconButton>
+                <Typography className={classes.title} color="textSecondary">
+                  {post.likes}
+                </Typography>
+              </div>
+            </CardActions>
+          ) : (
+            <CardActions>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Tooltip title="Sign in to favorite posts" placement="bottom">
+                  <div>
+                    {" "}
+                    <IconButton aria-label="add to favorites" disabled>
+                      <FavoriteIcon />
+                    </IconButton>
+                  </div>
+                </Tooltip>
+
+                <Typography className={classes.title} color="textSecondary">
+                  {post.likes}
+                </Typography>
+              </div>
+            </CardActions>
+          )}
         </Card>
       </GridListTile>
     );

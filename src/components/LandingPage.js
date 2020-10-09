@@ -5,13 +5,15 @@ import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-import { NavLink } from "react-router-dom";
+import { NavLink, useHistory } from "react-router-dom";
 import firebase from "../firebase";
 import "firebase/auth";
 import PuffLoader from "react-spinners/PuffLoader";
 import TextField from "@material-ui/core/TextField";
 import { Divider } from "@material-ui/core";
 import google from "../assets/google.png";
+import beach from "../assets/beach.mp4";
+import colors from "../assets/colors";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -99,42 +101,28 @@ const useStyles = makeStyles((theme) => ({
 
 const provider = new firebase.auth.GoogleAuthProvider();
 
-function onRedirectResult() {
-  firebase
-    .auth()
-    .getRedirectResult()
-    .then(function (result) {
-      console.log(result);
-      //   if (result.credential) {
-      //     // This gives you a Google Access Token. You can use it to access the Google API.
-      //     var token = result.credential.accessToken;
-      //     // ...
-      //   }
-      //   // The signed-in user info.
-      //   var user = result.user;
-      // })
-      // .catch(function (error) {
-      //   // Handle Errors here.
-      //   var errorCode = error.code;
-      //   var errorMessage = error.message;
-      //   // The email of the user's account used.
-      //   var email = error.email;
-      //   // The firebase.auth.AuthCredential type that was used.
-      //   var credential = error.credential;
-      // ...
-    });
-}
-
-export default function LandingPage() {
+export default function LandingPage(props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [failure, setFailure] = useState(false);
+  const user = props.user;
   const classes = useStyles();
+  const history = useHistory();
+
+  function onRedirectResult() {
+    firebase
+      .auth()
+      .getRedirectResult()
+      .then(function (result) {
+        console.log(result);
+      });
+  }
 
   function unsubscribe() {
     onRedirectResult();
   }
+
   useEffect(() => {
     return () => {
       unsubscribe();
@@ -158,247 +146,296 @@ export default function LandingPage() {
 
   function onGoogleSignIn() {
     setIsLoading(true);
-    firebase.auth().signInWithRedirect(provider);
+    firebase
+      .auth()
+      .signInWithRedirect(provider)
+      .then(() => {
+        console.log("signed in with Google redirect");
+      });
+  }
+
+  if (user?.loggedIn) {
+    history.push("/feed");
   }
 
   return (
-    <div className={classes.container}>
-      <div className={classes.paper}>
-        <Grid
-          container
-          spacing={5}
-          style={{
-            height: "100vh",
-            width: "100vw",
-            padding: "0px",
-            margin: "0px",
-          }}
-        >
+    <div
+      style={{
+        backgroundColor: colors.maikuu4,
+        marginTop: "-60px",
+      }}
+    >
+      <video
+        style={{
+          flex: 1,
+          minWidth: "100%",
+          width: "100%",
+          minHeight: "100%",
+          height: "100%",
+          position: "absolute",
+          zIndex: "0",
+          objectFit: "cover",
+          opacity: "100%",
+        }}
+        autoPlay
+        muted
+        loop
+        id="beach"
+        src={beach}
+        type="video/mp4"
+      />
+      <div className={classes.container}>
+        <div className={classes.paper}>
           <Grid
-            item
-            xl={6}
-            lg={6}
-            md={6}
-            s={12}
-            xs={12}
-            style={{ padding: "0px" }}
-          >
-            <div
-              style={{
-                flex: "1",
-                position: "relative",
-                padding: "0px",
-                zIndex: "1",
-                width: "100%",
-                height: "100%",
-                alignItems: "center",
-              }}
-            >
-              <Typography
-                className={classes.title}
-                style={{
-                  position: "relative",
-                  width: "100%",
-                  padding: "0px",
-                  top: "40%",
-                  zIndex: "3",
-                  textAlign: "center",
-                  userSelect: "none",
-                }}
-              >
-                Maikuu
-              </Typography>
-            </div>
-          </Grid>
-
-          <Grid
-            item
-            xl={6}
-            lg={6}
-            md={6}
-            s={12}
-            xs={12}
+            container
+            spacing={5}
             style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
+              height: "100vh",
+              width: "100vw",
               padding: "0px",
-              zIndex: "1",
+              margin: "0px",
             }}
           >
-            <form className={classes.form} noValidate>
-              <TextField
-                className={classes.textInput}
-                InputProps={{
-                  className: classes.input,
+            <Grid
+              item
+              xl={6}
+              lg={6}
+              md={6}
+              s={12}
+              xs={12}
+              style={{ padding: "0px" }}
+            >
+              <div
+                style={{
+                  flex: "1",
+                  display: "flex",
+                  padding: "0px",
+                  zIndex: "1",
+                  width: "100%",
+                  height: "100%",
+                  alignItems: "center",
+                  justifyContent: "center",
                 }}
-                margin="normal"
-                required
-                fullWidth
-                name="email"
-                label="Email"
-                type="email"
-                id="email"
-                autoComplete="email"
-                onChange={(event) => {
-                  setEmail(event.target.value);
-                }}
-              />
-              <TextField
-                className={classes.textInput}
-                margin="normal"
-                required
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-                InputProps={{
-                  className: classes.input,
-                }}
-                onChange={(event) => {
-                  setPassword(event.target.value);
-                }}
-              />
-              {failure && (
-                <div
-                  className={classes.loader}
+              >
+                <NavLink
                   style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
+                    textDecoration: "none",
                   }}
+                  to="/feed"
                 >
                   <Typography
-                    className={classes.heading}
-                    style={{ color: "#f2f2eb" }}
-                    component="h1"
-                    variant="body2"
-                  >
-                    {`Incorrect email or password, please try again`}
-                  </Typography>
-                </div>
-              )}
-              {isLoading ? (
-                <div
-                  className={classes.loader}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <PuffLoader color={"#A0C4F2"} />
-                </div>
-              ) : (
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    //justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                    className={classes.submit}
-                    style={{ marginTop: "20px" }}
-                    onClick={() => {
-                      onSignIn(email, password);
-                    }}
-                  >
-                    Sign In
-                  </Button>
-
-                  <Typography className={classes.text}>or</Typography>
-
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                    className={classes.googleSubmit}
+                    className={classes.title}
                     style={{
+                      width: "100%",
                       padding: "0px",
-                      marginTop: "0px",
-                      margin: "0px",
-                    }}
-                    onClick={() => {
-                      onGoogleSignIn();
+                      top: "40%",
+                      zIndex: "3",
+                      textAlign: "center",
+                      userSelect: "none",
                     }}
                   >
-                    <img src={google} width="100%" alt="Sign in with Google" />
-                  </Button>
-                </div>
-              )}
-            </form>
-
-            <Divider
-              variant="middle"
-              classes={{ root: classes.divider }}
-              style={{
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            />
+                    Maikuu
+                  </Typography>
+                </NavLink>
+              </div>
+            </Grid>
 
             <Grid
-              container
+              item
+              xl={6}
+              lg={6}
+              md={6}
+              s={12}
+              xs={12}
               style={{
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "center",
                 alignItems: "center",
-                marginTop: "30px",
+                padding: "0px",
                 zIndex: "1",
               }}
             >
-              <Grid item xs>
-                <NavLink
-                  className={classes.text}
-                  style={{
-                    textDecoration: "none",
+              <form className={classes.form} noValidate>
+                <TextField
+                  className={classes.textInput}
+                  InputProps={{
+                    className: classes.input,
                   }}
-                  to="/forgotpassword"
-                >
-                  Forgot password?
-                </NavLink>
-              </Grid>
-              <Grid item xs>
-                <NavLink
-                  className={classes.text}
-                  style={{
-                    textDecoration: "none",
+                  margin="normal"
+                  required
+                  fullWidth
+                  name="email"
+                  label="Email"
+                  type="email"
+                  id="email"
+                  autoComplete="email"
+                  onChange={(event) => {
+                    setEmail(event.target.value);
                   }}
-                  to="/signup"
-                >
-                  {"Don't have an account? Sign Up"}
-                </NavLink>
-              </Grid>
-
-              <Box style={{ marginTop: "100px" }} mt={5}>
-                <Typography
-                  variant="body2"
-                  style={{ fontFamily: "AvenirNext", color: "#f7f7f5" }}
-                  align="center"
-                >
-                  {"Copyright © "}
-                  <Link
-                    className={classes.text}
-                    style={{ textDecoration: "none", fontFamily: "BadScript" }}
-                    href="https://www.maikuu.app"
+                />
+                <TextField
+                  className={classes.textInput}
+                  margin="normal"
+                  required
+                  name="password"
+                  label="Password"
+                  type="password"
+                  id="password"
+                  autoComplete="current-password"
+                  InputProps={{
+                    className: classes.input,
+                  }}
+                  onChange={(event) => {
+                    setPassword(event.target.value);
+                  }}
+                />
+                {failure && (
+                  <div
+                    className={classes.loader}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
                   >
-                    Maikuu
-                  </Link>{" "}
-                  {new Date().getFullYear()}
-                  {"."}
-                </Typography>
-              </Box>
+                    <Typography
+                      className={classes.heading}
+                      style={{ color: "#f2f2eb" }}
+                      component="h1"
+                      variant="body2"
+                    >
+                      {`Incorrect email or password, please try again`}
+                    </Typography>
+                  </div>
+                )}
+                {isLoading ? (
+                  <div
+                    className={classes.loader}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <PuffLoader color={"#A0C4F2"} />
+                  </div>
+                ) : (
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      //justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      color="primary"
+                      className={classes.submit}
+                      style={{ marginTop: "20px" }}
+                      onClick={() => {
+                        onSignIn(email, password);
+                      }}
+                    >
+                      Sign In
+                    </Button>
+
+                    <Typography className={classes.text}>or</Typography>
+
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      color="primary"
+                      className={classes.googleSubmit}
+                      style={{
+                        padding: "0px",
+                        marginTop: "0px",
+                        margin: "0px",
+                      }}
+                      onClick={() => {
+                        onGoogleSignIn();
+                      }}
+                    >
+                      <img
+                        src={google}
+                        width="100%"
+                        alt="Sign in with Google"
+                      />
+                    </Button>
+                  </div>
+                )}
+              </form>
+
+              <Divider
+                variant="middle"
+                classes={{ root: classes.divider }}
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              />
+
+              <Grid
+                container
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginTop: "30px",
+                  zIndex: "1",
+                }}
+              >
+                <Grid item xs>
+                  <NavLink
+                    className={classes.text}
+                    style={{
+                      textDecoration: "none",
+                    }}
+                    to="/forgotpassword"
+                  >
+                    Forgot password?
+                  </NavLink>
+                </Grid>
+                <Grid item xs>
+                  <NavLink
+                    className={classes.text}
+                    style={{
+                      textDecoration: "none",
+                    }}
+                    to="/signup"
+                  >
+                    {"Don't have an account? Sign Up"}
+                  </NavLink>
+                </Grid>
+
+                <Box style={{ marginTop: "100px" }} mt={5}>
+                  <Typography
+                    variant="body2"
+                    style={{ fontFamily: "AvenirNext", color: "#f7f7f5" }}
+                    align="center"
+                  >
+                    {"Copyright © "}
+                    <Link
+                      className={classes.text}
+                      style={{
+                        textDecoration: "none",
+                        fontFamily: "BadScript",
+                      }}
+                      href="https://www.maikuu.app"
+                    >
+                      Maikuu
+                    </Link>{" "}
+                    {new Date().getFullYear()}
+                    {"."}
+                  </Typography>
+                </Box>
+              </Grid>
             </Grid>
           </Grid>
-        </Grid>
+        </div>
       </div>
     </div>
   );

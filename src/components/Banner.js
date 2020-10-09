@@ -1,15 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react";
 import colors from "../assets/colors";
-import logo from "../assets/logo.png";
 import { makeStyles } from "@material-ui/core/styles";
-import { NavLink } from "react-router-dom";
+import { NavLink, useHistory } from "react-router-dom";
 import {
   AppBar,
-  Button,
-  Container,
-  CssBaseline,
   Divider,
-  Grid,
   IconButton,
   List,
   ListItem,
@@ -44,15 +39,22 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function logout() {
-  firebase.auth().signOut();
+function logout(history) {
+  firebase
+    .auth()
+    .signOut()
+    .then(() => {
+      history.push("/signin");
+    });
 }
 
-export default function Banner() {
+export default function Banner(props) {
   const classes = useStyles();
+  const history = useHistory();
+  const user = props.user;
 
   const requestLogout = useCallback(() => {
-    logout();
+    logout(history);
   }, []);
 
   const [state, setState] = React.useState({
@@ -71,7 +73,7 @@ export default function Banner() {
     setState({ ...state, [anchor]: open });
   };
 
-  const list = (anchor) => (
+  const list = (anchor, user) => (
     <div
       className={clsx(classes.list, {
         [classes.fullList]: anchor === "top" || anchor === "bottom",
@@ -128,14 +130,44 @@ export default function Banner() {
       </List>
       <Divider />
       <List>
-        <ListItem button key={"Log out"}>
-          <ListItemIcon>{<LogoutIcon />}</ListItemIcon>
-          <ListItemText primary={"Log out"} />
-        </ListItem>
+        {user?.loggedIn ? (
+          <NavLink
+            to="/signin"
+            style={{
+              color: colors.maikuu0,
+              textDecoration: "none",
+            }}
+          >
+            <ListItem
+              button
+              key={"Log out"}
+              onClick={() => {
+                requestLogout();
+              }}
+            >
+              <ListItemIcon>{<LogoutIcon />}</ListItemIcon>
+              <ListItemText primary={"Log out"} />
+            </ListItem>
+          </NavLink>
+        ) : (
+          <NavLink
+            to="/signin"
+            style={{
+              color: colors.maikuu0,
+              textDecoration: "none",
+            }}
+          >
+            <ListItem button key={"Log in"}>
+              <ListItemIcon>{<LogoutIcon />}</ListItemIcon>
+              <ListItemText primary={"Log in"} />
+            </ListItem>
+          </NavLink>
+        )}
       </List>
     </div>
   );
 
+  console.log(user);
   return (
     <div className="root">
       <AppBar className={classes.appbar} position="fixed">
@@ -146,7 +178,7 @@ export default function Banner() {
             onClose={toggleDrawer("menu", false)}
             onOpen={toggleDrawer("menu", true)}
           >
-            {list("menu")}
+            {list("menu", user)}
           </SwipeableDrawer>
           <React.Fragment key={"menu"}>
             <IconButton
@@ -163,7 +195,6 @@ export default function Banner() {
           <Typography variant="h6" className={classes.title}>
             Maikuu
           </Typography>
-          <Button color="inherit">Login</Button>
         </Toolbar>
       </AppBar>
     </div>
