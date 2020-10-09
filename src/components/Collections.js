@@ -13,8 +13,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Collections() {
+export default function Collections(props) {
   const classes = useStyles();
+  const user = props.user;
 
   return (
     <div
@@ -29,7 +30,11 @@ export default function Collections() {
         backgroundColor: colors.maikuu5,
       }}
     >
-      <span className={classes.title}>Collections here</span>
+      {user?.loggedIn ? (
+        <span className={classes.title}>Collections here</span>
+      ) : (
+        <span className={classes.title}>Sign in to view your collections</span>
+      )}
     </div>
   );
 }

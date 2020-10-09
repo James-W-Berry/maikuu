@@ -163,7 +163,6 @@ export default function Main(props) {
               >
                 <Tooltip title="Sign in to favorite posts" placement="bottom">
                   <div>
-                    {" "}
                     <IconButton aria-label="add to favorites" disabled>
                       <FavoriteIcon />
                     </IconButton>

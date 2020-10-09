@@ -12,6 +12,7 @@ import {
   ListItemText,
   SwipeableDrawer,
   Toolbar,
+  Tooltip,
   Typography,
 } from "@material-ui/core";
 import clsx from "clsx";
@@ -98,35 +99,57 @@ export default function Banner(props) {
           </ListItem>
         </NavLink>
 
-        <NavLink
-          to="/compose"
-          style={{
-            textDecoration: "none",
-            color: colors.maikuu0,
-          }}
-        >
-          <ListItem button key={"Compose"}>
-            <ListItemIcon>
-              <CreateIcon />
-            </ListItemIcon>
-            <ListItemText primary={"Compose"} />
-          </ListItem>
-        </NavLink>
+        {user?.loggedIn ? (
+          <NavLink
+            to="/compose"
+            style={{
+              textDecoration: "none",
+              color: colors.maikuu0,
+            }}
+          >
+            <ListItem button key={"Compose"}>
+              <ListItemIcon>
+                <CreateIcon />
+              </ListItemIcon>
+              <ListItemText primary={"Compose"} />
+            </ListItem>
+          </NavLink>
+        ) : (
+          <Tooltip title="Sign in to compose haiku" placement="bottom">
+            <ListItem button key={"Compose"}>
+              <ListItemIcon>
+                <CreateIcon />
+              </ListItemIcon>
+              <ListItemText secondary={"Compose"} />
+            </ListItem>
+          </Tooltip>
+        )}
 
-        <NavLink
-          to="/collections"
-          style={{
-            color: colors.maikuu0,
-            textDecoration: "none",
-          }}
-        >
-          <ListItem button key={"Collections"}>
-            <ListItemIcon>
-              <LibraryBooksIcon />
-            </ListItemIcon>
-            <ListItemText primary={"Collections"} />
-          </ListItem>
-        </NavLink>
+        {user?.loggedIn ? (
+          <NavLink
+            to="/collections"
+            style={{
+              color: colors.maikuu0,
+              textDecoration: "none",
+            }}
+          >
+            <ListItem button key={"Collections"}>
+              <ListItemIcon>
+                <LibraryBooksIcon />
+              </ListItemIcon>
+              <ListItemText primary={"Collections"} />
+            </ListItem>
+          </NavLink>
+        ) : (
+          <Tooltip title="Sign in to view your collections" placement="bottom">
+            <ListItem button key={"Collections"}>
+              <ListItemIcon>
+                <LibraryBooksIcon />
+              </ListItemIcon>
+              <ListItemText secondary={"Collections"} />
+            </ListItem>
+          </Tooltip>
+        )}
       </List>
       <Divider />
       <List>
