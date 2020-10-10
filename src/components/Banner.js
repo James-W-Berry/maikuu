@@ -127,26 +127,26 @@ export default function Banner(props) {
 
         {user?.loggedIn ? (
           <NavLink
-            to="/collections"
+            to="/profile"
             style={{
               color: colors.maikuu0,
               textDecoration: "none",
             }}
           >
-            <ListItem button key={"Collections"}>
+            <ListItem button key={"Profile"}>
               <ListItemIcon>
                 <LibraryBooksIcon />
               </ListItemIcon>
-              <ListItemText primary={"Collections"} />
+              <ListItemText primary={"Profile"} />
             </ListItem>
           </NavLink>
         ) : (
-          <Tooltip title="Sign in to view your collections" placement="bottom">
-            <ListItem button key={"Collections"}>
+          <Tooltip title="Sign in to view your profile" placement="bottom">
+            <ListItem button key={"Profile"}>
               <ListItemIcon>
                 <LibraryBooksIcon />
               </ListItemIcon>
-              <ListItemText secondary={"Collections"} />
+              <ListItemText secondary={"Profile"} />
             </ListItem>
           </Tooltip>
         )}
@@ -190,7 +190,6 @@ export default function Banner(props) {
     </div>
   );
 
-  console.log(user);
   return (
     <div className="root">
       <AppBar className={classes.appbar} position="fixed">

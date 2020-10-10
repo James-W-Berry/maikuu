@@ -11,6 +11,7 @@
     "firebase": "^7.19.1",
     "framer-motion": "^2.6.6",
     "human-readable-ids": "^1.0.4",
+    "moment": "^2.29.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-lottie": "^1.2.3",

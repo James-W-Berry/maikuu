@@ -3,7 +3,7 @@ import "./App.css";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import Feed from "./components/Feed";
 import Compose from "./components/Compose";
-import Collections from "./components/Collections";
+import Profile from "./components/Profile";
 import firebase from "./firebase";
 import "firebase/auth";
 import SignUp from "./components/SignUp";
@@ -18,7 +18,7 @@ import colors from "./assets/colors";
 function onAuthStateChange(callback) {
   firebase.auth().onAuthStateChanged((user) => {
     if (user) {
-      callback({ loggedIn: true, email: user.email, isLoading: false });
+      callback({ loggedIn: true, email: user.email, isLoading: false, displayName: user.displayName });
     } else {
       callback({ loggedIn: false, isLoading: false });
     }
@@ -54,10 +54,7 @@ function App() {
             <Switch location={location}>
               <Route path="/feed" render={() => <Feed user={user} />} />
               <Route path="/compose" render={() => <Compose user={user} />} />
-              <Route
-                path="/collections"
-                render={() => <Collections user={user} />}
-              />
+              <Route path="/profile" render={() => <Profile user={user} />} />
               <Route
                 path="/signin"
                 render={() => <LandingPage user={user} />}
