@@ -16,9 +16,10 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import FavoriteIcon from "@material-ui/icons/Favorite";
+import LikeIcon from "@material-ui/icons/ThumbUp";
 import IconButton from "@material-ui/core/IconButton";
 import { AnimatePresence, motion } from "framer-motion";
-import { red } from '@material-ui/core/colors';
+import { red, blue } from "@material-ui/core/colors";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -40,6 +41,10 @@ const useStyles = makeStyles((theme) => ({
   title: {
     fontSize: 14,
     textAlign: "center",
+  },
+  numberLabel: {
+    fontSize: 14,
+    textAlign: "left",
   },
   heading: {
     color: colors.maikuu0,
@@ -71,7 +76,7 @@ export default function Main(props) {
   const classes = useStyles();
   const [sortBy, setSortBy] = useState("LIKES_DESC");
   const [posts, setPosts] = useState([]);
-  const [likedPosts, setLikedPosts] = useState([]);
+  const [userInfo, setUserInfo] = useState({});
   const user = props.user;
 
   useEffect(() => {
@@ -93,31 +98,124 @@ export default function Main(props) {
       });
   }, [sortBy]);
 
-  function handleFavorite(postId){
+  useEffect(() => {
     const userId = firebase.auth().currentUser.uid;
-    if(likedPosts.includes(postId)){
 
+    firebase
+      .firestore()
+      .collection("users")
+      .doc(userId)
+      .onSnapshot(function (doc) {
+        const user = doc.data();
+        setUserInfo(user);
+        console.log(`Received user information update`);
+      });
+  }, []);
+
+  function handleFavorite(postId) {
+    const userId = firebase.auth().currentUser.uid;
+    if (userInfo.favorites?.includes(postId)) {
+      // remove from favorites
+      firebase
+        .firestore()
+        .collection("users")
+        .doc(userId)
+        .set(
+          {
+            favorites: firebase.firestore.FieldValue.arrayRemove(postId),
+          },
+          { merge: true }
+        )
+        .then(() => {
+          console.log(`Removed ${postId} from favorite posts`);
+        })
+        .catch(function (error) {
+          console.log(`Error removing ${postId} from favorite posts: `, error);
+        });
+    } else {
+      // add to favorites
+      firebase
+        .firestore()
+        .collection("users")
+        .doc(userId)
+        .set(
+          {
+            favorites: firebase.firestore.FieldValue.arrayUnion(postId),
+          },
+          { merge: true }
+        )
+        .then(() => {
+          console.log(`Added ${postId} to favorite posts`);
+        })
+        .catch(function (error) {
+          console.log(`Error adding ${postId} to favorite posts: `, error);
+        });
     }
-
-    // firebase
-    //   .firestore()
-    //   .collection("users")
-    //   .doc(userId)
-    //   .set({
-    //     liked: firebase.firestore.FieldValue.arrayUnion(postId)
-    //   })
-    //   .then(() => {
-    //     let liked = likedPosts;
-    //     liked.push(postId)
-    //     setLikedPosts(liked);
-    //   })
-    //   .catch(function (error) {
-    //     console.log("Error adding to liked posts: ", error);
-    //   });
   }
 
-console.log(likedPosts.includes())
-  function createFeedPost(post) {
+  function handleLike(postId) {
+    const userId = firebase.auth().currentUser.uid;
+
+    if (userInfo.likes?.includes(postId)) {
+      // remove from liked posts
+      firebase
+        .firestore()
+        .collection("users")
+        .doc(userId)
+        .set(
+          { likes: firebase.firestore.FieldValue.arrayRemove(postId) },
+          { merge: true }
+        )
+        .then(() => {
+          console.log(`Removed ${postId} from liked posts`);
+        })
+        .catch((error) => {
+          console.log(`Error removing ${postId} from liked posts`);
+        });
+
+      firebase
+        .firestore()
+        .collection("posts")
+        .doc(postId)
+        .update({ likes: firebase.firestore.FieldValue.increment(-1) })
+        .then(() => {
+          console.log(`Decremented ${postId} likes`);
+        })
+        .catch((error) => {
+          console.log(`Error decrementing ${postId} likes`);
+        });
+    } else {
+      // add to liked posts
+      firebase
+        .firestore()
+        .collection("users")
+        .doc(userId)
+        .set(
+          { likes: firebase.firestore.FieldValue.arrayUnion(postId) },
+          { merge: true }
+        )
+        .then(() => {
+          console.log(`Added ${postId} to liked posts`);
+        })
+        .catch((error) => {
+          console.log(`Error adding ${postId} to liked posts`);
+        });
+
+      firebase
+        .firestore()
+        .collection("posts")
+        .doc(postId)
+        .update({ likes: firebase.firestore.FieldValue.increment(1) })
+        .then(() => {
+          console.log(`Incremented ${postId} likeds`);
+        })
+        .catch((error) => {
+          console.log(`Error incrementing ${postId} likes`);
+        });
+    }
+  }
+
+  function createFeedPost(post, userInfo) {
     return (
       <Grid
         key={post.id}
@@ -179,16 +277,32 @@ console.log(likedPosts.includes())
                   justifyContent: "center",
                 }}
               >
-                <IconButton onClick={()=>handleFavorite(post.id)} aria-label="add to favorites">
-                {likedPosts.includes(post.id) ? (
-                  <FavoriteIcon style={{  color: red[500] }}/>
-                ):(
-                  <FavoriteIcon />
-                )}
+                <IconButton
+                  onClick={() => handleLike(post.id)}
+                  aria-label="like post"
+                >
+                  {userInfo.likes?.includes(post.id) ? (
+                    <LikeIcon style={{ color: blue[500] }} />
+                  ) : (
+                    <LikeIcon />
+                  )}
                 </IconButton>
-                <Typography className={classes.title} color="textSecondary">
+                <Typography
+                  className={classes.numberLabel}
+                  color="textSecondary"
+                >
                   {post.likes}
                 </Typography>
+                <IconButton
+                  onClick={() => handleFavorite(post.id)}
+                  aria-label="add to favorites"
+                >
+                  {userInfo.favorites?.includes(post.id) ? (
+                    <FavoriteIcon style={{ color: red[500] }} />
+                  ) : (
+                    <FavoriteIcon />
+                  )}
+                </IconButton>
               </div>
             </CardActions>
           ) : (
@@ -201,14 +315,23 @@ console.log(likedPosts.includes())
                   justifyContent: "center",
                 }}
               >
-                <Tooltip title="Sign in to favorite posts" placement="bottom">
-                    <IconButton aria-label="add to favorites" disabled>
-                      <FavoriteIcon />
-                    </IconButton>
+                <Tooltip title="Sign in to like posts" placement="bottom">
+                  <IconButton aria-label="like post" disabled>
+                    <LikeIcon />
+                  </IconButton>
                 </Tooltip>
-                <Typography className={classes.title} color="textSecondary">
+                <Typography
+                  className={classes.numberLabel}
+                  color="textSecondary"
+                >
                   {post.likes}
                 </Typography>
+
+                <Tooltip title="Sign in to favorite posts" placement="bottom">
+                  <IconButton aria-label="add to favorites" disabled>
+                    <FavoriteIcon />
+                  </IconButton>
+                </Tooltip>
               </div>
             </CardActions>
           )}
@@ -246,8 +369,8 @@ console.log(likedPosts.includes())
                 value={sortBy}
                 onChange={(event) => handleSortBy(event.target.value)}
               >
-                <MenuItem value={"LIKES_DESC"}>Least likes</MenuItem>
-                <MenuItem value={"LIKES_ASC"}>Most likes</MenuItem>
+                <MenuItem value={"LIKES_DESC"}>Most likes</MenuItem>
+                <MenuItem value={"LIKES_ASC"}>Least likes</MenuItem>
                 <MenuItem value={"DATE_DESC"}>Newest</MenuItem>
                 <MenuItem value={"DATE_ASC"}>Oldest</MenuItem>
               </Select>
@@ -261,7 +384,7 @@ console.log(likedPosts.includes())
                   margin: "10px",
                 }}
               >
-                {posts.map((post) => createFeedPost(post))}
+                {posts.map((post) => createFeedPost(post, userInfo))}
               </Grid>
             </div>
           </Container>
