@@ -99,17 +99,18 @@ export default function Main(props) {
   }, [sortBy]);
 
   useEffect(() => {
-    const userId = firebase.auth().currentUser.uid;
+    if (user.loggedIn && firebase.auth().currentUser?.uid) {
+      const userId = firebase.auth().currentUser.uid;
 
-    firebase
-      .firestore()
-      .collection("users")
-      .doc(userId)
-      .onSnapshot(function (doc) {
-        const user = doc.data();
-        setUserInfo(user);
-        console.log(`Received user information update`);
-      });
+      firebase
+        .firestore()
+        .collection("users")
+        .doc(userId)
+        .onSnapshot(function (doc) {
+          const user = doc.data();
+          setUserInfo(user);
+        });
+    }
   }, []);
 
   function handleFavorite(postId) {
@@ -316,9 +317,11 @@ export default function Main(props) {
                 }}
               >
                 <Tooltip title="Sign in to like posts" placement="bottom">
-                  <IconButton aria-label="like post" disabled>
-                    <LikeIcon />
-                  </IconButton>
+                  <span>
+                    <IconButton aria-label="like post" disabled>
+                      <LikeIcon />
+                    </IconButton>
+                  </span>
                 </Tooltip>
                 <Typography
                   className={classes.numberLabel}
@@ -328,9 +331,11 @@ export default function Main(props) {
                 </Typography>
 
                 <Tooltip title="Sign in to favorite posts" placement="bottom">
-                  <IconButton aria-label="add to favorites" disabled>
-                    <FavoriteIcon />
-                  </IconButton>
+                  <span>
+                    <IconButton aria-label="add to favorites" disabled>
+                      <FavoriteIcon />
+                    </IconButton>
+                  </span>
                 </Tooltip>
               </div>
             </CardActions>

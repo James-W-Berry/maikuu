@@ -6,6 +6,7 @@ import {
   MenuItem,
   Container,
   CssBaseline,
+  Button,
 } from "@material-ui/core";
 import colors from "../assets/colors";
 import { AnimatePresence, motion } from "framer-motion";
@@ -13,6 +14,7 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import firebase from "../firebase";
+import { NavLink } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -56,6 +58,11 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center",
     fontFamily: "BadScript",
   },
+  submit: {
+    backgroundColor: colors.maikuu0,
+    color: colors.maikuu4,
+    marginTop: "30px",
+  },
 }));
 
 export default function Profile(props) {
@@ -67,18 +74,18 @@ export default function Profile(props) {
   const [userInfo, setUserInfo] = useState({});
 
   useEffect(() => {
-    const userId = firebase.auth().currentUser.uid;
-
-    firebase
-      .firestore()
-      .collection("users")
-      .doc(userId)
-      .onSnapshot(function (doc) {
-        const user = doc.data();
-        setUserInfo(user);
-        console.log(`Received user information update`);
-      });
-  }, []);
+    if (user.loggedIn) {
+      const userId = firebase.auth().currentUser.uid;
+      firebase
+        .firestore()
+        .collection("users")
+        .doc(userId)
+        .onSnapshot(function (doc) {
+          const user = doc.data();
+          setUserInfo(user);
+        });
+    }
+  }, [user]);
 
   useEffect(() => {
     let retrievedLikes = [];
@@ -211,25 +218,56 @@ export default function Profile(props) {
                   <MenuItem value={"FAVORITES"}>Favorite Posts</MenuItem>
                   <MenuItem value={"LIKES"}>Liked Posts</MenuItem>
                 </Select>
+              </div>
 
-                <div className={classes.paper}>
-                  <Grid
-                    container
-                    spacing={2}
-                    style={{
-                      margin: "10px",
-                    }}
-                  >
-                    {collection === "FAVORITES"
-                      ? favorites.map((post) => createFeedPost(post))
-                      : likes.map((post) => createFeedPost(post))}
-                  </Grid>
-                </div>
+              <div className={classes.paper}>
+                <Grid
+                  container
+                  spacing={2}
+                  style={{
+                    margin: "10px",
+                  }}
+                >
+                  {collection === "FAVORITES"
+                    ? favorites.map((post) => createFeedPost(post))
+                    : likes.map((post) => createFeedPost(post))}
+                </Grid>
               </div>
             </Container>
           </div>
         ) : (
-          <span className={classes.title}>Sign in to view your Profile</span>
+          <div>
+            <Container component="main" xl={12} lg={12} md={12}>
+              <CssBaseline />
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Typography className={classes.heading}>
+                  Sign in to view your profile
+                </Typography>
+                <NavLink
+                  to="/signin"
+                  style={{
+                    color: colors.maikuu0,
+                    textDecoration: "none",
+                  }}
+                >
+                  <Button
+                    classes={{
+                      root: classes.submit,
+                    }}
+                  >
+                    <Typography>Sign In</Typography>
+                  </Button>
+                </NavLink>
+              </div>
+            </Container>
+          </div>
         )}
       </motion.div>
     </AnimatePresence>
