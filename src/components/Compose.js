@@ -52,7 +52,14 @@ export default function Compose(props) {
           <div>
             <Container component="main" xl={12} lg={12} md={12}>
               <CssBaseline />
-              <div style={{ marginTop: "10vh" }}>
+              <div
+                style={{
+                  marginTop: "10vh",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
                 <HaikuBuilder user={user} />
               </div>
             </Container>
