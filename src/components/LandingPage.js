@@ -12,7 +12,7 @@ import PuffLoader from "react-spinners/PuffLoader";
 import TextField from "@material-ui/core/TextField";
 import { Divider } from "@material-ui/core";
 import google from "../assets/google.png";
-import beach from "../assets/beach.mp4";
+import beach from "../assets/beach_noir.mp4";
 import colors from "../assets/colors";
 
 const useStyles = makeStyles((theme) => ({
