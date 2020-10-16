@@ -20,6 +20,8 @@ import LikeIcon from "@material-ui/icons/ThumbUp";
 import IconButton from "@material-ui/core/IconButton";
 import { AnimatePresence, motion } from "framer-motion";
 import { red, blue } from "@material-ui/core/colors";
+import VizSensor from "react-visibility-sensor";
+import PuffLoader from "react-spinners/PuffLoader";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -78,6 +80,8 @@ export default function Main(props) {
   const [posts, setPosts] = useState([]);
   const [userInfo, setUserInfo] = useState({});
   const user = props.user;
+  const [lastVisiblePost, setLastVisiblePost] = useState(null);
+  const [loadingMorePosts, setLoadingMorePosts] = useState(false);
 
   useEffect(() => {
     let retrievedPosts = [];
@@ -85,13 +89,16 @@ export default function Main(props) {
       .firestore()
       .collection("posts")
       .orderBy(SORT_OPTIONS[sortBy].column, SORT_OPTIONS[sortBy].direction)
-      .limit(10)
+      .limit(1)
       .get()
       .then(function (querySnapshot) {
         querySnapshot.forEach(function (doc) {
           retrievedPosts.push({ id: doc.id, ...doc.data() });
         });
-        setPosts(retrievedPosts);
+        let allPosts = posts.concat(retrievedPosts);
+        setPosts(allPosts);
+        let lastPost = querySnapshot.docs[querySnapshot.docs.length - 1];
+        setLastVisiblePost(lastPost);
       })
       .catch(function (error) {
         console.log("Error getting documents: ", error);
@@ -112,6 +119,39 @@ export default function Main(props) {
         });
     }
   }, []);
+
+  const retrieveMorePosts = () => {
+    console.log("retrieving more posts");
+    setLoadingMorePosts(true);
+    try {
+      setLoadingMorePosts(true);
+      let retrievedPosts = [];
+
+      firebase
+        .firestore()
+        .collection("posts")
+        .orderBy(SORT_OPTIONS[sortBy].column, SORT_OPTIONS[sortBy].direction)
+        .startAfter(lastVisiblePost)
+        .limit(1)
+        .get()
+        .then(function (querySnapshot) {
+          querySnapshot.forEach(function (doc) {
+            retrievedPosts.push({ id: doc.id, ...doc.data() });
+          });
+          let allPosts = posts.concat(retrievedPosts);
+          setPosts(allPosts);
+          let lastPost = querySnapshot.docs[querySnapshot.docs.length - 1];
+          setLastVisiblePost(lastPost);
+          setLoadingMorePosts(false);
+        })
+        .catch(function (error) {
+          console.log("Error getting documents: ", error);
+          setLoadingMorePosts(false);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   function handleFavorite(postId) {
     const userId = firebase.auth().currentUser.uid;
@@ -228,124 +268,268 @@ export default function Main(props) {
         lg={4}
         xl={4}
       >
-        <Card className={classes.root}>
-          <CardContent className={classes.root}>
-            <Typography
-              color="textSecondary"
-              gutterBottom
-              className={classes.post}
-            >
-              {post.title}
-            </Typography>
-            <Typography
-              gutterBottom
-              variant="h5"
-              component="h2"
-              className={classes.post}
-            >
-              {post.line_1}
-            </Typography>
-
-            <Typography
-              gutterBottom
-              variant="h5"
-              component="h2"
-              className={classes.post}
-            >
-              {post.line_2}
-            </Typography>
-
-            <Typography
-              gutterBottom
-              variant="h5"
-              component="h2"
-              className={classes.post}
-            >
-              {post.line_3}
-            </Typography>
-
-            <Typography className={classes.title} color="textSecondary">
-              {`-${post.author}`}
-            </Typography>
-          </CardContent>
-          {user?.loggedIn ? (
-            <CardActions>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "center",
+        <AnimatePresence>
+          <motion.div
+            key="success"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: [0.0, 1.0] }}
+            exit={{ opacity: 0 }}
+          >
+            {post.id === lastVisiblePost?.id ? (
+              <VizSensor
+                partialVisibility
+                onChange={(isVisible) => {
+                  if (isVisible) {
+                    retrieveMorePosts();
+                  }
                 }}
               >
-                <IconButton
-                  onClick={() => handleLike(post.id)}
-                  aria-label="like post"
-                >
-                  {userInfo.likes?.includes(post.id) ? (
-                    <LikeIcon style={{ color: blue[500] }} />
-                  ) : (
-                    <LikeIcon />
-                  )}
-                </IconButton>
-                <Typography
-                  className={classes.numberLabel}
-                  color="textSecondary"
-                >
-                  {post.likes}
-                </Typography>
-                <IconButton
-                  onClick={() => handleFavorite(post.id)}
-                  aria-label="add to favorites"
-                >
-                  {userInfo.favorites?.includes(post.id) ? (
-                    <FavoriteIcon style={{ color: red[500] }} />
-                  ) : (
-                    <FavoriteIcon />
-                  )}
-                </IconButton>
-              </div>
-            </CardActions>
-          ) : (
-            <CardActions>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <Tooltip title="Sign in to like posts" placement="bottom">
-                  <span>
-                    <IconButton aria-label="like post" disabled>
-                      <LikeIcon />
-                    </IconButton>
-                  </span>
-                </Tooltip>
-                <Typography
-                  className={classes.numberLabel}
-                  color="textSecondary"
-                >
-                  {post.likes}
-                </Typography>
+                <Card className={classes.root}>
+                  <CardContent className={classes.root}>
+                    <Typography
+                      color="textSecondary"
+                      gutterBottom
+                      className={classes.post}
+                    >
+                      {post.title}
+                    </Typography>
+                    <Typography
+                      gutterBottom
+                      variant="h5"
+                      component="h2"
+                      className={classes.post}
+                    >
+                      {post.line_1}
+                    </Typography>
 
-                <Tooltip title="Sign in to favorite posts" placement="bottom">
-                  <span>
-                    <IconButton aria-label="add to favorites" disabled>
-                      <FavoriteIcon />
-                    </IconButton>
-                  </span>
-                </Tooltip>
-              </div>
-            </CardActions>
-          )}
-        </Card>
+                    <Typography
+                      gutterBottom
+                      variant="h5"
+                      component="h2"
+                      className={classes.post}
+                    >
+                      {post.line_2}
+                    </Typography>
+
+                    <Typography
+                      gutterBottom
+                      variant="h5"
+                      component="h2"
+                      className={classes.post}
+                    >
+                      {post.line_3}
+                    </Typography>
+
+                    <Typography className={classes.title} color="textSecondary">
+                      {`-${post.author}`}
+                    </Typography>
+                  </CardContent>
+                  {user?.loggedIn ? (
+                    <CardActions>
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <IconButton
+                          onClick={() => handleLike(post.id)}
+                          aria-label="like post"
+                        >
+                          {userInfo.likes?.includes(post.id) ? (
+                            <LikeIcon style={{ color: blue[500] }} />
+                          ) : (
+                            <LikeIcon />
+                          )}
+                        </IconButton>
+                        <Typography
+                          className={classes.numberLabel}
+                          color="textSecondary"
+                        >
+                          {post.likes}
+                        </Typography>
+                        <IconButton
+                          onClick={() => handleFavorite(post.id)}
+                          aria-label="add to favorites"
+                        >
+                          {userInfo.favorites?.includes(post.id) ? (
+                            <FavoriteIcon style={{ color: red[500] }} />
+                          ) : (
+                            <FavoriteIcon />
+                          )}
+                        </IconButton>
+                      </div>
+                    </CardActions>
+                  ) : (
+                    <CardActions>
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <Tooltip
+                          title="Sign in to like posts"
+                          placement="bottom"
+                        >
+                          <span>
+                            <IconButton aria-label="like post" disabled>
+                              <LikeIcon />
+                            </IconButton>
+                          </span>
+                        </Tooltip>
+                        <Typography
+                          className={classes.numberLabel}
+                          color="textSecondary"
+                        >
+                          {post.likes}
+                        </Typography>
+
+                        <Tooltip
+                          title="Sign in to favorite posts"
+                          placement="bottom"
+                        >
+                          <span>
+                            <IconButton aria-label="add to favorites" disabled>
+                              <FavoriteIcon />
+                            </IconButton>
+                          </span>
+                        </Tooltip>
+                      </div>
+                    </CardActions>
+                  )}
+                </Card>
+              </VizSensor>
+            ) : (
+              <Card className={classes.root}>
+                <CardContent className={classes.root}>
+                  <Typography
+                    color="textSecondary"
+                    gutterBottom
+                    className={classes.post}
+                  >
+                    {post.title}
+                  </Typography>
+                  <Typography
+                    gutterBottom
+                    variant="h5"
+                    component="h2"
+                    className={classes.post}
+                  >
+                    {post.line_1}
+                  </Typography>
+
+                  <Typography
+                    gutterBottom
+                    variant="h5"
+                    component="h2"
+                    className={classes.post}
+                  >
+                    {post.line_2}
+                  </Typography>
+
+                  <Typography
+                    gutterBottom
+                    variant="h5"
+                    component="h2"
+                    className={classes.post}
+                  >
+                    {post.line_3}
+                  </Typography>
+
+                  <Typography className={classes.title} color="textSecondary">
+                    {`-${post.author}`}
+                  </Typography>
+                </CardContent>
+                {user?.loggedIn ? (
+                  <CardActions>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <IconButton
+                        onClick={() => handleLike(post.id)}
+                        aria-label="like post"
+                      >
+                        {userInfo.likes?.includes(post.id) ? (
+                          <LikeIcon style={{ color: blue[500] }} />
+                        ) : (
+                          <LikeIcon />
+                        )}
+                      </IconButton>
+                      <Typography
+                        className={classes.numberLabel}
+                        color="textSecondary"
+                      >
+                        {post.likes}
+                      </Typography>
+                      <IconButton
+                        onClick={() => handleFavorite(post.id)}
+                        aria-label="add to favorites"
+                      >
+                        {userInfo.favorites?.includes(post.id) ? (
+                          <FavoriteIcon style={{ color: red[500] }} />
+                        ) : (
+                          <FavoriteIcon />
+                        )}
+                      </IconButton>
+                    </div>
+                  </CardActions>
+                ) : (
+                  <CardActions>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <Tooltip title="Sign in to like posts" placement="bottom">
+                        <span>
+                          <IconButton aria-label="like post" disabled>
+                            <LikeIcon />
+                          </IconButton>
+                        </span>
+                      </Tooltip>
+                      <Typography
+                        className={classes.numberLabel}
+                        color="textSecondary"
+                      >
+                        {post.likes}
+                      </Typography>
+
+                      <Tooltip
+                        title="Sign in to favorite posts"
+                        placement="bottom"
+                      >
+                        <span>
+                          <IconButton aria-label="add to favorites" disabled>
+                            <FavoriteIcon />
+                          </IconButton>
+                        </span>
+                      </Tooltip>
+                    </div>
+                  </CardActions>
+                )}
+              </Card>
+            )}
+          </motion.div>
+        </AnimatePresence>
       </Grid>
     );
   }
 
   function handleSortBy(sortBy) {
+    setPosts([]);
     setSortBy(sortBy);
   }
 
@@ -390,6 +574,18 @@ export default function Main(props) {
                 }}
               >
                 {posts.map((post) => createFeedPost(post, userInfo))}
+                {loadingMorePosts && (
+                  <div
+                    style={{
+                      width: "100%",
+                      display: "flex",
+                      alignSelf: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <PuffLoader color={"#A0C4F2"} />
+                  </div>
+                )}
               </Grid>
             </div>
           </Container>

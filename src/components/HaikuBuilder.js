@@ -16,6 +16,7 @@ import checkAnim from "../assets/check-animation.json";
 import { NavLink } from "react-router-dom";
 import Lottie from "react-lottie";
 import Popover from "@material-ui/core/Popover";
+import { v4 as uuidv4 } from "uuid";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -148,6 +149,7 @@ export default function HaikuBuilder(props) {
       .collection("posts")
       .doc()
       .set({
+        id: uuidv4(),
         author: author,
         likes: 0,
         line_1: firstLine.value,
@@ -172,6 +174,7 @@ export default function HaikuBuilder(props) {
       .collection("posts")
       .doc()
       .set({
+        id: uuidv4(),
         author: author,
         likes: 0,
         line_1: firstLine.value,
