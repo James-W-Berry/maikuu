@@ -169,12 +169,13 @@ export default function HaikuBuilder(props) {
   const handleConfirmSubmit = () => {
     handleClose();
     let author = anon ? "anonymous" : user.displayName;
+    let id = uuidv4();
     firebase
       .firestore()
       .collection("posts")
-      .doc()
+      .doc(id)
       .set({
-        id: uuidv4(),
+        id: id,
         author: author,
         likes: 0,
         line_1: firstLine.value,
@@ -186,9 +187,29 @@ export default function HaikuBuilder(props) {
       .then(() => {
         setSuccess(true);
         setAnon(false);
+        addToAuthoredPosts(id);
       })
       .catch(function (error) {
         console.log("Error getting documents: ", error);
+      });
+  };
+
+  const addToAuthoredPosts = (postId) => {
+    const userId = firebase.auth().currentUser.uid;
+
+    firebase
+      .firestore()
+      .collection("users")
+      .doc(userId)
+      .set(
+        { authored: firebase.firestore.FieldValue.arrayUnion(postId) },
+        { merge: true }
+      )
+      .then(() => {
+        console.log(`Added ${postId} to authored posts`);
+      })
+      .catch((error) => {
+        console.log(`Error adding ${postId} to authored posts`);
       });
   };
 

@@ -72,6 +72,7 @@ export default function Profile(props) {
   const [favorites, setFavorites] = useState([]);
   const [likes, setLikes] = useState([]);
   const [userInfo, setUserInfo] = useState({});
+  const [authoredPosts, setAuthoredPosts] = useState([]);
 
   useEffect(() => {
     if (user.loggedIn) {
@@ -122,6 +123,26 @@ export default function Profile(props) {
               retrievedFavorites.push({ id: doc.id, ...doc.data() });
             });
             setFavorites(retrievedFavorites);
+          })
+          .catch(function (error) {
+            console.log("Error getting documents: ", error);
+          });
+      });
+    }
+    let retrievedAuthoredPosts = [];
+    if (userInfo.authored) {
+      userInfo.authored.forEach((authoredPost) => {
+        firebase
+          .firestore()
+          .collection("posts")
+          .where(firebase.firestore.FieldPath.documentId(), "==", authoredPost)
+          .limit(5)
+          .get()
+          .then(function (querySnapshot) {
+            querySnapshot.forEach(function (doc) {
+              retrievedAuthoredPosts.push({ id: doc.id, ...doc.data() });
+            });
+            setAuthoredPosts(retrievedAuthoredPosts);
           })
           .catch(function (error) {
             console.log("Error getting documents: ", error);
@@ -217,6 +238,7 @@ export default function Profile(props) {
                 >
                   <MenuItem value={"FAVORITES"}>Favorite Posts</MenuItem>
                   <MenuItem value={"LIKES"}>Liked Posts</MenuItem>
+                  <MenuItem value={"AUTHORED"}>Your Posts</MenuItem>
                 </Select>
               </div>
 
@@ -228,9 +250,12 @@ export default function Profile(props) {
                     margin: "10px",
                   }}
                 >
-                  {collection === "FAVORITES"
-                    ? favorites.map((post) => createFeedPost(post))
-                    : likes.map((post) => createFeedPost(post))}
+                  {collection === "FAVORITES" &&
+                    favorites.map((post) => createFeedPost(post))}
+                  {collection === "LIKES" &&
+                    likes.map((post) => createFeedPost(post))}
+                  {collection === "AUTHORED" &&
+                    authoredPosts.map((post) => createFeedPost(post))}
                 </Grid>
               </div>
             </Container>
