@@ -34,6 +34,12 @@ const useStyles = makeStyles((theme) => ({
     color: colors.maikuu4,
     marginTop: "30px",
   },
+  signin: {
+    backgroundColor: colors.maikuu0,
+    color: colors.maikuu4,
+    marginTop: "10px",
+    marginBottom: "20px",
+  },
 }));
 
 export default function Compose(props) {
@@ -43,6 +49,7 @@ export default function Compose(props) {
   return (
     <AnimatePresence>
       <motion.div
+        style={{ marginBottom: "60px", marginTop: "10px" }}
         key="success"
         initial={{ opacity: 0 }}
         animate={{ opacity: [0.0, 1.0] }}
@@ -54,7 +61,6 @@ export default function Compose(props) {
               <CssBaseline />
               <div
                 style={{
-                  marginTop: "10vh",
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
@@ -74,6 +80,7 @@ export default function Compose(props) {
                   flexDirection: "column",
                   justifyContent: "center",
                   alignItems: "center",
+                  height: "70vh",
                 }}
               >
                 <Typography className={classes.heading}>
@@ -88,7 +95,7 @@ export default function Compose(props) {
                 >
                   <Button
                     classes={{
-                      root: classes.submit,
+                      root: classes.signin,
                     }}
                   >
                     <Typography>Sign In</Typography>

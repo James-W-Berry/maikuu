@@ -10,7 +10,7 @@ import PuffLoader from "react-spinners/PuffLoader";
 import firebase from "../firebase";
 import "firebase/auth";
 import { NavLink } from "react-router-dom";
-import beach from "../assets/beach.mp4";
+import beach from "../assets/beach_noir.mp4";
 import colors from "../assets/colors";
 
 const useStyles = makeStyles((theme) => ({
@@ -113,7 +113,6 @@ export default function ForgottenPassword() {
     <div
       style={{
         backgroundColor: colors.maikuu4,
-        marginTop: "-60px",
       }}
     >
       <video

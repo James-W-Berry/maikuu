@@ -162,7 +162,6 @@ export default function LandingPage(props) {
     <div
       style={{
         backgroundColor: colors.maikuu4,
-        marginTop: "-60px",
       }}
     >
       <video

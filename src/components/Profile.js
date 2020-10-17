@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   makeStyles,
   Grid,
@@ -14,7 +14,8 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import firebase from "../firebase";
-import { NavLink } from "react-router-dom";
+import { NavLink, useHistory } from "react-router-dom";
+import LogInOutIcon from "@material-ui/icons/ExitToApp";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -69,13 +70,23 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     backgroundColor: colors.maikuu0,
     color: colors.maikuu4,
-    marginTop: "30px",
+    marginTop: "10px",
+    marginBottom: "20px",
   },
   media: {
     // ⚠️ object-fit is not supported by IE 11.
     objectFit: "cover",
   },
 }));
+
+function logout(history) {
+  firebase
+    .auth()
+    .signOut()
+    .then(() => {
+      history.push("/signin");
+    });
+}
 
 export default function Profile(props) {
   const classes = useStyles();
@@ -85,6 +96,7 @@ export default function Profile(props) {
   const [likes, setLikes] = useState([]);
   const [userInfo, setUserInfo] = useState({});
   const [authoredPosts, setAuthoredPosts] = useState([]);
+  const history = useHistory();
 
   useEffect(() => {
     if (user.loggedIn) {
@@ -102,7 +114,7 @@ export default function Profile(props) {
 
   useEffect(() => {
     let retrievedLikes = [];
-    if (userInfo.likes) {
+    if (userInfo?.likes) {
       userInfo.likes.forEach((likedPost) => {
         firebase
           .firestore()
@@ -121,7 +133,7 @@ export default function Profile(props) {
       });
     }
     let retrievedFavorites = [];
-    if (userInfo.favorites) {
+    if (userInfo?.favorites) {
       userInfo.favorites.forEach((favoritePost) => {
         firebase
           .firestore()
@@ -141,7 +153,7 @@ export default function Profile(props) {
     }
 
     let retrievedAuthoredPosts = [];
-    if (userInfo.authored) {
+    if (userInfo?.authored) {
       userInfo.authored.forEach((authoredPost) => {
         firebase
           .firestore()
@@ -160,6 +172,10 @@ export default function Profile(props) {
       });
     }
   }, [userInfo]);
+
+  const requestLogout = useCallback(() => {
+    logout(history);
+  }, []);
 
   function createFeedPost(post) {
     return (
@@ -238,6 +254,7 @@ export default function Profile(props) {
   return (
     <AnimatePresence>
       <motion.div
+        style={{ marginBottom: "60px", marginTop: "10px" }}
         key="success"
         initial={{ opacity: 0 }}
         animate={{ opacity: [0.0, 1.0] }}
@@ -248,8 +265,53 @@ export default function Profile(props) {
             <Container component="main" xl={12} lg={12} md={12}>
               <CssBaseline />
               <Typography className={classes.heading}>
-                {user.displayName}
+                {user.displayName ? user.displayName : userInfo.displayName}
               </Typography>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                {user?.loggedIn ? (
+                  <NavLink
+                    to="/signin"
+                    style={{
+                      color: colors.maikuu0,
+                      textDecoration: "none",
+                    }}
+                  >
+                    <Button
+                      variant="contained"
+                      className={classes.submit}
+                      endIcon={<LogInOutIcon />}
+                      onClick={() => {
+                        requestLogout();
+                      }}
+                    >
+                      Logout
+                    </Button>
+                  </NavLink>
+                ) : (
+                  <NavLink
+                    to="/signin"
+                    style={{
+                      color: colors.maikuu0,
+                      textDecoration: "none",
+                    }}
+                  >
+                    <Button
+                      variant="contained"
+                      className={classes.submit}
+                      endIcon={<LogInOutIcon />}
+                    >
+                      Login
+                    </Button>
+                  </NavLink>
+                )}
+              </div>
+
               <div
                 style={{
                   display: "flex",
@@ -297,6 +359,7 @@ export default function Profile(props) {
                   flexDirection: "column",
                   justifyContent: "center",
                   alignItems: "center",
+                  height: "70vh",
                 }}
               >
                 <Typography className={classes.heading}>

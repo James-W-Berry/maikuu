@@ -11,7 +11,7 @@ import firebase from "../firebase";
 import "firebase/auth";
 import { NavLink } from "react-router-dom";
 import randomName from "human-readable-ids";
-import beach from "../assets/beach.mp4";
+import beach from "../assets/beach_noir.mp4";
 import colors from "../assets/colors";
 
 const useStyles = makeStyles((theme) => ({
@@ -87,7 +87,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function SignUp() {
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useState(randomName.hri.random());
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -95,6 +95,7 @@ export default function SignUp() {
   const [failureMessage, setFailureMessage] = useState("");
   const classes = useStyles();
   const [logoSrc, setLogoSrc] = useState(logo);
+  const [success, setSuccess] = useState(false);
 
   function onSignUp(username, email, password) {
     setIsLoading(true);
@@ -110,14 +111,14 @@ export default function SignUp() {
           .doc(userId)
           .set({
             displayName: username,
-            displayNameVisible: false,
-            group: "ETVOvDEqnWL9I7fURN3D",
           })
           .catch(function (error) {
             console.log(error);
           });
 
         console.log("sign up successful");
+        setIsLoading(false);
+        setSuccess(true);
       })
       .catch(function (error) {
         var errorMessage = error.message;
@@ -131,7 +132,6 @@ export default function SignUp() {
     <div
       style={{
         backgroundColor: colors.maikuu4,
-        marginTop: "-60px",
       }}
     >
       <video
@@ -175,74 +175,78 @@ export default function SignUp() {
           <Typography className={classes.heading} component="h1" variant="h5">
             Sign up
           </Typography>
+
           <form className={classes.form} noValidate>
-            <Grid container spacing={2}>
-              <Grid
-                item
-                xs={12}
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  padding: "0px",
-                  zIndex: "1",
-                }}
-              >
-                <TextField
-                  className={classes.textInput}
-                  InputProps={{
-                    className: classes.input,
+            {!success && (
+              <Grid container spacing={2}>
+                <Grid
+                  item
+                  xs={12}
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    padding: "0px",
+                    zIndex: "1",
                   }}
-                  margin="normal"
-                  required
-                  fullWidth
-                  autoFocus
-                  name="userName"
-                  type="username"
-                  id="userName"
-                  label="User name"
-                  defaultValue={randomName.hri.random()}
-                  onChange={(event) => {
-                    setUsername(event.target.value);
-                  }}
-                />
-                <TextField
-                  className={classes.textInput}
-                  InputProps={{
-                    className: classes.input,
-                  }}
-                  margin="normal"
-                  required
-                  fullWidth
-                  name="email"
-                  label="Email Address"
-                  type="email"
-                  id="email"
-                  autoComplete="email"
-                  onChange={(event) => {
-                    setEmail(event.target.value);
-                  }}
-                />
-                <TextField
-                  className={classes.textInput}
-                  InputProps={{
-                    className: classes.input,
-                  }}
-                  margin="normal"
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="current-password"
-                  onChange={(event) => {
-                    setPassword(event.target.value);
-                  }}
-                />
+                >
+                  <TextField
+                    className={classes.textInput}
+                    InputProps={{
+                      className: classes.input,
+                    }}
+                    margin="normal"
+                    required
+                    fullWidth
+                    autoFocus
+                    name="userName"
+                    type="username"
+                    id="userName"
+                    label="User name"
+                    defaultValue={username}
+                    onChange={(event) => {
+                      setUsername(event.target.value);
+                    }}
+                  />
+                  <TextField
+                    className={classes.textInput}
+                    InputProps={{
+                      className: classes.input,
+                    }}
+                    margin="normal"
+                    required
+                    fullWidth
+                    name="email"
+                    label="Email Address"
+                    type="email"
+                    id="email"
+                    autoComplete="email"
+                    onChange={(event) => {
+                      setEmail(event.target.value);
+                    }}
+                  />
+                  <TextField
+                    className={classes.textInput}
+                    InputProps={{
+                      className: classes.input,
+                    }}
+                    margin="normal"
+                    required
+                    fullWidth
+                    name="password"
+                    label="Password"
+                    type="password"
+                    id="password"
+                    autoComplete="current-password"
+                    onChange={(event) => {
+                      setPassword(event.target.value);
+                    }}
+                  />
+                </Grid>
               </Grid>
-            </Grid>
+            )}
+
             {failure && (
               <div
                 className={classes.loader}
@@ -286,6 +290,24 @@ export default function SignUp() {
               >
                 Sign Up
               </Button>
+            )}
+            {success && (
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Typography
+                  className={classes.heading}
+                  style={{ color: "#f7f7f5" }}
+                  component="h1"
+                  variant="body2"
+                >
+                  Sign up successful!
+                </Typography>
+              </div>
             )}
           </form>
         </div>

@@ -11,14 +11,38 @@ import LandingPage from "./components/LandingPage";
 import ForgottenPassword from "./components/ForgottenPassword";
 import PuffLoader from "react-spinners/PuffLoader";
 import { motion } from "framer-motion";
-import beach from "./assets/beach.mp4";
 import Banner from "./components/Banner";
 import colors from "./assets/colors";
+import { Divider, Typography } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
+  },
+  title: {
+    fontFamily: "BadScript",
+    color: colors.maikuu0s,
+    fontSize: "30px",
+    textAlign: "center",
+  },
+  appbar: {
+    background: colors.maikuu0,
+  },
+}));
 
 function onAuthStateChange(callback) {
   firebase.auth().onAuthStateChanged((user) => {
     if (user) {
-      callback({ loggedIn: true, email: user.email, isLoading: false, displayName: user.displayName });
+      callback({
+        loggedIn: true,
+        email: user.email,
+        isLoading: false,
+        displayName: user.displayName,
+      });
     } else {
       callback({ loggedIn: false, isLoading: false });
     }
@@ -27,6 +51,7 @@ function onAuthStateChange(callback) {
 
 function App() {
   const [user, setUser] = useState({ loggedIn: false, isLoading: true });
+  const classes = useStyles();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChange(setUser);
@@ -40,8 +65,27 @@ function App() {
       render={({ location }) => (
         <div style={{ display: "flex", flexDirection: "column" }}>
           {location.pathname.match("signin|signup|forgotpassword") == null ? (
-            <Banner user={user} />
+            <div>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  width: "100vw",
+                }}
+              >
+                <Typography
+                  style={{ alignSelf: "center", flex: "auto" }}
+                  variant="h6"
+                  className={classes.title}
+                >
+                  Maikuu
+                </Typography>
+              </div>
+
+              <Divider variant="middle" />
+            </div>
           ) : null}
+
           <motion.div
             id="content"
             key={location.pathname}
@@ -49,7 +93,6 @@ function App() {
               opacity: [0.9, 1.0],
             }}
             transition={{ duration: 1 }}
-            style={{ marginTop: "60px" }}
           >
             <Switch location={location}>
               <Route path="/feed" render={() => <Feed user={user} />} />
@@ -64,6 +107,9 @@ function App() {
               <Redirect to="/feed" />
             </Switch>
           </motion.div>
+          {location.pathname.match("signin|signup|forgotpassword") == null ? (
+            <Banner user={user} />
+          ) : null}
         </div>
       )}
     />

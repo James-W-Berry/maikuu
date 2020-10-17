@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TextField from "@material-ui/core/TextField";
 import syllable from "syllable";
 import {
@@ -154,6 +154,22 @@ export default function HaikuBuilder(props) {
   const [isUploading, setIsUploading] = useState(false);
   const [isPreviewVisible, setIsPreviewVisible] = useState(false);
   const [backgroundImage, setBackgroundImage] = useState("");
+  const [userInfo, setUserInfo] = useState({});
+  const [calculatedAuthor, setCalculatedAuthor] = useState();
+
+  useEffect(() => {
+    if (user.loggedIn) {
+      const userId = firebase.auth().currentUser.uid;
+      firebase
+        .firestore()
+        .collection("users")
+        .doc(userId)
+        .onSnapshot(function (doc) {
+          const user = doc.data();
+          setUserInfo(user);
+        });
+    }
+  }, [user]);
 
   const handleClick = (event) => {
     if (firstLine.value && secondLine.value && thirdLine.value && title.value) {
@@ -235,7 +251,17 @@ export default function HaikuBuilder(props) {
   async function handleSubmit() {
     setIsUploading(true);
     let id = uuidv4();
-    let author = anon ? "anonymous" : user.displayName;
+    let author;
+
+    if (anon) {
+      author = "anonymous";
+    } else if (user.displayName) {
+      author = user.displayName;
+    } else if (userInfo.displayName) {
+      author = userInfo.displayName;
+    } else {
+      author = "unknown";
+    }
 
     let imageUrl = await uploadPic(id);
 
@@ -268,8 +294,18 @@ export default function HaikuBuilder(props) {
   async function handleConfirmSubmit() {
     handleClose();
     setIsUploading(true);
-    let author = anon ? "anonymous" : user.displayName;
     let id = uuidv4();
+    let author;
+
+    if (anon) {
+      author = "anonymous";
+    } else if (user.displayName) {
+      author = user.displayName;
+    } else if (userInfo.displayName) {
+      author = userInfo.displayName;
+    } else {
+      author = "unknown";
+    }
 
     let imageUrl = await uploadPic(id);
 
@@ -347,412 +383,416 @@ export default function HaikuBuilder(props) {
 
   if (!success && !isUploading) {
     return (
-      <AnimatePresence>
-        <motion.div
-          key="not_submitted"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1.0 }}
-          transition={{ duration: 1.0 }}
-          exit={{ opacity: 0 }}
+      <div>
+        <Modal
+          style={{
+            width: "100vw",
+            height: "100vh",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+          open={isPreviewVisible}
+          onClose={closePreview}
+          aria-labelledby="preview"
+          aria-describedby="preview of haiku"
         >
-          <Modal
+          <div
             style={{
-              width: "100vw",
-              height: "100vh",
+              backgroundColor: colors.maikuu5,
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
+              alignSelf: "center",
             }}
-            open={isPreviewVisible}
-            onClose={closePreview}
-            aria-labelledby="preview"
-            aria-describedby="preview of haiku"
+          >
+            <Card
+              className={classes.root}
+              style={{
+                backgroundImage: backgroundImage,
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "center center",
+                backgroundSize: "cover",
+              }}
+            >
+              <CardContent className={classes.content}>
+                <Typography
+                  color="textSecondary"
+                  gutterBottom
+                  className={classes.post}
+                >
+                  {title.value}
+                </Typography>
+                <Typography
+                  gutterBottom
+                  variant="h5"
+                  component="h2"
+                  className={classes.post}
+                >
+                  {firstLine.value}
+                </Typography>
+
+                <Typography
+                  gutterBottom
+                  variant="h5"
+                  component="h2"
+                  className={classes.post}
+                >
+                  {secondLine.value}
+                </Typography>
+
+                <Typography
+                  gutterBottom
+                  variant="h5"
+                  component="h2"
+                  className={classes.post}
+                >
+                  {thirdLine.value}
+                </Typography>
+
+                <Typography
+                  className={classes.previewTitle}
+                  color="textSecondary"
+                >
+                  -{calculatedAuthor}
+                </Typography>
+              </CardContent>
+            </Card>
+          </div>
+        </Modal>
+        <div id="haiku-builder">
+          <form
+            onSubmit={(event) => {
+              event.preventDefault();
+            }}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "auto",
+              width: "90vw",
+            }}
           >
             <div
               style={{
-                backgroundColor: colors.maikuu5,
                 display: "flex",
+                flexDirection: "row",
+                width: "fitContent",
                 justifyContent: "center",
                 alignItems: "center",
-                alignSelf: "center",
               }}
             >
-              <Card
-                className={classes.root}
-                style={{
-                  backgroundImage: backgroundImage,
-                  backgroundRepeat: "no-repeat",
-                  backgroundPosition: "center center",
-                  backgroundSize: "cover",
+              <TextField
+                className={classes.title}
+                margin="normal"
+                required
+                name="title"
+                type="text"
+                id="title"
+                helperText="Title"
+                inputProps={{
+                  autoComplete: "off",
                 }}
-              >
-                <CardContent className={classes.content}>
-                  <Typography
-                    color="textSecondary"
-                    gutterBottom
-                    className={classes.post}
-                  >
-                    {title.value}
-                  </Typography>
-                  <Typography
-                    gutterBottom
-                    variant="h5"
-                    component="h2"
-                    className={classes.post}
-                  >
-                    {firstLine.value}
-                  </Typography>
-
-                  <Typography
-                    gutterBottom
-                    variant="h5"
-                    component="h2"
-                    className={classes.post}
-                  >
-                    {secondLine.value}
-                  </Typography>
-
-                  <Typography
-                    gutterBottom
-                    variant="h5"
-                    component="h2"
-                    className={classes.post}
-                  >
-                    {thirdLine.value}
-                  </Typography>
-
-                  <Typography
-                    className={classes.previewTitle}
-                    color="textSecondary"
-                  >
-                    {`-${anon ? "anonymous" : user.displayName}`}
-                  </Typography>
-                </CardContent>
-              </Card>
+                value={title.value}
+                onChange={(event) => {
+                  setTitle({ value: event.target.value });
+                }}
+              />
             </div>
-          </Modal>
-          <div id="haiku-builder">
-            <form
-              onSubmit={(event) => {
-                event.preventDefault();
-              }}
+            <div
               style={{
                 display: "flex",
-                flexDirection: "column",
+                flexDirection: "row",
+                width: "100%",
                 justifyContent: "center",
                 alignItems: "center",
-                height: "auto",
-                width: "90vw",
+              }}
+            >
+              <TextField
+                className={classes.fiveLine}
+                margin="normal"
+                required
+                name="line-1"
+                type="text"
+                id="line-1"
+                helperText={`${firstLine.syllables}/5 syllable line`}
+                inputProps={{
+                  autoComplete: "off",
+                }}
+                value={firstLine.value}
+                onChange={(event) => {
+                  let syllables = syllable(event.target.value);
+                  if (syllables !== 5) {
+                    setFirstLine({
+                      value: event.target.value,
+                      syllables: syllables,
+                      valid: false,
+                    });
+                  } else {
+                    setFirstLine({
+                      value: event.target.value,
+                      syllables: syllables,
+                      valid: true,
+                    });
+                  }
+                }}
+              />
+            </div>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                width: "100%",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <TextField
+                className={classes.sevenLine}
+                margin="normal"
+                required
+                name="line-2"
+                type="text"
+                id="line-2"
+                helperText={`${secondLine.syllables}/7 syllable line`}
+                inputProps={{
+                  autoComplete: "off",
+                }}
+                value={secondLine.value}
+                onChange={(event) => {
+                  let syllables = syllable(event.target.value);
+                  if (syllables !== 7) {
+                    setSecondLine({
+                      value: event.target.value,
+                      syllables: syllables,
+                      valid: false,
+                    });
+                  } else {
+                    setSecondLine({
+                      value: event.target.value,
+                      syllables: syllables,
+                      valid: true,
+                    });
+                  }
+                }}
+              />
+            </div>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                width: "100%",
+                justifyContent: "center",
+                alignItems: "center",
+                marginBottom: "40px",
+              }}
+            >
+              <TextField
+                className={classes.fiveLine}
+                margin="normal"
+                required
+                name="line-3"
+                type="text"
+                id="line-3"
+                helperText={`${thirdLine.syllables}/5 syllable line`}
+                inputProps={{
+                  autoComplete: "off",
+                }}
+                value={thirdLine.value}
+                onChange={(event) => {
+                  let syllables = syllable(event.target.value);
+                  if (syllables !== 5) {
+                    setThirdLine({
+                      value: event.target.value,
+                      syllables: syllables,
+                      valid: false,
+                    });
+                  } else {
+                    setThirdLine({
+                      value: event.target.value,
+                      syllables: syllables,
+                      valid: true,
+                    });
+                  }
+                }}
+              />
+            </div>
+
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-evenly",
+                alignItems: "center",
+                width: "80%",
+              }}
+            >
+              <FormControlLabel
+                control={
+                  <AnonCheckbox
+                    checked={anon}
+                    onChange={(event) => {
+                      setAnon(!anon);
+                    }}
+                    name="checkedG"
+                  />
+                }
+                label="Post Anonymously"
+              />
+
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  flexDirection: "row",
+                }}
+              >
+                <input
+                  accept="image/*"
+                  className={classes.input}
+                  id="image-input"
+                  type="file"
+                  style={{
+                    display: "none",
+                  }}
+                  onChange={(e) => {
+                    if (e.target.files[0]) {
+                      setImage(e.target.files[0]);
+                      updatePrevieImage(e.target.files[0]);
+                    }
+                  }}
+                />
+                {image === "" ? (
+                  <label
+                    for="image-input"
+                    style={{
+                      cursor: "pointer",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      flexDirection: "row",
+                    }}
+                  >
+                    <ImageIcon style={{ color: colors.maikuu0 }} />
+                    <Typography style={{ marginLeft: "10px" }}>
+                      Add image
+                    </Typography>
+                  </label>
+                ) : (
+                  <label
+                    for="image-input"
+                    style={{
+                      cursor: "pointer",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      flexDirection: "row",
+                    }}
+                  >
+                    <img
+                      width="100px"
+                      height="100px"
+                      style={{ borderRadius: "5px" }}
+                      src={URL.createObjectURL(image)}
+                      alt="post"
+                    />
+                    <Typography style={{ marginLeft: "10px" }}>
+                      Add image
+                    </Typography>
+                  </label>
+                )}
+              </div>
+            </div>
+
+            <Button
+              id="preview-button"
+              aria-describedby={id}
+              classes={{
+                root: classes.submit,
+                disabled: classes.disabledSubmit,
+              }}
+              style={{ width: "20%" }}
+              onClick={(event) => {
+                let author;
+
+                if (anon) {
+                  author = "anonymous";
+                } else if (user.displayName) {
+                  author = user.displayName;
+                } else if (userInfo.displayName) {
+                  author = userInfo.displayName;
+                } else {
+                  author = "unknown";
+                }
+                setCalculatedAuthor(author);
+                setIsPreviewVisible(true);
+              }}
+            >
+              <Typography>Preview</Typography>
+            </Button>
+
+            <Button
+              id="post-button"
+              type="submit"
+              aria-describedby={id}
+              classes={{
+                root: classes.submit,
+                disabled: classes.disabledSubmit,
+              }}
+              style={{ width: "30%", marginBottom: "20px" }}
+              onClick={(event) => {
+                if (firstLine.valid && secondLine.valid && thirdLine.valid) {
+                  handleSubmit();
+                } else {
+                  handleClick(event);
+                }
+              }}
+            >
+              <Typography>Post</Typography>
+            </Button>
+
+            <Popover
+              id={id}
+              open={open}
+              anchorEl={anchorEl}
+              onClose={handleClose}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "center",
+              }}
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "center",
               }}
             >
               <div
                 style={{
                   display: "flex",
-                  flexDirection: "row",
-                  width: "fitContent",
+                  flexDirection: "column",
                   justifyContent: "center",
                   alignItems: "center",
+                  padding: "10px",
                 }}
               >
-                <TextField
-                  className={classes.title}
-                  margin="normal"
-                  required
-                  name="title"
-                  type="text"
-                  id="title"
-                  helperText="Title"
-                  inputProps={{
-                    autoComplete: "off",
-                  }}
-                  value={title.value}
-                  onChange={(event) => {
-                    setTitle({ value: event.target.value });
-                  }}
-                />
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  width: "100%",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <TextField
-                  className={classes.fiveLine}
-                  margin="normal"
-                  required
-                  name="line-1"
-                  type="text"
-                  id="line-1"
-                  helperText={`${firstLine.syllables}/5 syllable line`}
-                  inputProps={{
-                    autoComplete: "off",
-                  }}
-                  value={firstLine.value}
-                  onChange={(event) => {
-                    let syllables = syllable(event.target.value);
-                    if (syllables !== 5) {
-                      setFirstLine({
-                        value: event.target.value,
-                        syllables: syllables,
-                        valid: false,
-                      });
-                    } else {
-                      setFirstLine({
-                        value: event.target.value,
-                        syllables: syllables,
-                        valid: true,
-                      });
-                    }
-                  }}
-                />
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  width: "100%",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <TextField
-                  className={classes.sevenLine}
-                  margin="normal"
-                  required
-                  name="line-2"
-                  type="text"
-                  id="line-2"
-                  helperText={`${secondLine.syllables}/7 syllable line`}
-                  inputProps={{
-                    autoComplete: "off",
-                  }}
-                  value={secondLine.value}
-                  onChange={(event) => {
-                    let syllables = syllable(event.target.value);
-                    if (syllables !== 7) {
-                      setSecondLine({
-                        value: event.target.value,
-                        syllables: syllables,
-                        valid: false,
-                      });
-                    } else {
-                      setSecondLine({
-                        value: event.target.value,
-                        syllables: syllables,
-                        valid: true,
-                      });
-                    }
-                  }}
-                />
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  width: "100%",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  marginBottom: "40px",
-                }}
-              >
-                <TextField
-                  className={classes.fiveLine}
-                  margin="normal"
-                  required
-                  name="line-3"
-                  type="text"
-                  id="line-3"
-                  helperText={`${thirdLine.syllables}/5 syllable line`}
-                  inputProps={{
-                    autoComplete: "off",
-                  }}
-                  value={thirdLine.value}
-                  onChange={(event) => {
-                    let syllables = syllable(event.target.value);
-                    if (syllables !== 5) {
-                      setThirdLine({
-                        value: event.target.value,
-                        syllables: syllables,
-                        valid: false,
-                      });
-                    } else {
-                      setThirdLine({
-                        value: event.target.value,
-                        syllables: syllables,
-                        valid: true,
-                      });
-                    }
-                  }}
-                />
-              </div>
+                <Typography className={classes.typography}>
+                  {`Post Haiku with irregular syllable count? (${firstLine.syllables}, ${secondLine.syllables}, ${thirdLine.syllables})`}
+                </Typography>
 
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-evenly",
-                  alignItems: "center",
-                  width: "80%",
-                }}
-              >
-                <FormControlLabel
-                  control={
-                    <AnonCheckbox
-                      checked={anon}
-                      onChange={(event) => {
-                        setAnon(!anon);
-                      }}
-                      name="checkedG"
-                    />
-                  }
-                  label="Post Anonymously"
-                />
-
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    flexDirection: "row",
+                <Button
+                  classes={{
+                    root: classes.submit,
                   }}
+                  onClick={handleConfirmSubmit}
                 >
-                  <input
-                    accept="image/*"
-                    className={classes.input}
-                    id="image-input"
-                    type="file"
-                    style={{
-                      display: "none",
-                    }}
-                    onChange={(e) => {
-                      if (e.target.files[0]) {
-                        setImage(e.target.files[0]);
-                        updatePrevieImage(e.target.files[0]);
-                      }
-                    }}
-                  />
-                  {image === "" ? (
-                    <label
-                      for="image-input"
-                      style={{
-                        cursor: "pointer",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        flexDirection: "row",
-                      }}
-                    >
-                      <ImageIcon style={{ color: colors.maikuu0 }} />
-                      <Typography style={{ marginLeft: "10px" }}>
-                        Add image
-                      </Typography>
-                    </label>
-                  ) : (
-                    <label
-                      for="image-input"
-                      style={{
-                        cursor: "pointer",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        flexDirection: "row",
-                      }}
-                    >
-                      <img
-                        width="100px"
-                        height="100px"
-                        style={{ borderRadius: "5px" }}
-                        src={URL.createObjectURL(image)}
-                        alt="post"
-                      />
-                      <Typography style={{ marginLeft: "10px" }}>
-                        Add image
-                      </Typography>
-                    </label>
-                  )}
-                </div>
+                  <Typography>Confirm</Typography>
+                </Button>
               </div>
-
-              <Button
-                id="preview-button"
-                aria-describedby={id}
-                classes={{
-                  root: classes.submit,
-                  disabled: classes.disabledSubmit,
-                }}
-                style={{ width: "20%" }}
-                onClick={(event) => {
-                  setIsPreviewVisible(true);
-                }}
-              >
-                <Typography>Preview</Typography>
-              </Button>
-
-              <Button
-                id="post-button"
-                type="submit"
-                aria-describedby={id}
-                classes={{
-                  root: classes.submit,
-                  disabled: classes.disabledSubmit,
-                }}
-                style={{ width: "30%" }}
-                onClick={(event) => {
-                  if (firstLine.valid && secondLine.valid && thirdLine.valid) {
-                    handleSubmit();
-                  } else {
-                    handleClick(event);
-                  }
-                }}
-              >
-                <Typography>Post</Typography>
-              </Button>
-
-              <Popover
-                id={id}
-                open={open}
-                anchorEl={anchorEl}
-                onClose={handleClose}
-                anchorOrigin={{
-                  vertical: "bottom",
-                  horizontal: "center",
-                }}
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "center",
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    padding: "10px",
-                  }}
-                >
-                  <Typography className={classes.typography}>
-                    {`Post Haiku with irregular syllable count? (${firstLine.syllables}, ${secondLine.syllables}, ${thirdLine.syllables})`}
-                  </Typography>
-
-                  <Button
-                    classes={{
-                      root: classes.submit,
-                    }}
-                    onClick={handleConfirmSubmit}
-                  >
-                    <Typography>Confirm</Typography>
-                  </Button>
-                </div>
-              </Popover>
-            </form>
-          </div>
-        </motion.div>
-      </AnimatePresence>
+            </Popover>
+          </form>
+        </div>
+      </div>
     );
   }
 
