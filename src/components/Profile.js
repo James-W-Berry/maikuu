@@ -23,6 +23,14 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     justifyContent: "center",
   },
+  content: {
+    backgroundColor: "rgba(255, 255, 255, 0.7)",
+    width: "100%",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+  },
   gridTile: {
     width: "fitContent",
     height: "100% !important",
@@ -63,12 +71,16 @@ const useStyles = makeStyles((theme) => ({
     color: colors.maikuu4,
     marginTop: "30px",
   },
+  media: {
+    // ⚠️ object-fit is not supported by IE 11.
+    objectFit: "cover",
+  },
 }));
 
 export default function Profile(props) {
   const classes = useStyles();
   const user = props.user;
-  const [collection, setCollection] = useState("FAVORITES");
+  const [collection, setCollection] = useState("LIKES");
   const [favorites, setFavorites] = useState([]);
   const [likes, setLikes] = useState([]);
   const [userInfo, setUserInfo] = useState({});
@@ -96,7 +108,6 @@ export default function Profile(props) {
           .firestore()
           .collection("posts")
           .where(firebase.firestore.FieldPath.documentId(), "==", likedPost)
-          .limit(10)
           .get()
           .then(function (querySnapshot) {
             querySnapshot.forEach(function (doc) {
@@ -116,7 +127,6 @@ export default function Profile(props) {
           .firestore()
           .collection("posts")
           .where(firebase.firestore.FieldPath.documentId(), "==", favoritePost)
-          .limit(10)
           .get()
           .then(function (querySnapshot) {
             querySnapshot.forEach(function (doc) {
@@ -129,6 +139,7 @@ export default function Profile(props) {
           });
       });
     }
+
     let retrievedAuthoredPosts = [];
     if (userInfo.authored) {
       userInfo.authored.forEach((authoredPost) => {
@@ -136,7 +147,6 @@ export default function Profile(props) {
           .firestore()
           .collection("posts")
           .where(firebase.firestore.FieldPath.documentId(), "==", authoredPost)
-          .limit(5)
           .get()
           .then(function (querySnapshot) {
             querySnapshot.forEach(function (doc) {
@@ -163,47 +173,64 @@ export default function Profile(props) {
         lg={4}
         xl={4}
       >
-        <Card className={classes.root}>
-          <CardContent className={classes.root}>
-            <Typography
-              color="textSecondary"
-              gutterBottom
-              className={classes.post}
+        <AnimatePresence>
+          <motion.div
+            key="success"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: [0.0, 1.0] }}
+            exit={{ opacity: 0 }}
+          >
+            <Card
+              className={classes.root}
+              style={{
+                backgroundImage: `url(${post.image})`,
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "center center",
+                backgroundSize: "cover",
+              }}
             >
-              {post.title}
-            </Typography>
-            <Typography
-              gutterBottom
-              variant="h5"
-              component="h2"
-              className={classes.post}
-            >
-              {post.line_1}
-            </Typography>
+              <CardContent className={classes.content}>
+                <Typography
+                  color="textSecondary"
+                  gutterBottom
+                  className={classes.post}
+                >
+                  {post.title}
+                </Typography>
+                <Typography
+                  gutterBottom
+                  variant="h5"
+                  component="h2"
+                  className={classes.post}
+                >
+                  {post.line_1}
+                </Typography>
 
-            <Typography
-              gutterBottom
-              variant="h5"
-              component="h2"
-              className={classes.post}
-            >
-              {post.line_2}
-            </Typography>
+                <Typography
+                  gutterBottom
+                  variant="h5"
+                  component="h2"
+                  className={classes.post}
+                >
+                  {post.line_2}
+                </Typography>
 
-            <Typography
-              gutterBottom
-              variant="h5"
-              component="h2"
-              className={classes.post}
-            >
-              {post.line_3}
-            </Typography>
+                <Typography
+                  gutterBottom
+                  variant="h5"
+                  component="h2"
+                  className={classes.post}
+                >
+                  {post.line_3}
+                </Typography>
 
-            <Typography className={classes.title} color="textSecondary">
-              {`-${post.author}`}
-            </Typography>
-          </CardContent>
-        </Card>
+                <Typography className={classes.title} color="textSecondary">
+                  {`-${post.author}`}
+                </Typography>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </AnimatePresence>
       </Grid>
     );
   }

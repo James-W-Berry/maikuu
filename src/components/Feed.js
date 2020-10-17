@@ -29,6 +29,21 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
+    "& .MuiCardActions-root": {
+      backgroundColor: "rgba(255, 255, 255, 0.7)",
+      width: "100%",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+  },
+  content: {
+    backgroundColor: "rgba(255, 255, 255, 0.7)",
+    width: "100%",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
   },
   gridTile: {
     width: "fitContent",
@@ -284,8 +299,16 @@ export default function Main(props) {
                   }
                 }}
               >
-                <Card className={classes.root}>
-                  <CardContent className={classes.root}>
+                <Card
+                  className={classes.root}
+                  style={{
+                    backgroundImage: `url(${post.image})`,
+                    backgroundRepeat: "no-repeat",
+                    backgroundPosition: "center center",
+                    backgroundSize: "cover",
+                  }}
+                >
+                  <CardContent className={classes.content}>
                     <Typography
                       color="textSecondary"
                       gutterBottom
@@ -405,8 +428,16 @@ export default function Main(props) {
                 </Card>
               </VizSensor>
             ) : (
-              <Card className={classes.root}>
-                <CardContent className={classes.root}>
+              <Card
+                className={classes.root}
+                style={{
+                  backgroundImage: `url(${post.image})`,
+                  backgroundRepeat: "no-repeat",
+                  backgroundPosition: "center center",
+                  backgroundSize: "cover",
+                }}
+              >
+                <CardContent className={classes.content}>
                   <Typography
                     color="textSecondary"
                     gutterBottom
