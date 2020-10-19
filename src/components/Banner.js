@@ -42,6 +42,7 @@ export default function Banner(props) {
   return (
     <div className="root">
       <BottomNavigation
+        style={{ justifyContent: "space-evenly" }}
         value={value}
         onChange={(event, newValue) => {
           setValue(newValue);

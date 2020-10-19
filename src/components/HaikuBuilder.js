@@ -736,7 +736,7 @@ export default function HaikuBuilder(props) {
             <Button
               id="post-button"
               type="submit"
-              aria-describedby={id}
+              s
               classes={{
                 root: classes.submit,
                 disabled: classes.disabledSubmit,

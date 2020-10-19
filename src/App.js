@@ -71,6 +71,7 @@ function App() {
                   display: "flex",
                   flexDirection: "row",
                   width: "100vw",
+                  marginTop: "10px",
                 }}
               >
                 <Typography

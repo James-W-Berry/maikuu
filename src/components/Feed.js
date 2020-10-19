@@ -7,6 +7,7 @@ import {
   Tooltip,
   MenuItem,
   Select,
+  Popover,
 } from "@material-ui/core";
 import colors from "../assets/colors";
 import firebase from "../firebase";
@@ -17,11 +18,28 @@ import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import LikeIcon from "@material-ui/icons/ThumbUp";
+import ShareIcon from "@material-ui/icons/Share";
 import IconButton from "@material-ui/core/IconButton";
 import { AnimatePresence, motion } from "framer-motion";
 import { red, blue } from "@material-ui/core/colors";
 import VizSensor from "react-visibility-sensor";
 import PuffLoader from "react-spinners/PuffLoader";
+import {
+  FacebookShareButton,
+  FacebookIcon,
+  PinterestShareButton,
+  PinterestIcon,
+  RedditShareButton,
+  RedditIcon,
+  TumblrShareButton,
+  TumblrIcon,
+  TwitterShareButton,
+  TwitterIcon,
+  WhatsappShareButton,
+  WhatsappIcon,
+  FacebookMessengerIcon,
+  FacebookMessengerShareButton,
+} from "react-share";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -97,6 +115,12 @@ export default function Main(props) {
   const user = props.user;
   const [lastVisiblePost, setLastVisiblePost] = useState(null);
   const [loadingMorePosts, setLoadingMorePosts] = useState(false);
+  const shareUrl = "http://maikuu.app";
+  const shareTitle = "Maikuu";
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const [selectedShare, setSelectedShare] = useState(null);
+  const id = open ? `share-${selectedShare}` : undefined;
 
   useEffect(() => {
     let retrievedPosts = [];
@@ -134,6 +158,10 @@ export default function Main(props) {
         });
     }
   }, []);
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   const retrieveMorePosts = () => {
     console.log("retrieving more posts");
@@ -271,6 +299,11 @@ export default function Main(props) {
     }
   }
 
+  function handleShare(postId, event) {
+    setAnchorEl(event.currentTarget);
+    setSelectedShare(postId);
+  }
+
   function createFeedPost(post, userInfo) {
     return (
       <Grid
@@ -383,6 +416,14 @@ export default function Main(props) {
                             <FavoriteIcon />
                           )}
                         </IconButton>
+                        <IconButton
+                          id={id}
+                          aria-describedby={id}
+                          onClick={(event) => handleShare(post.id, event)}
+                          aria-label="share"
+                        >
+                          <ShareIcon />
+                        </IconButton>
                       </div>
                     </CardActions>
                   ) : (
@@ -419,6 +460,20 @@ export default function Main(props) {
                           <span>
                             <IconButton aria-label="add to favorites" disabled>
                               <FavoriteIcon />
+                            </IconButton>
+                          </span>
+                        </Tooltip>
+
+                        <Tooltip
+                          title="Sign in to share posts"
+                          placement="bottom"
+                        >
+                          <span>
+                            <IconButton
+                              onClick={() => handleShare(post.id)}
+                              aria-label="share"
+                            >
+                              <ShareIcon />
                             </IconButton>
                           </span>
                         </Tooltip>
@@ -511,6 +566,14 @@ export default function Main(props) {
                         ) : (
                           <FavoriteIcon />
                         )}
+                      </IconButton>
+                      <IconButton
+                        id={id}
+                        aria-describedby={id}
+                        onClick={(event) => handleShare(post.id, event)}
+                        aria-label="share"
+                      >
+                        <ShareIcon />
                       </IconButton>
                     </div>
                   </CardActions>
@@ -605,6 +668,80 @@ export default function Main(props) {
                   margin: "10px",
                 }}
               >
+                <Popover
+                  id={id}
+                  open={open}
+                  anchorEl={anchorEl}
+                  onClose={handleClose}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "center",
+                  }}
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "center",
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <FacebookShareButton
+                      url={shareUrl}
+                      quote={shareTitle}
+                      className="facebook-share-button"
+                    >
+                      <FacebookIcon size={32} round />
+                    </FacebookShareButton>
+
+                    <FacebookMessengerShareButton
+                      url={shareUrl}
+                      appId="521270401588372"
+                      className="fb-messenger-share-button"
+                    >
+                      <FacebookMessengerIcon size={32} round />
+                    </FacebookMessengerShareButton>
+
+                    <TwitterShareButton
+                      url={shareUrl}
+                      title={shareTitle}
+                      className="twitter-share-button"
+                    >
+                      <TwitterIcon size={32} round />
+                    </TwitterShareButton>
+
+                    <WhatsappShareButton
+                      url={shareUrl}
+                      title={shareTitle}
+                      separator=":: "
+                      className="whatsapp-share-button"
+                    >
+                      <WhatsappIcon size={32} round />
+                    </WhatsappShareButton>
+
+                    <RedditShareButton
+                      url={shareUrl}
+                      title={shareTitle}
+                      windowWidth={660}
+                      windowHeight={460}
+                      className="reddit-share-button"
+                    >
+                      <RedditIcon size={32} round />
+                    </RedditShareButton>
+
+                    <TumblrShareButton
+                      url={shareUrl}
+                      title={shareTitle}
+                      className="tumblr-share-button"
+                    >
+                      <TumblrIcon size={32} round />
+                    </TumblrShareButton>
+                  </div>
+                </Popover>
                 {posts.map((post) => createFeedPost(post, userInfo))}
                 {loadingMorePosts && (
                   <div

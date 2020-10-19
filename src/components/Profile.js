@@ -7,6 +7,9 @@ import {
   Container,
   CssBaseline,
   Button,
+  CardActions,
+  IconButton,
+  Popover,
 } from "@material-ui/core";
 import colors from "../assets/colors";
 import { AnimatePresence, motion } from "framer-motion";
@@ -16,6 +19,26 @@ import Typography from "@material-ui/core/Typography";
 import firebase from "../firebase";
 import { NavLink, useHistory } from "react-router-dom";
 import LogInOutIcon from "@material-ui/icons/ExitToApp";
+import FavoriteIcon from "@material-ui/icons/Favorite";
+import LikeIcon from "@material-ui/icons/ThumbUp";
+import ShareIcon from "@material-ui/icons/Share";
+import { red, blue } from "@material-ui/core/colors";
+import {
+  FacebookShareButton,
+  FacebookIcon,
+  PinterestShareButton,
+  PinterestIcon,
+  RedditShareButton,
+  RedditIcon,
+  TumblrShareButton,
+  TumblrIcon,
+  TwitterShareButton,
+  TwitterIcon,
+  WhatsappShareButton,
+  WhatsappIcon,
+  FacebookMessengerIcon,
+  FacebookMessengerShareButton,
+} from "react-share";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -23,6 +46,13 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
+    "& .MuiCardActions-root": {
+      backgroundColor: "rgba(255, 255, 255, 0.7)",
+      width: "100%",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+    },
   },
   content: {
     backgroundColor: "rgba(255, 255, 255, 0.7)",
@@ -97,6 +127,12 @@ export default function Profile(props) {
   const [userInfo, setUserInfo] = useState({});
   const [authoredPosts, setAuthoredPosts] = useState([]);
   const history = useHistory();
+  const shareUrl = "http://maikuu.app";
+  const shareTitle = "Maikuu";
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const [selectedShare, setSelectedShare] = useState(null);
+  const id = open ? `share-${selectedShare}` : undefined;
 
   useEffect(() => {
     if (user.loggedIn) {
@@ -173,9 +209,121 @@ export default function Profile(props) {
     }
   }, [userInfo]);
 
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   const requestLogout = useCallback(() => {
     logout(history);
   }, []);
+
+  function handleFavorite(postId) {
+    const userId = firebase.auth().currentUser.uid;
+    if (userInfo.favorites?.includes(postId)) {
+      // remove from favorites
+      firebase
+        .firestore()
+        .collection("users")
+        .doc(userId)
+        .set(
+          {
+            favorites: firebase.firestore.FieldValue.arrayRemove(postId),
+          },
+          { merge: true }
+        )
+        .then(() => {
+          console.log(`Removed ${postId} from favorite posts`);
+        })
+        .catch(function (error) {
+          console.log(`Error removing ${postId} from favorite posts: `, error);
+        });
+    } else {
+      // add to favorites
+      firebase
+        .firestore()
+        .collection("users")
+        .doc(userId)
+        .set(
+          {
+            favorites: firebase.firestore.FieldValue.arrayUnion(postId),
+          },
+          { merge: true }
+        )
+        .then(() => {
+          console.log(`Added ${postId} to favorite posts`);
+        })
+        .catch(function (error) {
+          console.log(`Error adding ${postId} to favorite posts: `, error);
+        });
+    }
+  }
+
+  function handleLike(postId) {
+    const userId = firebase.auth().currentUser.uid;
+
+    if (userInfo.likes?.includes(postId)) {
+      // remove from liked posts
+      firebase
+        .firestore()
+        .collection("users")
+        .doc(userId)
+        .set(
+          { likes: firebase.firestore.FieldValue.arrayRemove(postId) },
+          { merge: true }
+        )
+        .then(() => {
+          console.log(`Removed ${postId} from liked posts`);
+        })
+        .catch((error) => {
+          console.log(`Error removing ${postId} from liked posts`);
+        });
+
+      firebase
+        .firestore()
+        .collection("posts")
+        .doc(postId)
+        .update({ likes: firebase.firestore.FieldValue.increment(-1) })
+        .then(() => {
+          console.log(`Decremented ${postId} likes`);
+        })
+        .catch((error) => {
+          console.log(`Error decrementing ${postId} likes`);
+        });
+    } else {
+      // add to liked posts
+      firebase
+        .firestore()
+        .collection("users")
+        .doc(userId)
+        .set(
+          { likes: firebase.firestore.FieldValue.arrayUnion(postId) },
+          { merge: true }
+        )
+        .then(() => {
+          console.log(`Added ${postId} to liked posts`);
+        })
+        .catch((error) => {
+          console.log(`Error adding ${postId} to liked posts`);
+        });
+
+      firebase
+        .firestore()
+        .collection("posts")
+        .doc(postId)
+        .update({ likes: firebase.firestore.FieldValue.increment(1) })
+        .then(() => {
+          console.log(`Incremented ${postId} likeds`);
+        })
+        .catch((error) => {
+          console.log(`Error incrementing ${postId} likes`);
+        });
+    }
+  }
+
+  function handleShare(postId, event) {
+    setAnchorEl(event.currentTarget);
+    setSelectedShare(postId);
+  }
 
   function createFeedPost(post) {
     return (
@@ -244,6 +392,51 @@ export default function Profile(props) {
                   {`-${post.author}`}
                 </Typography>
               </CardContent>
+              <CardActions>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <IconButton
+                    onClick={() => handleLike(post.id)}
+                    aria-label="like post"
+                  >
+                    {userInfo.likes?.includes(post.id) ? (
+                      <LikeIcon style={{ color: blue[500] }} />
+                    ) : (
+                      <LikeIcon />
+                    )}
+                  </IconButton>
+                  <Typography
+                    className={classes.numberLabel}
+                    color="textSecondary"
+                  >
+                    {post.likes}
+                  </Typography>
+                  <IconButton
+                    onClick={() => handleFavorite(post.id)}
+                    aria-label="add to favorites"
+                  >
+                    {userInfo.favorites?.includes(post.id) ? (
+                      <FavoriteIcon style={{ color: red[500] }} />
+                    ) : (
+                      <FavoriteIcon />
+                    )}
+                  </IconButton>
+                  <IconButton
+                    id={id}
+                    aria-describedby={id}
+                    onClick={(event) => handleShare(post.id, event)}
+                    aria-label="share"
+                  >
+                    <ShareIcon />
+                  </IconButton>
+                </div>
+              </CardActions>
             </Card>
           </motion.div>
         </AnimatePresence>
@@ -339,6 +532,88 @@ export default function Profile(props) {
                     margin: "10px",
                   }}
                 >
+                  <Popover
+                    id={id}
+                    open={open}
+                    anchorEl={anchorEl}
+                    onClose={handleClose}
+                    anchorOrigin={{
+                      vertical: "bottom",
+                      horizontal: "center",
+                    }}
+                    transformOrigin={{
+                      vertical: "top",
+                      horizontal: "center",
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <FacebookShareButton
+                        url={shareUrl}
+                        quote={shareTitle}
+                        className="facebook-share-button"
+                      >
+                        <FacebookIcon size={32} round />
+                      </FacebookShareButton>
+
+                      <FacebookMessengerShareButton
+                        url={shareUrl}
+                        appId="521270401588372"
+                        className="fb-messenger-share-button"
+                      >
+                        <FacebookMessengerIcon size={32} round />
+                      </FacebookMessengerShareButton>
+
+                      <TwitterShareButton
+                        url={shareUrl}
+                        title={shareTitle}
+                        className="twitter-share-button"
+                      >
+                        <TwitterIcon size={32} round />
+                      </TwitterShareButton>
+
+                      <WhatsappShareButton
+                        url={shareUrl}
+                        title={shareTitle}
+                        separator=":: "
+                        className="whatsapp-share-button"
+                      >
+                        <WhatsappIcon size={32} round />
+                      </WhatsappShareButton>
+
+                      {/* <PinterestShareButton
+                        url={String(window.location)}
+                        media={`${String(window.location)}/${post.image}`}
+                        className="Demo__some-network__share-button"
+                      >
+                        <PinterestIcon size={32} round />
+                      </PinterestShareButton> */}
+
+                      <RedditShareButton
+                        url={shareUrl}
+                        title={shareTitle}
+                        windowWidth={660}
+                        windowHeight={460}
+                        className="reddit-share-button"
+                      >
+                        <RedditIcon size={32} round />
+                      </RedditShareButton>
+
+                      <TumblrShareButton
+                        url={shareUrl}
+                        title={shareTitle}
+                        className="tumblr-share-button"
+                      >
+                        <TumblrIcon size={32} round />
+                      </TumblrShareButton>
+                    </div>
+                  </Popover>
                   {collection === "FAVORITES" &&
                     favorites.map((post) => createFeedPost(post))}
                   {collection === "LIKES" &&
