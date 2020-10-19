@@ -653,8 +653,8 @@ export default function Main(props) {
                 value={sortBy}
                 onChange={(event) => handleSortBy(event.target.value)}
               >
-                <MenuItem value={"LIKES_DESC"}>Most likes</MenuItem>
-                <MenuItem value={"LIKES_ASC"}>Least likes</MenuItem>
+                <MenuItem value={"LIKES_DESC"}>Likes more-less</MenuItem>
+                <MenuItem value={"LIKES_ASC"}>Likes less-more</MenuItem>
                 <MenuItem value={"DATE_DESC"}>Newest</MenuItem>
                 <MenuItem value={"DATE_ASC"}>Oldest</MenuItem>
               </Select>

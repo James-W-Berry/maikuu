@@ -105,6 +105,7 @@ export default function LandingPage(props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [videoLoading, setVideoLoading] = useState(true);
   const [failure, setFailure] = useState(false);
   const user = props.user;
   const classes = useStyles();
@@ -182,260 +183,291 @@ export default function LandingPage(props) {
         id="beach"
         src={beach}
         type="video/mp4"
+        onLoadStart={() => {
+          console.log("loading video");
+          setVideoLoading(true);
+        }}
+        onLoadedData={() => {
+          console.log("finished loading video");
+          setVideoLoading(false);
+        }}
       />
-      <div className={classes.container}>
-        <div className={classes.paper}>
-          <Grid
-            container
-            spacing={5}
+      {videoLoading ? (
+        <div
+          style={{
+            backgroundColor: colors.maikuu5,
+            width: "100vw",
+            height: "100vh",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <div
+            className={classes.loader}
             style={{
-              height: "100vh",
-              width: "100vw",
-              padding: "0px",
-              margin: "0px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
             }}
           >
+            <PuffLoader color={"#A0C4F2"} />
+          </div>
+        </div>
+      ) : (
+        <div className={classes.container}>
+          <div className={classes.paper}>
             <Grid
-              item
-              xl={6}
-              lg={6}
-              md={6}
-              s={12}
-              xs={12}
-              style={{ padding: "0px" }}
-            >
-              <div
-                style={{
-                  flex: "1",
-                  display: "flex",
-                  padding: "0px",
-                  zIndex: "1",
-                  width: "100%",
-                  height: "100%",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <NavLink
-                  style={{
-                    textDecoration: "none",
-                  }}
-                  to="/feed"
-                >
-                  <Typography
-                    className={classes.title}
-                    style={{
-                      width: "100%",
-                      padding: "0px",
-                      top: "40%",
-                      zIndex: "3",
-                      textAlign: "center",
-                      userSelect: "none",
-                    }}
-                  >
-                    Maikuu
-                  </Typography>
-                </NavLink>
-              </div>
-            </Grid>
-
-            <Grid
-              item
-              xl={6}
-              lg={6}
-              md={6}
-              s={12}
-              xs={12}
+              container
+              spacing={5}
               style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
+                height: "100vh",
+                width: "100vw",
                 padding: "0px",
-                zIndex: "1",
+                margin: "0px",
               }}
             >
-              <form className={classes.form} noValidate>
-                <TextField
-                  className={classes.textInput}
-                  InputProps={{
-                    className: classes.input,
+              <Grid
+                item
+                xl={6}
+                lg={6}
+                md={6}
+                s={12}
+                xs={12}
+                style={{ padding: "0px" }}
+              >
+                <div
+                  style={{
+                    flex: "1",
+                    display: "flex",
+                    padding: "0px",
+                    zIndex: "1",
+                    width: "100%",
+                    height: "100%",
+                    alignItems: "center",
+                    justifyContent: "center",
                   }}
-                  margin="normal"
-                  required
-                  fullWidth
-                  name="email"
-                  label="Email"
-                  type="email"
-                  id="email"
-                  autoComplete="email"
-                  onChange={(event) => {
-                    setEmail(event.target.value);
-                  }}
-                />
-                <TextField
-                  className={classes.textInput}
-                  margin="normal"
-                  required
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="current-password"
-                  InputProps={{
-                    className: classes.input,
-                  }}
-                  onChange={(event) => {
-                    setPassword(event.target.value);
-                  }}
-                />
-                {failure && (
-                  <div
-                    className={classes.loader}
+                >
+                  <NavLink
                     style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
+                      textDecoration: "none",
                     }}
+                    to="/feed"
                   >
                     <Typography
-                      className={classes.heading}
-                      style={{ color: "#f2f2eb" }}
-                      component="h1"
-                      variant="body2"
-                    >
-                      {`Incorrect email or password, please try again`}
-                    </Typography>
-                  </div>
-                )}
-                {isLoading ? (
-                  <div
-                    className={classes.loader}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <PuffLoader color={"#A0C4F2"} />
-                  </div>
-                ) : (
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      //justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Button
-                      type="submit"
-                      variant="contained"
-                      color="primary"
-                      className={classes.submit}
-                      style={{ marginTop: "20px" }}
-                      onClick={() => {
-                        onSignIn(email, password);
-                      }}
-                    >
-                      Sign In
-                    </Button>
-
-                    <Typography className={classes.text}>or</Typography>
-
-                    <Button
-                      type="submit"
-                      variant="contained"
-                      color="primary"
-                      className={classes.googleSubmit}
+                      className={classes.title}
                       style={{
+                        width: "100%",
                         padding: "0px",
-                        marginTop: "0px",
-                        margin: "0px",
-                      }}
-                      onClick={() => {
-                        onGoogleSignIn();
+                        top: "40%",
+                        zIndex: "3",
+                        textAlign: "center",
+                        userSelect: "none",
                       }}
                     >
-                      <img
-                        src={google}
-                        width="100%"
-                        alt="Sign in with Google"
-                      />
-                    </Button>
-                  </div>
-                )}
-              </form>
-
-              <Divider
-                variant="middle"
-                classes={{ root: classes.divider }}
-                style={{
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              />
+                      Maikuu
+                    </Typography>
+                  </NavLink>
+                </div>
+              </Grid>
 
               <Grid
-                container
+                item
+                xl={6}
+                lg={6}
+                md={6}
+                s={12}
+                xs={12}
                 style={{
                   display: "flex",
                   flexDirection: "column",
                   justifyContent: "center",
                   alignItems: "center",
-                  marginTop: "30px",
+                  padding: "0px",
                   zIndex: "1",
                 }}
               >
-                <Grid item xs>
-                  <NavLink
-                    className={classes.text}
-                    style={{
-                      textDecoration: "none",
+                <form className={classes.form} noValidate>
+                  <TextField
+                    className={classes.textInput}
+                    InputProps={{
+                      className: classes.input,
                     }}
-                    to="/forgotpassword"
-                  >
-                    Forgot password?
-                  </NavLink>
-                </Grid>
-                <Grid item xs>
-                  <NavLink
-                    className={classes.text}
-                    style={{
-                      textDecoration: "none",
+                    margin="normal"
+                    required
+                    fullWidth
+                    name="email"
+                    label="Email"
+                    type="email"
+                    id="email"
+                    autoComplete="email"
+                    onChange={(event) => {
+                      setEmail(event.target.value);
                     }}
-                    to="/signup"
-                  >
-                    {"Don't have an account? Sign Up"}
-                  </NavLink>
-                </Grid>
+                  />
+                  <TextField
+                    className={classes.textInput}
+                    margin="normal"
+                    required
+                    name="password"
+                    label="Password"
+                    type="password"
+                    id="password"
+                    autoComplete="current-password"
+                    InputProps={{
+                      className: classes.input,
+                    }}
+                    onChange={(event) => {
+                      setPassword(event.target.value);
+                    }}
+                  />
+                  {failure && (
+                    <div
+                      className={classes.loader}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <Typography
+                        className={classes.heading}
+                        style={{ color: "#f2f2eb" }}
+                        component="h1"
+                        variant="body2"
+                      >
+                        {`Incorrect email or password, please try again`}
+                      </Typography>
+                    </div>
+                  )}
+                  {isLoading ? (
+                    <div
+                      className={classes.loader}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <PuffLoader color={"#A0C4F2"} />
+                    </div>
+                  ) : (
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        className={classes.submit}
+                        style={{ marginTop: "20px" }}
+                        onClick={() => {
+                          onSignIn(email, password);
+                        }}
+                      >
+                        Sign In
+                      </Button>
 
-                <Box style={{ marginTop: "100px" }} mt={5}>
-                  <Typography
-                    variant="body2"
-                    style={{ fontFamily: "AvenirNext", color: "#f7f7f5" }}
-                    align="center"
-                  >
-                    {"Copyright © "}
-                    <Link
+                      <Typography className={classes.text}>or</Typography>
+
+                      <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        className={classes.googleSubmit}
+                        style={{
+                          padding: "0px",
+                          marginTop: "0px",
+                          margin: "0px",
+                        }}
+                        onClick={() => {
+                          onGoogleSignIn();
+                        }}
+                      >
+                        <img
+                          src={google}
+                          width="100%"
+                          alt="Sign in with Google"
+                        />
+                      </Button>
+                    </div>
+                  )}
+                </form>
+
+                <Divider
+                  variant="middle"
+                  classes={{ root: classes.divider }}
+                  style={{
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                />
+
+                <Grid
+                  container
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    marginTop: "30px",
+                    zIndex: "1",
+                  }}
+                >
+                  <Grid item xs>
+                    <NavLink
                       className={classes.text}
                       style={{
                         textDecoration: "none",
-                        fontFamily: "BadScript",
                       }}
-                      href="https://www.maikuu.app"
+                      to="/forgotpassword"
                     >
-                      Maikuu
-                    </Link>{" "}
-                    {new Date().getFullYear()}
-                    {"."}
-                  </Typography>
-                </Box>
+                      Forgot password?
+                    </NavLink>
+                  </Grid>
+                  <Grid item xs>
+                    <NavLink
+                      className={classes.text}
+                      style={{
+                        textDecoration: "none",
+                      }}
+                      to="/signup"
+                    >
+                      {"Don't have an account? Sign Up"}
+                    </NavLink>
+                  </Grid>
+
+                  <Box style={{ marginTop: "100px" }} mt={5}>
+                    <Typography
+                      variant="body2"
+                      style={{ fontFamily: "AvenirNext", color: "#f7f7f5" }}
+                      align="center"
+                    >
+                      {"Copyright © "}
+                      <Link
+                        className={classes.text}
+                        style={{
+                          textDecoration: "none",
+                          fontFamily: "BadScript",
+                        }}
+                        href="https://www.maikuu.app"
+                      >
+                        Maikuu
+                      </Link>{" "}
+                      {new Date().getFullYear()}
+                      {"."}
+                    </Typography>
+                  </Box>
+                </Grid>
               </Grid>
             </Grid>
-          </Grid>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
