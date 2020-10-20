@@ -1,9 +1,7 @@
-import React, { useState, useCallback } from "react";
+import React, { useState } from "react";
 import colors from "../assets/colors";
 import { makeStyles } from "@material-ui/core/styles";
-import { NavLink, useHistory } from "react-router-dom";
-import { Tooltip } from "@material-ui/core";
-import firebase from "../firebase";
+import { useHistory } from "react-router-dom";
 import ClearAllIcon from "@material-ui/icons/ClearAll";
 import CreateIcon from "@material-ui/icons/Create";
 import BottomNavigation from "@material-ui/core/BottomNavigation";
@@ -34,9 +32,21 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const useNavStyles = makeStyles((theme) => ({
+  selected: {
+    "& .MuiBottomNavigationAction-label": {
+      color: colors.maikuu0,
+    },
+    "& .MuiSvgIcon-root": {
+      color: colors.maikuu0,
+    },
+  },
+}));
+
 export default function Banner(props) {
   const classes = useStyles();
-  const user = props.user;
+  const navClasses = useNavStyles();
+  const history = useHistory();
   const [value, setValue] = useState(0);
 
   return (
@@ -44,41 +54,42 @@ export default function Banner(props) {
       <BottomNavigation
         style={{ justifyContent: "space-evenly" }}
         value={value}
-        onChange={(event, newValue) => {
-          setValue(newValue);
-        }}
         showLabels
         className={classes.stickToBottom}
       >
-        <NavLink
-          to="/feed"
-          style={{
-            textDecoration: "none",
-            color: colors.maikuu0,
+        <BottomNavigationAction
+          showLabel
+          label="Feed"
+          classes={navClasses}
+          onClick={() => {
+            setValue(0);
+            history.push("/feed");
           }}
-        >
-          <BottomNavigationAction label="Feed" icon={<ClearAllIcon />} />
-        </NavLink>
+          icon={<ClearAllIcon />}
+        />
 
-        <NavLink
-          to="/compose"
-          style={{
-            textDecoration: "none",
-            color: colors.maikuu0,
+        <BottomNavigationAction
+          showLabel
+          classes={navClasses}
+          label="Compose"
+          onClick={() => {
+            setValue(1);
+            history.push("/compose");
           }}
-        >
-          <BottomNavigationAction label="Compose" icon={<CreateIcon />} />
-        </NavLink>
+          icon={<CreateIcon />}
+        />
 
-        <NavLink
-          to="/profile"
-          style={{
-            textDecoration: "none",
-            color: colors.maikuu0,
+        <BottomNavigationAction
+          showLabel
+          classes={navClasses}
+          label="Profile"
+          onClick={() => {
+            setValue(2);
+            console.log(value);
+            history.push("/profile");
           }}
-        >
-          <BottomNavigationAction label="Profile" icon={<ProfileIcon />} />
-        </NavLink>
+          icon={<ProfileIcon />}
+        />
       </BottomNavigation>
     </div>
   );

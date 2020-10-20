@@ -40,6 +40,8 @@ import {
   FacebookMessengerIcon,
   FacebookMessengerShareButton,
 } from "react-share";
+import Highlight from "./Highlight";
+import logo from "../assets/logo_blue.png";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -70,7 +72,7 @@ const useStyles = makeStyles((theme) => ({
   paper: {
     display: "flex",
     flexDirection: "column",
-    alignItems: "center",
+    //alignItems: "center",
     background: colors.maikuu5,
   },
   title: {
@@ -302,6 +304,39 @@ export default function Main(props) {
   function handleShare(postId, event) {
     setAnchorEl(event.currentTarget);
     setSelectedShare(postId);
+  }
+
+  function createHighlight() {
+    let random = Math.floor(Math.random() * Math.floor(posts.length));
+
+    return (
+      <Grid
+        key="highlight"
+        // className={classes.gridTile}
+        style={{
+          display: "flex",
+          justifyContent: "flex-start",
+          alignItems: "center",
+        }}
+        item
+        xs={12}
+        sm={12}
+        md={8}
+        lg={8}
+        xl={8}
+      >
+        <AnimatePresence>
+          <motion.div
+            key="success"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: [0.0, 1.0] }}
+            exit={{ opacity: 0 }}
+          >
+            <Highlight post={posts[random]} />
+          </motion.div>
+        </AnimatePresence>
+      </Grid>
+    );
   }
 
   function createFeedPost(post, userInfo) {
@@ -639,35 +674,65 @@ export default function Main(props) {
         <div>
           <Container component="main" xl={12} lg={12} md={12}>
             <CssBaseline />
-            <Typography className={classes.heading}>Feed</Typography>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Select
-                labelId="select-label"
-                id="select"
-                value={sortBy}
-                onChange={(event) => handleSortBy(event.target.value)}
-              >
-                <MenuItem value={"LIKES_DESC"}>Likes more-less</MenuItem>
-                <MenuItem value={"LIKES_ASC"}>Likes less-more</MenuItem>
-                <MenuItem value={"DATE_DESC"}>Newest</MenuItem>
-                <MenuItem value={"DATE_ASC"}>Oldest</MenuItem>
-              </Select>
-            </div>
 
             <div className={classes.paper}>
-              <Grid
-                container
-                spacing={2}
+              <Grid container spacing={2}>
+                {createHighlight()}
+                <Grid
+                  key="highlight"
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                  item
+                  xs={0}
+                  sm={0}
+                  md={4}
+                  lg={4}
+                  xl={4}
+                >
+                  <AnimatePresence>
+                    <motion.div
+                      key="success"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: [0.0, 1.0] }}
+                      exit={{ opacity: 0 }}
+                    >
+                      <img
+                        src={logo}
+                        alt="logo"
+                        style={{
+                          width: "100%",
+                          padding: "10%",
+                        }}
+                      />
+                    </motion.div>
+                  </AnimatePresence>
+                </Grid>
+              </Grid>
+              <div
                 style={{
-                  margin: "10px",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginTop: "15px",
                 }}
               >
+                <Select
+                  labelId="select-label"
+                  id="select"
+                  value={sortBy}
+                  onChange={(event) => handleSortBy(event.target.value)}
+                >
+                  <MenuItem value={"LIKES_DESC"}>Likes more-less</MenuItem>
+                  <MenuItem value={"LIKES_ASC"}>Likes less-more</MenuItem>
+                  <MenuItem value={"DATE_DESC"}>Newest</MenuItem>
+                  <MenuItem value={"DATE_ASC"}>Oldest</MenuItem>
+                </Select>
+              </div>
+
+              <Grid container spacing={2}>
                 <Popover
                   id={id}
                   open={open}
