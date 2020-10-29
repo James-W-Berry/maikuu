@@ -18,30 +18,11 @@ import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import LikeIcon from "@material-ui/icons/ThumbUp";
-import ShareIcon from "@material-ui/icons/Share";
 import IconButton from "@material-ui/core/IconButton";
 import { AnimatePresence, motion } from "framer-motion";
 import { red, blue } from "@material-ui/core/colors";
 import VizSensor from "react-visibility-sensor";
 import PuffLoader from "react-spinners/PuffLoader";
-import {
-  FacebookShareButton,
-  FacebookIcon,
-  PinterestShareButton,
-  PinterestIcon,
-  RedditShareButton,
-  RedditIcon,
-  TumblrShareButton,
-  TumblrIcon,
-  TwitterShareButton,
-  TwitterIcon,
-  WhatsappShareButton,
-  WhatsappIcon,
-  FacebookMessengerIcon,
-  FacebookMessengerShareButton,
-} from "react-share";
-import Highlight from "./Highlight";
-import logo from "../assets/logo_blue.png";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -50,15 +31,18 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     justifyContent: "center",
     "& .MuiCardActions-root": {
-      backgroundColor: "rgba(255, 255, 255, 0.7)",
+      backgroundColor: "rgba(0,0,0, 0.5)",
       width: "100%",
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
     },
+    "& .MuiCardContent-root": {
+      padding: "0px",
+    },
   },
   content: {
-    backgroundColor: "rgba(255, 255, 255, 0.7)",
+    backgroundColor: "rgba(0,0,0, 0.5)",
     width: "100%",
     display: "flex",
     flexDirection: "column",
@@ -78,6 +62,7 @@ const useStyles = makeStyles((theme) => ({
   title: {
     fontSize: 14,
     textAlign: "center",
+    color: colors.maikuu4,
   },
   numberLabel: {
     fontSize: 14,
@@ -99,6 +84,7 @@ const useStyles = makeStyles((theme) => ({
     align: "center",
     textAlign: "center",
     fontFamily: "BadScript",
+    color: colors.maikuu4,
   },
 }));
 
@@ -111,18 +97,12 @@ const SORT_OPTIONS = {
 
 export default function Main(props) {
   const classes = useStyles();
-  const [sortBy, setSortBy] = useState("LIKES_DESC");
+  const [sortBy, setSortBy] = useState("DATE_DESC");
   const [posts, setPosts] = useState([]);
   const [userInfo, setUserInfo] = useState({});
   const user = props.user;
   const [lastVisiblePost, setLastVisiblePost] = useState(null);
   const [loadingMorePosts, setLoadingMorePosts] = useState(false);
-  const shareUrl = "http://maikuu.app";
-  const shareTitle = "Maikuu";
-  const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
-  const [selectedShare, setSelectedShare] = useState(null);
-  const id = open ? `share-${selectedShare}` : undefined;
 
   useEffect(() => {
     let retrievedPosts = [];
@@ -161,10 +141,6 @@ export default function Main(props) {
     }
   }, []);
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
   const retrieveMorePosts = () => {
     console.log("retrieving more posts");
     setLoadingMorePosts(true);
@@ -177,7 +153,7 @@ export default function Main(props) {
         .collection("posts")
         .orderBy(SORT_OPTIONS[sortBy].column, SORT_OPTIONS[sortBy].direction)
         .startAfter(lastVisiblePost)
-        .limit(1)
+        .limit(3)
         .get()
         .then(function (querySnapshot) {
           querySnapshot.forEach(function (doc) {
@@ -301,44 +277,6 @@ export default function Main(props) {
     }
   }
 
-  function handleShare(postId, event) {
-    setAnchorEl(event.currentTarget);
-    setSelectedShare(postId);
-  }
-
-  function createHighlight() {
-    let random = Math.floor(Math.random() * Math.floor(posts.length));
-
-    return (
-      <Grid
-        key="highlight"
-        // className={classes.gridTile}
-        style={{
-          display: "flex",
-          justifyContent: "flex-start",
-          alignItems: "center",
-        }}
-        item
-        xs={12}
-        sm={12}
-        md={8}
-        lg={8}
-        xl={8}
-      >
-        <AnimatePresence>
-          <motion.div
-            key="success"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: [0.0, 1.0] }}
-            exit={{ opacity: 0 }}
-          >
-            <Highlight post={posts[random]} />
-          </motion.div>
-        </AnimatePresence>
-      </Grid>
-    );
-  }
-
   function createFeedPost(post, userInfo) {
     return (
       <Grid
@@ -451,14 +389,6 @@ export default function Main(props) {
                             <FavoriteIcon />
                           )}
                         </IconButton>
-                        <IconButton
-                          id={id}
-                          aria-describedby={id}
-                          onClick={(event) => handleShare(post.id, event)}
-                          aria-label="share"
-                        >
-                          <ShareIcon />
-                        </IconButton>
                       </div>
                     </CardActions>
                   ) : (
@@ -499,7 +429,7 @@ export default function Main(props) {
                           </span>
                         </Tooltip>
 
-                        <Tooltip
+                        {/* <Tooltip
                           title="Sign in to share posts"
                           placement="bottom"
                         >
@@ -511,63 +441,74 @@ export default function Main(props) {
                               <ShareIcon />
                             </IconButton>
                           </span>
-                        </Tooltip>
+                        </Tooltip> */}
                       </div>
                     </CardActions>
                   )}
                 </Card>
               </VizSensor>
             ) : (
-              <Card
-                className={classes.root}
-                style={{
-                  backgroundImage: `url(${post.image})`,
-                  backgroundRepeat: "no-repeat",
-                  backgroundPosition: "center center",
-                  backgroundSize: "cover",
-                }}
-              >
-                <CardContent className={classes.content}>
-                  <Typography
-                    color="textSecondary"
-                    gutterBottom
-                    className={classes.post}
+              <Card className={classes.root}>
+                <CardContent
+                  className={classes.content}
+                  style={{
+                    backgroundImage: `url(${post.image})`,
+                    backgroundRepeat: "no-repeat",
+                    backgroundPosition: "center center",
+                    backgroundSize: "cover",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      backgroundColor: "rgba(0, 0, 0, 0.5)",
+                      padding: "16px",
+                    }}
                   >
-                    {post.title}
-                  </Typography>
-                  <Typography
-                    gutterBottom
-                    variant="h5"
-                    component="h2"
-                    className={classes.post}
-                  >
-                    {post.line_1}
-                  </Typography>
+                    <Typography
+                      color="textSecondary"
+                      gutterBottom
+                      className={classes.post}
+                    >
+                      {post.title}
+                    </Typography>
+                    <Typography
+                      gutterBottom
+                      variant="h5"
+                      component="h2"
+                      className={classes.post}
+                    >
+                      {post.line_1}
+                    </Typography>
 
-                  <Typography
-                    gutterBottom
-                    variant="h5"
-                    component="h2"
-                    className={classes.post}
-                  >
-                    {post.line_2}
-                  </Typography>
+                    <Typography
+                      gutterBottom
+                      variant="h5"
+                      component="h2"
+                      className={classes.post}
+                    >
+                      {post.line_2}
+                    </Typography>
 
-                  <Typography
-                    gutterBottom
-                    variant="h5"
-                    component="h2"
-                    className={classes.post}
-                  >
-                    {post.line_3}
-                  </Typography>
+                    <Typography
+                      gutterBottom
+                      variant="h5"
+                      component="h2"
+                      className={classes.post}
+                    >
+                      {post.line_3}
+                    </Typography>
 
-                  <Typography className={classes.title} color="textSecondary">
-                    {`-${post.author}`}
-                  </Typography>
+                    <Typography className={classes.title} color="textSecondary">
+                      {`-${post.author}`}
+                    </Typography>
+                  </div>
                 </CardContent>
                 {user?.loggedIn ? (
-                  <CardActions>
+                  <CardActions
+                    style={{ backgroundColor: "rgba(255, 255, 255, 0.5" }}
+                  >
                     <div
                       style={{
                         display: "flex",
@@ -602,14 +543,6 @@ export default function Main(props) {
                           <FavoriteIcon />
                         )}
                       </IconButton>
-                      <IconButton
-                        id={id}
-                        aria-describedby={id}
-                        onClick={(event) => handleShare(post.id, event)}
-                        aria-label="share"
-                      >
-                        <ShareIcon />
-                      </IconButton>
                     </div>
                   </CardActions>
                 ) : (
@@ -635,17 +568,6 @@ export default function Main(props) {
                       >
                         {post.likes}
                       </Typography>
-
-                      <Tooltip
-                        title="Sign in to favorite posts"
-                        placement="bottom"
-                      >
-                        <span>
-                          <IconButton aria-label="add to favorites" disabled>
-                            <FavoriteIcon />
-                          </IconButton>
-                        </span>
-                      </Tooltip>
                     </div>
                   </CardActions>
                 )}
@@ -676,47 +598,12 @@ export default function Main(props) {
             <CssBaseline />
 
             <div className={classes.paper}>
-              <Grid container spacing={2}>
-                {createHighlight()}
-                <Grid
-                  key="highlight"
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                  item
-                  xs={0}
-                  sm={0}
-                  md={4}
-                  lg={4}
-                  xl={4}
-                >
-                  <AnimatePresence>
-                    <motion.div
-                      key="success"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: [0.0, 1.0] }}
-                      exit={{ opacity: 0 }}
-                    >
-                      <img
-                        src={logo}
-                        alt="logo"
-                        style={{
-                          width: "100%",
-                          padding: "10%",
-                        }}
-                      />
-                    </motion.div>
-                  </AnimatePresence>
-                </Grid>
-              </Grid>
               <div
                 style={{
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
-                  marginTop: "15px",
+                  margin: "15px",
                 }}
               >
                 <Select
@@ -733,80 +620,6 @@ export default function Main(props) {
               </div>
 
               <Grid container spacing={2}>
-                <Popover
-                  id={id}
-                  open={open}
-                  anchorEl={anchorEl}
-                  onClose={handleClose}
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "center",
-                  }}
-                  transformOrigin={{
-                    vertical: "top",
-                    horizontal: "center",
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <FacebookShareButton
-                      url={shareUrl}
-                      quote={shareTitle}
-                      className="facebook-share-button"
-                    >
-                      <FacebookIcon size={32} round />
-                    </FacebookShareButton>
-
-                    <FacebookMessengerShareButton
-                      url={shareUrl}
-                      appId="521270401588372"
-                      className="fb-messenger-share-button"
-                    >
-                      <FacebookMessengerIcon size={32} round />
-                    </FacebookMessengerShareButton>
-
-                    <TwitterShareButton
-                      url={shareUrl}
-                      title={shareTitle}
-                      className="twitter-share-button"
-                    >
-                      <TwitterIcon size={32} round />
-                    </TwitterShareButton>
-
-                    <WhatsappShareButton
-                      url={shareUrl}
-                      title={shareTitle}
-                      separator=":: "
-                      className="whatsapp-share-button"
-                    >
-                      <WhatsappIcon size={32} round />
-                    </WhatsappShareButton>
-
-                    <RedditShareButton
-                      url={shareUrl}
-                      title={shareTitle}
-                      windowWidth={660}
-                      windowHeight={460}
-                      className="reddit-share-button"
-                    >
-                      <RedditIcon size={32} round />
-                    </RedditShareButton>
-
-                    <TumblrShareButton
-                      url={shareUrl}
-                      title={shareTitle}
-                      className="tumblr-share-button"
-                    >
-                      <TumblrIcon size={32} round />
-                    </TumblrShareButton>
-                  </div>
-                </Popover>
                 {posts.map((post) => createFeedPost(post, userInfo))}
                 {loadingMorePosts && (
                   <div

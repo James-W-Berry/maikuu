@@ -15,6 +15,7 @@ import Banner from "./components/Banner";
 import colors from "./assets/colors";
 import { Divider, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import logo from "./assets/logo_blue.png";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -72,6 +73,8 @@ function App() {
                   flexDirection: "row",
                   width: "100vw",
                   marginTop: "10px",
+                  justifyContent: "center",
+                  alignItems: "center",
                 }}
               >
                 <Typography
@@ -82,7 +85,6 @@ function App() {
                   Maikuu
                 </Typography>
               </div>
-
               <Divider variant="middle" />
             </div>
           ) : null}

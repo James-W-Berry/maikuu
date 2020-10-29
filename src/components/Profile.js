@@ -21,24 +21,7 @@ import { NavLink, useHistory } from "react-router-dom";
 import LogInOutIcon from "@material-ui/icons/ExitToApp";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import LikeIcon from "@material-ui/icons/ThumbUp";
-import ShareIcon from "@material-ui/icons/Share";
 import { red, blue } from "@material-ui/core/colors";
-import {
-  FacebookShareButton,
-  FacebookIcon,
-  PinterestShareButton,
-  PinterestIcon,
-  RedditShareButton,
-  RedditIcon,
-  TumblrShareButton,
-  TumblrIcon,
-  TwitterShareButton,
-  TwitterIcon,
-  WhatsappShareButton,
-  WhatsappIcon,
-  FacebookMessengerIcon,
-  FacebookMessengerShareButton,
-} from "react-share";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -53,9 +36,12 @@ const useStyles = makeStyles((theme) => ({
       justifyContent: "center",
       alignItems: "center",
     },
+    "& .MuiCardContent-root": {
+      padding: "0px",
+    },
   },
   content: {
-    backgroundColor: "rgba(255, 255, 255, 0.7)",
+    backgroundColor: "rgba(0,0,0, 0.5)",
     width: "100%",
     display: "flex",
     flexDirection: "column",
@@ -75,6 +61,7 @@ const useStyles = makeStyles((theme) => ({
   title: {
     fontSize: 14,
     textAlign: "center",
+    color: colors.maikuu4,
   },
   numberLabel: {
     fontSize: 14,
@@ -96,6 +83,7 @@ const useStyles = makeStyles((theme) => ({
     align: "center",
     textAlign: "center",
     fontFamily: "BadScript",
+    color: colors.maikuu4,
   },
   submit: {
     backgroundColor: colors.maikuu0,
@@ -127,12 +115,6 @@ export default function Profile(props) {
   const [userInfo, setUserInfo] = useState({});
   const [authoredPosts, setAuthoredPosts] = useState([]);
   const history = useHistory();
-  const shareUrl = "http://maikuu.app";
-  const shareTitle = "Maikuu";
-  const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
-  const [selectedShare, setSelectedShare] = useState(null);
-  const id = open ? `share-${selectedShare}` : undefined;
 
   useEffect(() => {
     if (user.loggedIn) {
@@ -208,10 +190,6 @@ export default function Profile(props) {
       });
     }
   }, [userInfo]);
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
 
   const requestLogout = useCallback(() => {
     logout(history);
@@ -320,11 +298,6 @@ export default function Profile(props) {
     }
   }
 
-  function handleShare(postId, event) {
-    setAnchorEl(event.currentTarget);
-    setSelectedShare(postId);
-  }
-
   function createFeedPost(post) {
     return (
       <Grid
@@ -344,55 +317,66 @@ export default function Profile(props) {
             animate={{ opacity: [0.0, 1.0] }}
             exit={{ opacity: 0 }}
           >
-            <Card
-              className={classes.root}
-              style={{
-                backgroundImage: `url(${post.image})`,
-                backgroundRepeat: "no-repeat",
-                backgroundPosition: "center center",
-                backgroundSize: "cover",
-              }}
-            >
-              <CardContent className={classes.content}>
-                <Typography
-                  color="textSecondary"
-                  gutterBottom
-                  className={classes.post}
+            <Card className={classes.root}>
+              <CardContent
+                className={classes.content}
+                style={{
+                  backgroundImage: `url(${post.image})`,
+                  backgroundRepeat: "no-repeat",
+                  backgroundPosition: "center center",
+                  backgroundSize: "cover",
+                }}
+              >
+                <div
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    backgroundColor: "rgba(0, 0, 0, 0.5)",
+                    padding: "16px",
+                  }}
                 >
-                  {post.title}
-                </Typography>
-                <Typography
-                  gutterBottom
-                  variant="h5"
-                  component="h2"
-                  className={classes.post}
-                >
-                  {post.line_1}
-                </Typography>
+                  <Typography
+                    color="textSecondary"
+                    gutterBottom
+                    className={classes.post}
+                  >
+                    {post.title}
+                  </Typography>
+                  <Typography
+                    gutterBottom
+                    variant="h5"
+                    component="h2"
+                    className={classes.post}
+                  >
+                    {post.line_1}
+                  </Typography>
 
-                <Typography
-                  gutterBottom
-                  variant="h5"
-                  component="h2"
-                  className={classes.post}
-                >
-                  {post.line_2}
-                </Typography>
+                  <Typography
+                    gutterBottom
+                    variant="h5"
+                    component="h2"
+                    className={classes.post}
+                  >
+                    {post.line_2}
+                  </Typography>
 
-                <Typography
-                  gutterBottom
-                  variant="h5"
-                  component="h2"
-                  className={classes.post}
-                >
-                  {post.line_3}
-                </Typography>
+                  <Typography
+                    gutterBottom
+                    variant="h5"
+                    component="h2"
+                    className={classes.post}
+                  >
+                    {post.line_3}
+                  </Typography>
 
-                <Typography className={classes.title} color="textSecondary">
-                  {`-${post.author}`}
-                </Typography>
+                  <Typography className={classes.title} color="textSecondary">
+                    {`-${post.author}`}
+                  </Typography>
+                </div>
               </CardContent>
-              <CardActions>
+              <CardActions
+                style={{ backgroundColor: "rgba(255, 255, 255, 0.5" }}
+              >
                 <div
                   style={{
                     display: "flex",
@@ -426,14 +410,6 @@ export default function Profile(props) {
                     ) : (
                       <FavoriteIcon />
                     )}
-                  </IconButton>
-                  <IconButton
-                    id={id}
-                    aria-describedby={id}
-                    onClick={(event) => handleShare(post.id, event)}
-                    aria-label="share"
-                  >
-                    <ShareIcon />
                   </IconButton>
                 </div>
               </CardActions>
@@ -532,88 +508,6 @@ export default function Profile(props) {
                     margin: "10px",
                   }}
                 >
-                  <Popover
-                    id={id}
-                    open={open}
-                    anchorEl={anchorEl}
-                    onClose={handleClose}
-                    anchorOrigin={{
-                      vertical: "bottom",
-                      horizontal: "center",
-                    }}
-                    transformOrigin={{
-                      vertical: "top",
-                      horizontal: "center",
-                    }}
-                  >
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <FacebookShareButton
-                        url={shareUrl}
-                        quote={shareTitle}
-                        className="facebook-share-button"
-                      >
-                        <FacebookIcon size={32} round />
-                      </FacebookShareButton>
-
-                      <FacebookMessengerShareButton
-                        url={shareUrl}
-                        appId="521270401588372"
-                        className="fb-messenger-share-button"
-                      >
-                        <FacebookMessengerIcon size={32} round />
-                      </FacebookMessengerShareButton>
-
-                      <TwitterShareButton
-                        url={shareUrl}
-                        title={shareTitle}
-                        className="twitter-share-button"
-                      >
-                        <TwitterIcon size={32} round />
-                      </TwitterShareButton>
-
-                      <WhatsappShareButton
-                        url={shareUrl}
-                        title={shareTitle}
-                        separator=":: "
-                        className="whatsapp-share-button"
-                      >
-                        <WhatsappIcon size={32} round />
-                      </WhatsappShareButton>
-
-                      {/* <PinterestShareButton
-                        url={String(window.location)}
-                        media={`${String(window.location)}/${post.image}`}
-                        className="Demo__some-network__share-button"
-                      >
-                        <PinterestIcon size={32} round />
-                      </PinterestShareButton> */}
-
-                      <RedditShareButton
-                        url={shareUrl}
-                        title={shareTitle}
-                        windowWidth={660}
-                        windowHeight={460}
-                        className="reddit-share-button"
-                      >
-                        <RedditIcon size={32} round />
-                      </RedditShareButton>
-
-                      <TumblrShareButton
-                        url={shareUrl}
-                        title={shareTitle}
-                        className="tumblr-share-button"
-                      >
-                        <TumblrIcon size={32} round />
-                      </TumblrShareButton>
-                    </div>
-                  </Popover>
                   {collection === "FAVORITES" &&
                     favorites.map((post) => createFeedPost(post))}
                   {collection === "LIKES" &&

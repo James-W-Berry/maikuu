@@ -58,6 +58,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 12,
   },
   post: {
+    fontSize: "3.5vw",
     align: "center",
     textAlign: "center",
     fontFamily: "BadScript",
@@ -92,19 +93,18 @@ export default function Highlight(props) {
               className={classes.content}
               style={{
                 flex: 2,
-
                 padding: "20px",
               }}
             >
-              <Typography gutterBottom variant="h3" className={classes.post}>
+              <Typography gutterBottom className={classes.post}>
                 {post.line_1}
               </Typography>
 
-              <Typography gutterBottom variant="h3" className={classes.post}>
+              <Typography gutterBottom className={classes.post}>
                 {post.line_2}
               </Typography>
 
-              <Typography gutterBottom variant="h3" className={classes.post}>
+              <Typography gutterBottom className={classes.post}>
                 {post.line_3}
               </Typography>
             </div>
@@ -123,18 +123,13 @@ export default function Highlight(props) {
           >
             <Typography
               color="textSecondary"
-              variant="h4"
               gutterBottom
               className={classes.post}
             >
               {post.title}
             </Typography>
 
-            <Typography
-              className={classes.title}
-              variant="h4"
-              color="textSecondary"
-            >
+            <Typography className={classes.title} color="textSecondary">
               {`by ${post.author}`}
             </Typography>
           </div>

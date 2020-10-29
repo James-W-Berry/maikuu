@@ -7,10 +7,8 @@ import {
   CardContent,
   Checkbox,
   FormControlLabel,
-  IconButton,
   Modal,
   Typography,
-  useScrollTrigger,
 } from "@material-ui/core";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import colors from "../assets/colors";
@@ -101,7 +99,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
   },
   content: {
-    backgroundColor: "rgba(255, 255, 255, 0.7)",
+    backgroundColor: "rgba(0,0,0, 0.5)",
     width: "100%",
     display: "flex",
     flexDirection: "column",
@@ -112,8 +110,10 @@ const useStyles = makeStyles((theme) => ({
     align: "center",
     textAlign: "center",
     fontFamily: "BadScript",
+    color: colors.maikuu4,
   },
   previewTitle: {
+    color: colors.maikuu4,
     fontSize: 14,
     textAlign: "center",
   },
@@ -239,7 +239,7 @@ export default function HaikuBuilder(props) {
     }
   }
 
-  function updatePrevieImage(file) {
+  function updatePreviewImage(file) {
     const fileReader = new FileReader();
 
     fileReader.onload = () => {
@@ -326,6 +326,7 @@ export default function HaikuBuilder(props) {
       })
       .then(() => {
         setSuccess(true);
+        setIsUploading(false);
         setAnon(false);
         addToAuthoredPosts(id);
       })
@@ -452,7 +453,7 @@ export default function HaikuBuilder(props) {
 
                 <Typography
                   className={classes.previewTitle}
-                  color="textSecondary"
+                  color={colors.maikuu4}
                 >
                   -{calculatedAuthor}
                 </Typography>
@@ -478,7 +479,7 @@ export default function HaikuBuilder(props) {
               style={{
                 display: "flex",
                 flexDirection: "row",
-                width: "fitContent",
+                width: "100%",
                 justifyContent: "center",
                 alignItems: "center",
               }}
@@ -660,7 +661,7 @@ export default function HaikuBuilder(props) {
                   onChange={(e) => {
                     if (e.target.files[0]) {
                       setImage(e.target.files[0]);
-                      updatePrevieImage(e.target.files[0]);
+                      updatePreviewImage(e.target.files[0]);
                     }
                   }}
                 />
@@ -800,13 +801,15 @@ export default function HaikuBuilder(props) {
     return (
       <div
         style={{
-          width: "100%",
+          height: "70vh",
           display: "flex",
           alignSelf: "center",
+          alignItems: "center",
           justifyContent: "center",
+          flexDirection: "column",
         }}
       >
-        <Typography className={classes.text}>Posting</Typography>
+        <Typography className={classes.heading}>Posting your haiku</Typography>
         <PuffLoader color={"#A0C4F2"} />
       </div>
     );
