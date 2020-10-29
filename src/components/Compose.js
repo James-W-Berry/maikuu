@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
 export default function Compose(props) {
   const classes = useStyles();
   const user = props.user;
-  const [interactive, setInteractive] = useState(false);
+  const [interactive, setInteractive] = useState(true);
   const [basic, setBasic] = useState(false);
 
   const setMode = (mode) => {
