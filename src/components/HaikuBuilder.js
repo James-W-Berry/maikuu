@@ -22,6 +22,7 @@ import Popover from "@material-ui/core/Popover";
 import { v4 as uuidv4 } from "uuid";
 import PuffLoader from "react-spinners/PuffLoader";
 import ImageIcon from "@material-ui/icons/Image";
+import line from "../assets/line.png";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -44,7 +45,6 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     backgroundColor: colors.maikuu0,
     color: colors.maikuu4,
-    marginTop: "30px",
     cursor: "pointer",
   },
   disabledSubmit: {
@@ -131,6 +131,7 @@ const AnonCheckbox = withStyles({
 
 export default function HaikuBuilder(props) {
   const user = props.user;
+  const setMode = props.setMode;
   const [title, setTitle] = useState({ value: null });
   const [firstLine, setFirstLine] = useState({
     value: "",
@@ -707,52 +708,121 @@ export default function HaikuBuilder(props) {
               </div>
             </div>
 
-            <Button
-              id="preview-button"
-              aria-describedby={id}
-              classes={{
-                root: classes.submit,
-                disabled: classes.disabledSubmit,
-              }}
-              style={{ width: "20%" }}
-              onClick={(event) => {
-                let author;
-
-                if (anon) {
-                  author = "anonymous";
-                } else if (user.displayName) {
-                  author = user.displayName;
-                } else if (userInfo.displayName) {
-                  author = userInfo.displayName;
-                } else {
-                  author = "unknown";
-                }
-                setCalculatedAuthor(author);
-                setIsPreviewVisible(true);
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-evenly",
+                alignItems: "center",
+                width: "100vw",
+                marginBottom: "20px",
+                marginTop: "20px",
               }}
             >
-              <Typography>Preview</Typography>
-            </Button>
+              <div
+                style={{
+                  display: "flex",
+                  flex: 1,
+                  padding: "10px",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Button
+                  id="preview-button"
+                  aria-describedby={id}
+                  classes={{
+                    root: classes.submit,
+                    disabled: classes.disabledSubmit,
+                  }}
+                  onClick={(event) => {
+                    let author;
 
-            <Button
-              id="post-button"
-              type="submit"
-              s
-              classes={{
-                root: classes.submit,
-                disabled: classes.disabledSubmit,
-              }}
-              style={{ width: "30%", marginBottom: "20px" }}
-              onClick={(event) => {
-                if (firstLine.valid && secondLine.valid && thirdLine.valid) {
-                  handleSubmit();
-                } else {
-                  handleClick(event);
-                }
-              }}
-            >
-              <Typography>Post</Typography>
-            </Button>
+                    if (anon) {
+                      author = "anonymous";
+                    } else if (user.displayName) {
+                      author = user.displayName;
+                    } else if (userInfo.displayName) {
+                      author = userInfo.displayName;
+                    } else {
+                      author = "unknown";
+                    }
+                    setCalculatedAuthor(author);
+                    setIsPreviewVisible(true);
+                  }}
+                >
+                  <Typography>Preview</Typography>
+                </Button>
+                {/* <img
+                  src={line}
+                  alt="break"
+                  style={{
+                    width: "30px",
+                    height: "100px",
+                  }}
+                /> */}
+              </div>
+
+              <div
+                style={{
+                  display: "flex",
+                  flex: 1,
+                  padding: "10px",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Button
+                  id="post-button"
+                  type="submit"
+                  classes={{
+                    root: classes.submit,
+                    disabled: classes.disabledSubmit,
+                  }}
+                  onClick={(event) => {
+                    if (
+                      firstLine.valid &&
+                      secondLine.valid &&
+                      thirdLine.valid
+                    ) {
+                      handleSubmit();
+                    } else {
+                      handleClick(event);
+                    }
+                  }}
+                >
+                  <Typography>Post</Typography>
+                </Button>
+                {/* <img
+                  src={line}
+                  alt="break"
+                  style={{
+                    width: "30px",
+                    height: "100px",
+                  }}
+                /> */}
+              </div>
+
+              <div
+                style={{
+                  display: "flex",
+                  flex: 1,
+                  padding: "10px",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Button
+                  id="change-mode-button"
+                  classes={{
+                    root: classes.submit,
+                  }}
+                  onClick={() => setMode(0)}
+                >
+                  <Typography>Interactive Mode</Typography>
+                </Button>
+              </div>
+            </div>
 
             <Popover
               id={id}

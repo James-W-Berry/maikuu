@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import HaikuBuilder from "./HaikuBuilder";
 import {
   Button,
@@ -10,6 +10,7 @@ import {
 import colors from "../assets/colors";
 import { NavLink } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
+import InteractiveHaikuBuilder from "./InteractiveHaikuBuilder";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -45,6 +46,18 @@ const useStyles = makeStyles((theme) => ({
 export default function Compose(props) {
   const classes = useStyles();
   const user = props.user;
+  const [interactive, setInteractive] = useState(false);
+  const [basic, setBasic] = useState(false);
+
+  const setMode = (mode) => {
+    if (mode === 0) {
+      setInteractive(true);
+      setBasic(false);
+    } else {
+      setInteractive(false);
+      setBasic(true);
+    }
+  };
 
   return (
     <AnimatePresence>
@@ -64,9 +77,62 @@ export default function Compose(props) {
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
+                  flexDirection: "column",
                 }}
               >
-                <HaikuBuilder user={user} />
+                {!basic && !interactive && (
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      height: "70vh",
+                    }}
+                  >
+                    <Button onClick={() => setMode(0)}>
+                      <Typography className={classes.heading}>
+                        Interactive Experience
+                      </Typography>
+                    </Button>
+
+                    <Button
+                      onClick={() => {
+                        setMode(1);
+                      }}
+                    >
+                      <Typography className={classes.heading}>
+                        or Basic Experience ?
+                      </Typography>
+                    </Button>
+                  </div>
+                )}
+                {basic && (
+                  <AnimatePresence>
+                    <motion.div
+                      style={{ marginBottom: "60px", marginTop: "10px" }}
+                      key="success"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: [0.0, 1.0] }}
+                      exit={{ opacity: 0 }}
+                    >
+                      <HaikuBuilder user={user} setMode={setMode} />
+                    </motion.div>
+                  </AnimatePresence>
+                )}
+                {interactive && (
+                  <AnimatePresence>
+                    <motion.div
+                      style={{ marginBottom: "60px", marginTop: "10px" }}
+                      key="success"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: [0.0, 1.0] }}
+                      exit={{ opacity: 0 }}
+                    >
+                      <InteractiveHaikuBuilder user={user} setMode={setMode} />
+                    </motion.div>
+                  </AnimatePresence>
+                )}
               </div>
             </Container>
           </div>
