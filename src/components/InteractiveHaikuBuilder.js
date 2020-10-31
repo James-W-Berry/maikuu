@@ -6,6 +6,7 @@ import LoopIcon from "@material-ui/icons/Loop";
 import abstract_nouns from "../assets/abstract_nouns.json";
 import colors from "../assets/colors";
 import { AnimatePresence, motion } from "framer-motion";
+import ImageIcon from "@material-ui/icons/Image";
 
 export default function InteractiveHaikuBuilder(props) {
   const user = props.user;
@@ -13,6 +14,9 @@ export default function InteractiveHaikuBuilder(props) {
   const classes = useStyles();
   const [reflectionNoun, setReflectionNoun] = useState();
   const [loadingNewNoun, setLoadingNewNoun] = useState(true);
+  const [backgroundImage, setBackgroundImage] = useState("");
+  const [image, setImage] = useState("");
+
   useEffect(() => {
     fetchReflectionNoun();
   }, []);
@@ -25,12 +29,21 @@ export default function InteractiveHaikuBuilder(props) {
     setLoadingNewNoun(false);
   };
 
+  function updatePreviewImage(file) {
+    const fileReader = new FileReader();
+
+    fileReader.onload = () => {
+      setBackgroundImage(`url(${fileReader.result})`);
+    };
+    fileReader.readAsDataURL(file);
+  }
+
   return (
     <div
       style={{
         display: "flex",
         flexDirection: "column",
-        height: "70vh",
+        height: "90vh",
         width: "90vw",
       }}
     >
@@ -98,12 +111,89 @@ export default function InteractiveHaikuBuilder(props) {
         )}
       </div>
 
+      <div display={{ display: "flex", flexDirection: "row" }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: "column",
+          }}
+        >
+          <Typography>Pick one of your photos</Typography>
+          <Typography>or select one of ours</Typography>
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: "row",
+          }}
+        >
+          <input
+            accept="image/*"
+            className={classes.input}
+            id="image-input"
+            type="file"
+            style={{
+              display: "none",
+            }}
+            onChange={(e) => {
+              if (e.target.files[0]) {
+                setImage(e.target.files[0]);
+                updatePreviewImage(e.target.files[0]);
+              }
+            }}
+          />
+          {image === "" ? (
+            <label
+              for="image-input"
+              style={{
+                cursor: "pointer",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "row",
+              }}
+            >
+              <ImageIcon style={{ color: colors.maikuu0 }} />
+              <Typography style={{ marginLeft: "10px" }}>Add image</Typography>
+            </label>
+          ) : (
+            <label
+              for="image-input"
+              style={{
+                cursor: "pointer",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "row",
+              }}
+            >
+              <ImageIcon style={{ color: colors.maikuu0 }} />
+              <Typography style={{ marginLeft: "10px" }}>Add image</Typography>
+            </label>
+          )}
+        </div>
+      </div>
+
+      <div
+        style={{
+          backgroundImage: backgroundImage,
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center center",
+          backgroundSize: "cover",
+          height: "60vh",
+          width: "90vw",
+        }}
+      />
+
       <div
         style={{
           display: "flex",
-          flexDirection: "column",
-          justifyContent: "flex-end",
-          flex: 1,
+          justifyContent: "center",
         }}
       >
         <Button
