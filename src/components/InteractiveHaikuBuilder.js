@@ -7,6 +7,7 @@ import abstract_nouns from "../assets/abstract_nouns.json";
 import colors from "../assets/colors";
 import { AnimatePresence, motion } from "framer-motion";
 import ImageIcon from "@material-ui/icons/Image";
+import ImageCarousel from "./ImageCarousel";
 
 export default function InteractiveHaikuBuilder(props) {
   const user = props.user;
@@ -16,6 +17,7 @@ export default function InteractiveHaikuBuilder(props) {
   const [loadingNewNoun, setLoadingNewNoun] = useState(true);
   const [backgroundImage, setBackgroundImage] = useState("");
   const [image, setImage] = useState("");
+  const [showImageCarousel, setShowImageCarousel] = useState(false);
 
   useEffect(() => {
     fetchReflectionNoun();
@@ -116,20 +118,24 @@ export default function InteractiveHaikuBuilder(props) {
           style={{
             display: "flex",
             justifyContent: "center",
-            alignItems: "center",
-            flexDirection: "column",
           }}
         >
-          <Typography>Pick one of your photos</Typography>
-          <Typography>or select one of ours</Typography>
+          <Button
+            id="change-mode-button"
+            classes={{
+              root: classes.submit,
+            }}
+            onClick={() => setMode(1)}
+          >
+            <Typography>Basic Mode</Typography>
+          </Button>
         </div>
-
         <div
           style={{
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            flexDirection: "row",
+            flexDirection: "column",
           }}
         >
           <input
@@ -147,35 +153,47 @@ export default function InteractiveHaikuBuilder(props) {
               }
             }}
           />
-          {image === "" ? (
-            <label
-              for="image-input"
+          <label
+            for="image-input"
+            style={{
+              cursor: "pointer",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              flexDirection: "row",
+            }}
+          >
+            <Typography style={{ fontWeight: "bold" }}>Pick</Typography>
+            <Typography style={{ marginLeft: "4px" }}>
+              one of your photos
+            </Typography>
+          </label>
+          <div
+            style={{
+              cursor: "pointer",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              flexDirection: "row",
+            }}
+            onClick={() => {
+              setShowImageCarousel(!showImageCarousel);
+            }}
+          >
+            <Typography>or</Typography>
+            <Typography
               style={{
+                marginLeft: "4px",
+                fontWeight: "bold",
                 cursor: "pointer",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                flexDirection: "row",
               }}
             >
-              <ImageIcon style={{ color: colors.maikuu0 }} />
-              <Typography style={{ marginLeft: "10px" }}>Add image</Typography>
-            </label>
-          ) : (
-            <label
-              for="image-input"
-              style={{
-                cursor: "pointer",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                flexDirection: "row",
-              }}
-            >
-              <ImageIcon style={{ color: colors.maikuu0 }} />
-              <Typography style={{ marginLeft: "10px" }}>Add image</Typography>
-            </label>
-          )}
+              select
+            </Typography>
+            <Typography style={{ marginLeft: "4px" }}>
+              one of ours for inspiration
+            </Typography>
+          </div>
         </div>
       </div>
 
@@ -188,23 +206,16 @@ export default function InteractiveHaikuBuilder(props) {
           height: "60vh",
           width: "90vw",
         }}
-      />
-
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-        }}
       >
-        <Button
-          id="change-mode-button"
-          classes={{
-            root: classes.submit,
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
           }}
-          onClick={() => setMode(1)}
         >
-          <Typography>Basic Mode</Typography>
-        </Button>
+          {showImageCarousel && <ImageCarousel />}
+        </div>
       </div>
     </div>
   );
