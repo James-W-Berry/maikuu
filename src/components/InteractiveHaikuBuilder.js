@@ -1,13 +1,23 @@
 import React, { useEffect, useState } from "react";
 import TextField from "@material-ui/core/TextField";
 import syllable from "syllable";
-import { Button, IconButton, makeStyles, Typography } from "@material-ui/core";
+import {
+  Button,
+  Dialog,
+  IconButton,
+  makeStyles,
+  Modal,
+  Typography,
+} from "@material-ui/core";
 import LoopIcon from "@material-ui/icons/Loop";
 import abstract_nouns from "../assets/abstract_nouns.json";
 import colors from "../assets/colors";
 import { AnimatePresence, motion } from "framer-motion";
 import ImageIcon from "@material-ui/icons/Image";
 import ImageCarousel from "./ImageCarousel";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import { useTheme } from "@material-ui/core/styles";
+import CloseIcon from "@material-ui/icons/Close";
 
 export default function InteractiveHaikuBuilder(props) {
   const user = props.user;
@@ -16,8 +26,9 @@ export default function InteractiveHaikuBuilder(props) {
   const [reflectionNoun, setReflectionNoun] = useState();
   const [loadingNewNoun, setLoadingNewNoun] = useState(true);
   const [backgroundImage, setBackgroundImage] = useState("");
-  const [image, setImage] = useState("");
   const [showImageCarousel, setShowImageCarousel] = useState(false);
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   useEffect(() => {
     fetchReflectionNoun();
@@ -38,6 +49,10 @@ export default function InteractiveHaikuBuilder(props) {
       setBackgroundImage(`url(${fileReader.result})`);
     };
     fileReader.readAsDataURL(file);
+  }
+
+  function updatePreviewImageFromCarousel(file) {
+    setBackgroundImage(`url(${file})`);
   }
 
   return (
@@ -148,7 +163,6 @@ export default function InteractiveHaikuBuilder(props) {
             }}
             onChange={(e) => {
               if (e.target.files[0]) {
-                setImage(e.target.files[0]);
                 updatePreviewImage(e.target.files[0]);
               }
             }}
@@ -199,7 +213,9 @@ export default function InteractiveHaikuBuilder(props) {
 
       <div
         style={{
+          marginTop: "10px",
           backgroundImage: backgroundImage,
+          borderRadius: "10px",
           backgroundRepeat: "no-repeat",
           backgroundPosition: "center center",
           backgroundSize: "cover",
@@ -213,10 +229,44 @@ export default function InteractiveHaikuBuilder(props) {
             justifyContent: "center",
             alignItems: "center",
           }}
-        >
-          {showImageCarousel && <ImageCarousel />}
-        </div>
+        />
       </div>
+
+      <Dialog
+        fullScreen={fullScreen}
+        fullWidth={true}
+        aria-labelledby="customized-dialog-title"
+        open={showImageCarousel}
+        style={{ borderRadius: "10px" }}
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexDirection: "column",
+            width: "100%",
+            height: "100%",
+            backgroundColor: colors.maikuu5,
+          }}
+        >
+          <IconButton
+            onClick={() => setShowImageCarousel(false)}
+            aria-label="close carousel"
+            style={{
+              width: "40px",
+              alignSelf: "flex-end",
+              justifyContent: "flex-end",
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+          <ImageCarousel
+            updatePreviewImageFromCarousel={updatePreviewImageFromCarousel}
+            setShowImageCarousel={setShowImageCarousel}
+          />
+        </div>
+      </Dialog>
     </div>
   );
 }
@@ -313,5 +363,27 @@ const useStyles = makeStyles((theme) => ({
     color: colors.maikuu4,
     fontSize: 14,
     textAlign: "center",
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    justifyContent: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
 }));
