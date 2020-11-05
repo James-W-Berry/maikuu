@@ -221,6 +221,11 @@ export default function InteractiveHaikuBuilder(props) {
           backgroundSize: "cover",
           height: "60vh",
           width: "90vw",
+          boxShadow: backgroundImage ? "10px 10px  5px rgba(0,0,0,0.6)" : null,
+          //  box-shadow: ;
+          // -moz-box-shadow: 10px 10px  5px rgba(0,0,0,0.6);
+          // -webkit-box-shadow: 10px 10px  5px rgba(0,0,0,0.6);
+          // -o-box-shadow: 10px 10px  5px rgba(0,0,0,0.6);
         }}
       >
         <div
@@ -237,7 +242,6 @@ export default function InteractiveHaikuBuilder(props) {
         fullWidth={true}
         aria-labelledby="customized-dialog-title"
         open={showImageCarousel}
-        style={{ borderRadius: "10px" }}
       >
         <div
           style={{
