@@ -17,6 +17,7 @@
     "react-alice-carousel": "^2.0.2",
     "react-bootstrap": "^1.4.0",
     "react-dom": "^16.13.1",
+    "react-draggable": "^4.4.3",
     "react-hook-form": "^6.9.2",
     "react-lottie": "^1.2.3",
     "react-responsive-carousel": "^3.2.10",

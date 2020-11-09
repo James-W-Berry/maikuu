@@ -1,23 +1,24 @@
 import React, { useEffect, useState } from "react";
-import TextField from "@material-ui/core/TextField";
-import syllable from "syllable";
 import {
   Button,
   Dialog,
   IconButton,
   makeStyles,
-  Modal,
+  TextField,
   Typography,
 } from "@material-ui/core";
 import LoopIcon from "@material-ui/icons/Loop";
+import CircleIcon from "@material-ui/icons/RadioButtonUnchecked";
 import abstract_nouns from "../assets/abstract_nouns.json";
 import colors from "../assets/colors";
 import { AnimatePresence, motion } from "framer-motion";
-import ImageIcon from "@material-ui/icons/Image";
 import ImageCarousel from "./ImageCarousel";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 import CloseIcon from "@material-ui/icons/Close";
+import EmbeddedHaikuBuilder from "./EmbeddedHaikuBuilder";
+import syllable from "syllable";
+import Draggable from "react-draggable";
 
 export default function InteractiveHaikuBuilder(props) {
   const user = props.user;
@@ -25,14 +26,44 @@ export default function InteractiveHaikuBuilder(props) {
   const classes = useStyles();
   const [reflectionNoun, setReflectionNoun] = useState();
   const [loadingNewNoun, setLoadingNewNoun] = useState(true);
-  const [backgroundImage, setBackgroundImage] = useState("");
+  const [backgroundImage, setBackgroundImage] = useState();
   const [showImageCarousel, setShowImageCarousel] = useState(false);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const [showFirstMarker, setShowFirstMarker] = useState(true);
+  const [firstMarkerPosition, setFirstMarkerPosition] = useState({
+    x: 250,
+    y: 250,
+  });
+  const [title, setTitle] = useState({ value: null });
+  const [firstLine, setFirstLine] = useState({
+    value: "",
+    valid: null,
+    syllables: 0,
+  });
+  const [secondLine, setSecondLine] = useState({
+    value: "",
+    valid: null,
+    syllables: 0,
+  });
+  const [thirdLine, setThirdLine] = useState({
+    value: "",
+    valid: null,
+    syllables: 0,
+  });
+  const [showFirstLine, setShowFirstLine] = useState(false);
 
   useEffect(() => {
     fetchReflectionNoun();
   }, []);
+
+  useEffect(() => {
+    console.log("background image changed");
+    let position = generateRandomMarkerPosition();
+    setFirstMarkerPosition(position);
+    console.log(backgroundImage);
+    backgroundImage ? setShowFirstMarker(true) : setShowFirstMarker(false);
+  }, [backgroundImage]);
 
   const fetchReflectionNoun = () => {
     const max = Object.entries(abstract_nouns).length;
@@ -53,6 +84,10 @@ export default function InteractiveHaikuBuilder(props) {
 
   function updatePreviewImageFromCarousel(file) {
     setBackgroundImage(`url(${file})`);
+  }
+
+  function generateRandomMarkerPosition() {
+    return firstMarkerPosition;
   }
 
   return (
@@ -221,11 +256,7 @@ export default function InteractiveHaikuBuilder(props) {
           backgroundSize: "cover",
           height: "60vh",
           width: "90vw",
-          boxShadow: backgroundImage ? "10px 10px  5px rgba(0,0,0,0.6)" : null,
-          //  box-shadow: ;
-          // -moz-box-shadow: 10px 10px  5px rgba(0,0,0,0.6);
-          // -webkit-box-shadow: 10px 10px  5px rgba(0,0,0,0.6);
-          // -o-box-shadow: 10px 10px  5px rgba(0,0,0,0.6);
+          boxShadow: backgroundImage ? "10px 10px  5px rgba(0,0,0,0.5)" : null,
         }}
       >
         <div
@@ -234,7 +265,73 @@ export default function InteractiveHaikuBuilder(props) {
             justifyContent: "center",
             alignItems: "center",
           }}
-        />
+        >
+          {showFirstMarker && (
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                // justifyContent: "center",
+                // alignItems: "center",
+              }}
+            >
+              <Draggable>
+                <CircleIcon
+                  style={{
+                    color: colors.maikuu4,
+                    position: "relative",
+                    marginLeft: firstMarkerPosition.x,
+                    marginTop: firstMarkerPosition.y,
+                    cursor: "pointer",
+                  }}
+                  onClick={() => setShowFirstLine(!showFirstLine)}
+                />
+              </Draggable>
+              {showFirstLine && (
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    backgroundColor: "rgba(0,0,0,0.5",
+                  }}
+                >
+                  <TextField
+                    className={classes.fiveLine}
+                    margin="normal"
+                    required
+                    name="line-1"
+                    type="text"
+                    id="line-1"
+                    helperText={`${firstLine.syllables}/5 syllable line`}
+                    inputProps={{
+                      autoComplete: "off",
+                    }}
+                    value={firstLine.value}
+                    onChange={(event) => {
+                      let syllables = syllable(event.target.value);
+                      if (syllables !== 5) {
+                        setFirstLine({
+                          value: event.target.value,
+                          syllables: syllables,
+                          valid: false,
+                        });
+                      } else {
+                        setFirstLine({
+                          value: event.target.value,
+                          syllables: syllables,
+                          valid: true,
+                        });
+                      }
+                    }}
+                  />
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* {backgroundImage && <EmbeddedHaikuBuilder user={user} />} */}
+        </div>
       </div>
 
       <Dialog
@@ -308,9 +405,17 @@ const useStyles = makeStyles((theme) => ({
       fontFamily: "BadScript",
       fontSize: "32px",
       textAlign: "center",
+      color: colors.maikuu4,
     },
     "& .MuiFormHelperText-root": {
       textAlign: "center",
+      color: colors.maikuu4,
+    },
+    "& .MuiInput-underline:before": {
+      borderBottom: "1px solid rgba(255, 255, 255, 0.5)",
+    },
+    "& .MuiInput-underline:after": {
+      borderBottom: "1px solid rgba(255, 255, 255, 1)",
     },
     width: "80%",
   },
