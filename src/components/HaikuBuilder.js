@@ -385,7 +385,7 @@ export default function HaikuBuilder(props) {
 
   if (!success && !isUploading) {
     return (
-      <div>
+      <div style={{ marginTop: "30px" }}>
         <Modal
           style={{
             width: "100%",

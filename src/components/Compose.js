@@ -1,19 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import HaikuBuilder from "./HaikuBuilder";
 import {
   Button,
   makeStyles,
   Typography,
-  Container,
   CssBaseline,
   Grid,
-  Icon,
+  IconButton,
+  Divider,
 } from "@material-ui/core";
 import colors from "../assets/colors";
 import { NavLink } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import InteractiveHaikuBuilder from "./InteractiveHaikuBuilder";
 import SwapHorizontalCircleIcon from "@material-ui/icons/SwapHorizontalCircle";
+import abstract_nouns from "../assets/abstract_nouns.json";
+import LoopIcon from "@material-ui/icons/Loop";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -53,6 +55,11 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "10px",
     marginBottom: "20px",
   },
+  divider: {
+    // Theme Color, or use css color in quote
+    background: colors.maikuu5,
+    width: "80%",
+  },
 }));
 
 export default function Compose(props) {
@@ -60,6 +67,20 @@ export default function Compose(props) {
   const user = props.user;
   const [interactive, setInteractive] = useState(true);
   const [basic, setBasic] = useState(false);
+  const [reflectionNoun, setReflectionNoun] = useState();
+  const [loadingNewNoun, setLoadingNewNoun] = useState(true);
+
+  useEffect(() => {
+    fetchReflectionNoun();
+  }, []);
+
+  const fetchReflectionNoun = () => {
+    const max = Object.entries(abstract_nouns).length;
+    const randomIndex = Math.floor(Math.random() * (max - 0 + 1));
+    const randomAbstractNoun = abstract_nouns[randomIndex];
+    setReflectionNoun(randomAbstractNoun);
+    setLoadingNewNoun(false);
+  };
 
   const setMode = (mode) => {
     if (mode === 0) {
@@ -86,7 +107,10 @@ export default function Compose(props) {
           >
             <Grid container xl={12} lg={12} md={12}>
               <Grid
-                style={{ backgroundColor: colors.maikuu0 }}
+                style={{
+                  backgroundColor: colors.maikuu0,
+                  boxShadow: "5px 5px  5px rgba(0,0,0,0.3)",
+                }}
                 key="control"
                 item
                 xs={12}
@@ -106,52 +130,151 @@ export default function Compose(props) {
                 >
                   {basic ? (
                     <div
-                      onClick={() => setMode(0)}
                       style={{
                         display: "flex",
-                        flexDirection: "row",
+                        flexDirection: "column",
                         justifyContent: "center",
                         alignItems: "center",
-                        padding: "20px",
-                        textAlign: "center",
-                        cursor: "pointer",
                       }}
                     >
-                      <SwapHorizontalCircleIcon
+                      <div
+                        onClick={() => setMode(0)}
                         style={{
+                          display: "flex",
+                          flexDirection: "row",
                           justifyContent: "center",
                           alignItems: "center",
-                          color: colors.maikuu4,
+                          padding: "20px",
+                          textAlign: "center",
+                          cursor: "pointer",
                         }}
-                      />
+                      >
+                        <SwapHorizontalCircleIcon
+                          style={{
+                            justifyContent: "center",
+                            alignItems: "center",
+                            color: colors.maikuu4,
+                          }}
+                        />
 
-                      <Typography className={classes.lightHeading}>
-                        Switch to the interactive experience
-                      </Typography>
+                        <Typography className={classes.lightHeading}>
+                          Switch to the interactive experience
+                        </Typography>
+                      </div>
+                      <Divider variant="middle" className={classes.divider} />
                     </div>
                   ) : (
                     <div
-                      onClick={() => setMode(1)}
                       style={{
                         display: "flex",
-                        flexDirection: "row",
+                        flexDirection: "column",
                         justifyContent: "center",
                         alignItems: "center",
-                        padding: "20px",
-                        textAlign: "center",
-                        cursor: "pointer",
                       }}
                     >
-                      <SwapHorizontalCircleIcon
+                      <div
+                        onClick={() => setMode(1)}
                         style={{
+                          display: "flex",
+                          flexDirection: "row",
                           justifyContent: "center",
                           alignItems: "center",
-                          color: colors.maikuu4,
+                          padding: "20px",
+                          textAlign: "center",
+                          cursor: "pointer",
                         }}
-                      />
-                      <Typography className={classes.lightHeading}>
-                        Switch to the basic experience
-                      </Typography>
+                      >
+                        <SwapHorizontalCircleIcon
+                          style={{
+                            justifyContent: "center",
+                            alignItems: "center",
+                            color: colors.maikuu4,
+                          }}
+                        />
+                        <Typography className={classes.lightHeading}>
+                          Switch to the basic experience
+                        </Typography>
+                      </div>
+                      <Divider variant="middle" className={classes.divider} />
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          marginTop: "50px",
+                          height: "90%",
+                          width: "90%",
+                        }}
+                      >
+                        <AnimatePresence>
+                          <motion.div
+                            key="success"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: [0.0, 1.0] }}
+                            exit={{ opacity: 0 }}
+                            style={{
+                              display: "flex",
+                              flexDirection: "row",
+
+                              width: "90%",
+                            }}
+                          >
+                            <Typography
+                              className={classes.lightHeading}
+                              style={{ display: "flex", marginRight: "20px" }}
+                            >
+                              Reflect on
+                            </Typography>
+                          </motion.div>
+                        </AnimatePresence>
+                        {!loadingNewNoun && (
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "flex-start",
+                              height: "90%",
+                              width: "90%",
+                            }}
+                          >
+                            <AnimatePresence>
+                              <motion.div
+                                key="success"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: [0.0, 1.0] }}
+                                exit={{ opacity: 0 }}
+                                style={{
+                                  display: "flex",
+                                  flexDirection: "row",
+                                  height: "90%",
+                                  width: "90%",
+                                }}
+                              >
+                                <Typography
+                                  className={classes.lightHeading}
+                                  style={{
+                                    fontFamily: "BadScript",
+                                    fontSize: "32px",
+                                  }}
+                                >
+                                  {reflectionNoun}
+                                </Typography>
+                                <IconButton
+                                  onClick={() => {
+                                    setLoadingNewNoun(true);
+                                    setTimeout(() => {
+                                      fetchReflectionNoun();
+                                    }, 500);
+                                  }}
+                                  aria-label="new reflection"
+                                >
+                                  <LoopIcon style={{ color: colors.maikuu5 }} />
+                                </IconButton>
+                              </motion.div>
+                            </AnimatePresence>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   )}
                 </div>
@@ -173,6 +296,7 @@ export default function Compose(props) {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: [0.0, 1.0] }}
                         exit={{ opacity: 0 }}
+                        style={{ height: "90%", width: "90%" }}
                       >
                         <HaikuBuilder user={user} setMode={setMode} />
                       </motion.div>
@@ -185,6 +309,7 @@ export default function Compose(props) {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: [0.0, 1.0] }}
                         exit={{ opacity: 0 }}
+                        style={{ height: "90%", width: "90%" }}
                       >
                         <InteractiveHaikuBuilder
                           user={user}

@@ -1,31 +1,22 @@
 import React, { useEffect, useState } from "react";
 import {
-  Button,
   Dialog,
   IconButton,
   makeStyles,
   TextField,
   Typography,
 } from "@material-ui/core";
-import LoopIcon from "@material-ui/icons/Loop";
 import CircleIcon from "@material-ui/icons/RadioButtonUnchecked";
-import abstract_nouns from "../assets/abstract_nouns.json";
 import colors from "../assets/colors";
-import { AnimatePresence, motion } from "framer-motion";
 import ImageCarousel from "./ImageCarousel";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 import CloseIcon from "@material-ui/icons/Close";
-import EmbeddedHaikuBuilder from "./EmbeddedHaikuBuilder";
 import syllable from "syllable";
 import Draggable from "react-draggable";
 
 export default function InteractiveHaikuBuilder(props) {
-  const user = props.user;
-  const setMode = props.setMode;
   const classes = useStyles();
-  const [reflectionNoun, setReflectionNoun] = useState();
-  const [loadingNewNoun, setLoadingNewNoun] = useState(true);
   const [backgroundImage, setBackgroundImage] = useState();
   const [showImageCarousel, setShowImageCarousel] = useState(false);
   const theme = useTheme();
@@ -54,22 +45,10 @@ export default function InteractiveHaikuBuilder(props) {
   const [showFirstLine, setShowFirstLine] = useState(false);
 
   useEffect(() => {
-    fetchReflectionNoun();
-  }, []);
-
-  useEffect(() => {
     let position = generateRandomMarkerPosition();
     setFirstMarkerPosition(position);
     backgroundImage ? setShowFirstMarker(true) : setShowFirstMarker(false);
   }, [backgroundImage]);
-
-  const fetchReflectionNoun = () => {
-    const max = Object.entries(abstract_nouns).length;
-    const randomIndex = Math.floor(Math.random() * (max - 0 + 1));
-    const randomAbstractNoun = abstract_nouns[randomIndex];
-    setReflectionNoun(randomAbstractNoun);
-    setLoadingNewNoun(false);
-  };
 
   function updatePreviewImage(file) {
     const fileReader = new FileReader();
@@ -91,99 +70,27 @@ export default function InteractiveHaikuBuilder(props) {
   return (
     <div
       style={{
-        display: "flex",
-        flexDirection: "column",
         height: "90%",
         width: "90%",
+        marginTop: "30px",
       }}
     >
       <div
-        style={{
+        display={{
           display: "flex",
           flexDirection: "row",
-          justifyContent: "center",
-          alignItems: "center",
+          height: "90%",
+          width: "90%",
         }}
       >
-        {!loadingNewNoun && (
-          <AnimatePresence>
-            <motion.div
-              key="success"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: [0.0, 1.0] }}
-              exit={{ opacity: 0 }}
-              style={{ display: "flex", flexDirection: "row" }}
-            >
-              <Typography
-                className={classes.heading}
-                style={{ display: "flex", marginRight: "20px" }}
-              >
-                Reflect on
-              </Typography>
-            </motion.div>
-          </AnimatePresence>
-        )}
-        {!loadingNewNoun && (
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "flex-start",
-            }}
-          >
-            <AnimatePresence>
-              <motion.div
-                key="success"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: [0.0, 1.0] }}
-                exit={{ opacity: 0 }}
-                style={{ display: "flex", flexDirection: "row" }}
-              >
-                <Typography
-                  className={classes.heading}
-                  style={{ fontFamily: "BadScript" }}
-                >
-                  {reflectionNoun}
-                </Typography>
-                <IconButton
-                  onClick={() => {
-                    setLoadingNewNoun(true);
-                    setTimeout(() => {
-                      fetchReflectionNoun();
-                    }, 500);
-                  }}
-                  aria-label="new reflection"
-                >
-                  <LoopIcon style={{ color: colors.maikuu2 }} />
-                </IconButton>
-              </motion.div>
-            </AnimatePresence>
-          </div>
-        )}
-      </div>
-
-      <div display={{ display: "flex", flexDirection: "row" }}>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
-          <Button
-            id="change-mode-button"
-            classes={{
-              root: classes.submit,
-            }}
-            onClick={() => setMode(1)}
-          >
-            <Typography>Basic Mode</Typography>
-          </Button>
-        </div>
         <div
           style={{
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
             flexDirection: "column",
+            height: "90%",
+            width: "90%",
           }}
         >
           <input
@@ -269,8 +176,6 @@ export default function InteractiveHaikuBuilder(props) {
               style={{
                 display: "flex",
                 flexDirection: "column",
-                // justifyContent: "center",
-                // alignItems: "center",
               }}
             >
               <Draggable>
@@ -329,8 +234,6 @@ export default function InteractiveHaikuBuilder(props) {
               )}
             </div>
           )}
-
-          {/* {backgroundImage && <EmbeddedHaikuBuilder user={user} />} */}
         </div>
       </div>
 

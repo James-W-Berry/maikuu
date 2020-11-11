@@ -18,6 +18,7 @@ const useStyles = makeStyles((theme) => ({
     top: 0,
     height: "80px",
     backgroundColor: colors.maikuu4,
+    boxShadow: "5px 5px  5px rgba(0,0,0,0.3)",
   },
   menuButton: {
     marginRight: theme.spacing(2),
