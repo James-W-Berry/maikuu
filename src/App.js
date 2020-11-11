@@ -14,26 +14,7 @@ import { motion } from "framer-motion";
 import Banner from "./components/Banner";
 import colors from "./assets/colors";
 import { Divider, Typography } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
-import logo from "./assets/logo_blue.png";
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
-  title: {
-    fontFamily: "BadScript",
-    color: colors.maikuu0s,
-    fontSize: "30px",
-    textAlign: "center",
-  },
-  appbar: {
-    background: colors.maikuu0,
-  },
-}));
+import logo from "./assets/logo.png";
 
 function onAuthStateChange(callback) {
   firebase.auth().onAuthStateChanged((user) => {
@@ -52,7 +33,6 @@ function onAuthStateChange(callback) {
 
 function App() {
   const [user, setUser] = useState({ loggedIn: false, isLoading: true });
-  const classes = useStyles();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChange(setUser);
@@ -67,26 +47,35 @@ function App() {
         <div style={{ display: "flex", flexDirection: "column" }}>
           {location.pathname.match("signin|signup|forgotpassword") == null ? (
             <div>
-              <div
+              {/* <div
                 style={{
                   display: "flex",
                   flexDirection: "row",
                   width: "100vw",
-                  marginTop: "10px",
+                  margin: "10px",
                   justifyContent: "center",
                   alignItems: "center",
                 }}
               >
-                <Typography
-                  style={{ alignSelf: "center", flex: "auto" }}
-                  variant="h6"
-                  className={classes.title}
-                >
-                  Maikuu
-                </Typography>
-              </div>
+                <img
+                  src={logo}
+                  alt="Logo"
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    height: "60px",
+                    width: "60px",
+                    cursor: "pointer",
+                  }}
+                />
+              </div> */}
               <Divider variant="middle" />
             </div>
+          ) : null}
+
+          {location.pathname.match("signin|signup|forgotpassword") == null ? (
+            <Banner user={user} />
           ) : null}
 
           <motion.div
@@ -110,9 +99,6 @@ function App() {
               <Redirect to="/feed" />
             </Switch>
           </motion.div>
-          {location.pathname.match("signin|signup|forgotpassword") == null ? (
-            <Banner user={user} />
-          ) : null}
         </div>
       )}
     />

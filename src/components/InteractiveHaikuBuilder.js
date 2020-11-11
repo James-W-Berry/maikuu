@@ -58,10 +58,8 @@ export default function InteractiveHaikuBuilder(props) {
   }, []);
 
   useEffect(() => {
-    console.log("background image changed");
     let position = generateRandomMarkerPosition();
     setFirstMarkerPosition(position);
-    console.log(backgroundImage);
     backgroundImage ? setShowFirstMarker(true) : setShowFirstMarker(false);
   }, [backgroundImage]);
 
@@ -284,7 +282,9 @@ export default function InteractiveHaikuBuilder(props) {
                     marginTop: firstMarkerPosition.y,
                     cursor: "pointer",
                   }}
-                  onClick={() => setShowFirstLine(!showFirstLine)}
+                  onClick={() => {
+                    setShowFirstLine(!showFirstLine);
+                  }}
                 />
               </Draggable>
               {showFirstLine && (

@@ -2,11 +2,10 @@ import React, { useState } from "react";
 import colors from "../assets/colors";
 import { makeStyles } from "@material-ui/core/styles";
 import { useHistory } from "react-router-dom";
-import ClearAllIcon from "@material-ui/icons/ClearAll";
-import CreateIcon from "@material-ui/icons/Create";
 import BottomNavigation from "@material-ui/core/BottomNavigation";
 import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
-import ProfileIcon from "@material-ui/icons/Person";
+import logo from "../assets/logo_blue.png";
+import { Divider } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -17,7 +16,9 @@ const useStyles = makeStyles((theme) => ({
   stickToBottom: {
     width: "100%",
     position: "fixed",
-    bottom: 0,
+    top: 0,
+    minHeight: "80px",
+    backgroundColor: colors.maikuu3,
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -35,11 +36,13 @@ const useStyles = makeStyles((theme) => ({
 const useNavStyles = makeStyles((theme) => ({
   selected: {
     "& .MuiBottomNavigationAction-label": {
-      color: colors.maikuu0,
+      color: colors.maikuu4,
+      outline: "none !important",
     },
-    "& .MuiSvgIcon-root": {
-      color: colors.maikuu0,
-    },
+  },
+  root: {
+    color: colors.maikuu5,
+    outline: "none !important",
   },
 }));
 
@@ -50,9 +53,9 @@ export default function Banner(props) {
   const [value, setValue] = useState(0);
 
   return (
-    <div className="root">
+    <div className="root" style={{ zIndex: "1" }}>
       <BottomNavigation
-        style={{ justifyContent: "space-evenly" }}
+        style={{ justifyContent: "space-evenly", alignItems: "center" }}
         value={value}
         showLabels
         className={classes.stickToBottom}
@@ -65,18 +68,6 @@ export default function Banner(props) {
             setValue(0);
             history.push("/feed");
           }}
-          icon={<ClearAllIcon />}
-        />
-
-        <BottomNavigationAction
-          showLabel
-          classes={navClasses}
-          label="Compose"
-          onClick={() => {
-            setValue(1);
-            history.push("/compose");
-          }}
-          icon={<CreateIcon />}
         />
 
         <BottomNavigationAction
@@ -84,13 +75,43 @@ export default function Banner(props) {
           classes={navClasses}
           label="Profile"
           onClick={() => {
-            setValue(2);
-            console.log(value);
+            setValue(1);
             history.push("/profile");
           }}
-          icon={<ProfileIcon />}
+        />
+
+        <img
+          src={logo}
+          alt="Logo"
+          style={{
+            height: "60px",
+            width: "60px",
+            cursor: "pointer",
+          }}
+        />
+
+        <BottomNavigationAction
+          showLabel
+          classes={navClasses}
+          label="Compose"
+          onClick={() => {
+            setValue(3);
+            history.push("/compose");
+          }}
+        />
+
+        <BottomNavigationAction
+          showLabel
+          classes={navClasses}
+          // label=""
+          onClick={() => {
+            setValue(4);
+            history.push("/profile");
+          }}
         />
       </BottomNavigation>
+
+      <Divider variant="middle" />
     </div>
   );
 }

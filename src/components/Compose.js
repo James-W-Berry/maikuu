@@ -62,7 +62,7 @@ export default function Compose(props) {
   return (
     <AnimatePresence>
       <motion.div
-        style={{ marginBottom: "10px", marginTop: "10px" }}
+        style={{ marginBottom: "10px", marginTop: "100px" }}
         key="success"
         initial={{ opacity: 0 }}
         animate={{ opacity: [0.0, 1.0] }}
