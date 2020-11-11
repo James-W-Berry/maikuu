@@ -13,8 +13,6 @@ import PuffLoader from "react-spinners/PuffLoader";
 import { motion } from "framer-motion";
 import Banner from "./components/Banner";
 import colors from "./assets/colors";
-import { Divider, Typography } from "@material-ui/core";
-import logo from "./assets/logo.png";
 
 function onAuthStateChange(callback) {
   firebase.auth().onAuthStateChanged((user) => {
@@ -44,36 +42,9 @@ function App() {
   let FeatureRoutes = () => (
     <Route
       render={({ location }) => (
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          {location.pathname.match("signin|signup|forgotpassword") == null ? (
-            <div>
-              {/* <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  width: "100vw",
-                  margin: "10px",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <img
-                  src={logo}
-                  alt="Logo"
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    height: "60px",
-                    width: "60px",
-                    cursor: "pointer",
-                  }}
-                />
-              </div> */}
-              <Divider variant="middle" />
-            </div>
-          ) : null}
-
+        <div
+          style={{ display: "flex", flexDirection: "column", height: "100%" }}
+        >
           {location.pathname.match("signin|signup|forgotpassword") == null ? (
             <Banner user={user} />
           ) : null}
@@ -81,6 +52,11 @@ function App() {
           <motion.div
             id="content"
             key={location.pathname}
+            style={
+              location.pathname.match("signin|signup|forgotpassword") == null
+                ? { marginTop: "80px", height: "100%" }
+                : null
+            }
             animate={{
               opacity: [0.9, 1.0],
             }}

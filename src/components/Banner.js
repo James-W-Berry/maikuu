@@ -5,7 +5,6 @@ import { useHistory } from "react-router-dom";
 import BottomNavigation from "@material-ui/core/BottomNavigation";
 import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
 import logo from "../assets/logo_blue.png";
-import { Divider } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -13,12 +12,12 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-evenly",
     alignItems: "center",
   },
-  stickToBottom: {
+  stickToTop: {
     width: "100%",
     position: "fixed",
     top: 0,
-    minHeight: "80px",
-    backgroundColor: colors.maikuu3,
+    height: "80px",
+    backgroundColor: colors.maikuu4,
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -36,12 +35,11 @@ const useStyles = makeStyles((theme) => ({
 const useNavStyles = makeStyles((theme) => ({
   selected: {
     "& .MuiBottomNavigationAction-label": {
-      color: colors.maikuu4,
+      color: colors.maikuu1,
       outline: "none !important",
     },
   },
   root: {
-    color: colors.maikuu5,
     outline: "none !important",
   },
 }));
@@ -58,7 +56,7 @@ export default function Banner(props) {
         style={{ justifyContent: "space-evenly", alignItems: "center" }}
         value={value}
         showLabels
-        className={classes.stickToBottom}
+        className={classes.stickToTop}
       >
         <BottomNavigationAction
           showLabel
@@ -110,8 +108,6 @@ export default function Banner(props) {
           }}
         />
       </BottomNavigation>
-
-      <Divider variant="middle" />
     </div>
   );
 }

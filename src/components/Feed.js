@@ -587,7 +587,7 @@ export default function Main(props) {
   return (
     <AnimatePresence>
       <motion.div
-        style={{ marginBottom: "60px", marginTop: "80px" }}
+        style={{ marginBottom: "60px", marginTop: "10px" }}
         key="success"
         initial={{ opacity: 0 }}
         animate={{ opacity: [0.0, 1.0] }}

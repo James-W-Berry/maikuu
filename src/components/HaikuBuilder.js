@@ -388,8 +388,8 @@ export default function HaikuBuilder(props) {
       <div>
         <Modal
           style={{
-            width: "100vw",
-            height: "100vh",
+            width: "100%",
+            height: "100%",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
@@ -473,7 +473,7 @@ export default function HaikuBuilder(props) {
               justifyContent: "center",
               alignItems: "center",
               height: "auto",
-              width: "90vw",
+              width: "90%",
             }}
           >
             <div
@@ -714,7 +714,7 @@ export default function HaikuBuilder(props) {
                 flexDirection: "row",
                 justifyContent: "space-evenly",
                 alignItems: "center",
-                width: "100vw",
+                width: "80%",
                 marginBottom: "20px",
                 marginTop: "20px",
               }}

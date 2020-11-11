@@ -93,8 +93,8 @@ export default function InteractiveHaikuBuilder(props) {
       style={{
         display: "flex",
         flexDirection: "column",
-        height: "90vh",
-        width: "90vw",
+        height: "90%",
+        width: "90%",
       }}
     >
       <div
@@ -252,8 +252,8 @@ export default function InteractiveHaikuBuilder(props) {
           backgroundRepeat: "no-repeat",
           backgroundPosition: "center center",
           backgroundSize: "cover",
-          height: "60vh",
-          width: "90vw",
+          height: "60%",
+          width: "90%",
           boxShadow: backgroundImage ? "10px 10px  5px rgba(0,0,0,0.5)" : null,
         }}
       >
