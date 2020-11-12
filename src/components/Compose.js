@@ -44,6 +44,16 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     padding: "10px",
   },
+  lightHeadingInactive: {
+    color: colors.maikuu4,
+    opacity: "0.5",
+    userSelect: "none",
+    fontSize: "18px",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: "10px",
+  },
   submit: {
     backgroundColor: colors.maikuu0,
     color: colors.maikuu4,
@@ -58,7 +68,6 @@ const useStyles = makeStyles((theme) => ({
   divider: {
     // Theme Color, or use css color in quote
     background: colors.maikuu5,
-    width: "80%",
   },
 }));
 
@@ -135,6 +144,7 @@ export default function Compose(props) {
                         flexDirection: "column",
                         justifyContent: "center",
                         alignItems: "center",
+                        width: "90%",
                       }}
                     >
                       <div
@@ -147,6 +157,7 @@ export default function Compose(props) {
                           padding: "20px",
                           textAlign: "center",
                           cursor: "pointer",
+                          width: "100%",
                         }}
                       >
                         <SwapHorizontalCircleIcon
@@ -158,7 +169,7 @@ export default function Compose(props) {
                         />
 
                         <Typography className={classes.lightHeading}>
-                          Switch to the interactive experience
+                          Interactive Mode
                         </Typography>
                       </div>
                       <Divider variant="middle" className={classes.divider} />
@@ -170,6 +181,7 @@ export default function Compose(props) {
                         flexDirection: "column",
                         justifyContent: "center",
                         alignItems: "center",
+                        width: "90%",
                       }}
                     >
                       <div
@@ -182,6 +194,7 @@ export default function Compose(props) {
                           padding: "20px",
                           textAlign: "center",
                           cursor: "pointer",
+                          width: "100%",
                         }}
                       >
                         <SwapHorizontalCircleIcon
@@ -192,19 +205,25 @@ export default function Compose(props) {
                           }}
                         />
                         <Typography className={classes.lightHeading}>
-                          Switch to the basic experience
+                          Basic Mode
                         </Typography>
                       </div>
-                      <Divider variant="middle" className={classes.divider} />
+                      <Divider
+                        variant="middle"
+                        className={classes.divider}
+                        style={{ width: "100%" }}
+                      />
                       <div
                         style={{
                           display: "flex",
                           flexDirection: "column",
                           justifyContent: "center",
                           alignItems: "center",
-                          marginTop: "50px",
+                          marginTop: "10%",
+                          marginBottom: "10%",
+
                           height: "90%",
-                          width: "90%",
+                          width: "100%",
                         }}
                       >
                         <AnimatePresence>
@@ -216,19 +235,18 @@ export default function Compose(props) {
                             style={{
                               display: "flex",
                               flexDirection: "row",
-
                               width: "90%",
                             }}
                           >
                             <Typography
                               className={classes.lightHeading}
-                              style={{ display: "flex", marginRight: "20px" }}
+                              style={{ display: "flex" }}
                             >
                               Reflect on
                             </Typography>
                           </motion.div>
                         </AnimatePresence>
-                        {!loadingNewNoun && (
+                        {!loadingNewNoun ? (
                           <div
                             style={{
                               display: "flex",
@@ -242,6 +260,7 @@ export default function Compose(props) {
                                 key="success"
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: [0.0, 1.0] }}
+                                transition={{ duration: 2 }}
                                 exit={{ opacity: 0 }}
                                 style={{
                                   display: "flex",
@@ -273,8 +292,102 @@ export default function Compose(props) {
                               </motion.div>
                             </AnimatePresence>
                           </div>
+                        ) : (
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "flex-start",
+                              height: "90%",
+                              width: "90%",
+                            }}
+                          >
+                            <Typography
+                              className={classes.lightHeading}
+                              style={{
+                                fontFamily: "BadScript",
+                                fontSize: "32px",
+                                color: colors.maikuu0,
+                              }}
+                            >
+                              Loading
+                            </Typography>
+                          </div>
                         )}
                       </div>
+                      <Divider
+                        variant="middle"
+                        className={classes.divider}
+                        style={{ width: "100%" }}
+                      />
+                      <AnimatePresence>
+                        <motion.div
+                          key="success"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: [0.0, 1.0] }}
+                          exit={{ opacity: 0 }}
+                          transition={{ duration: 2 }}
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            width: "90%",
+                            marginTop: "10%",
+                          }}
+                        >
+                          <Typography
+                            className={classes.lightHeading}
+                            style={{
+                              display: "flex",
+                              justifyContent: "flex-start",
+                            }}
+                          >
+                            Select inspiration
+                          </Typography>
+                        </motion.div>
+                        <motion.div
+                          key="success"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: [0.0, 1.0] }}
+                          transition={{ duration: 4 }}
+                          exit={{ opacity: 0 }}
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            width: "90%",
+                          }}
+                        >
+                          <Typography
+                            className={classes.lightHeadingInactive}
+                            style={{
+                              display: "flex",
+                              justifyContent: "flex-start",
+                            }}
+                          >
+                            Focus your reflection
+                          </Typography>
+                        </motion.div>
+                        <motion.div
+                          key="success"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: [0.0, 1.0] }}
+                          transition={{ duration: 6 }}
+                          exit={{ opacity: 0 }}
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            width: "90%",
+                          }}
+                        >
+                          <Typography
+                            className={classes.lightHeadingInactive}
+                            style={{
+                              display: "flex",
+                              justifyContent: "flex-start",
+                            }}
+                          >
+                            Compose
+                          </Typography>
+                        </motion.div>
+                      </AnimatePresence>
                     </div>
                   )}
                 </div>
@@ -287,6 +400,8 @@ export default function Compose(props) {
                     justifyContent: "center",
                     alignItems: "center",
                     flexDirection: "column",
+                    height: "100%",
+                    width: "100%",
                   }}
                 >
                   {basic && (
@@ -309,7 +424,7 @@ export default function Compose(props) {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: [0.0, 1.0] }}
                         exit={{ opacity: 0 }}
-                        style={{ height: "90%", width: "90%" }}
+                        style={{ height: "100%", width: "100%" }}
                       >
                         <InteractiveHaikuBuilder
                           user={user}

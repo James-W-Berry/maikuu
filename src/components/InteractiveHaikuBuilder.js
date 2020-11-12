@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import {
+  Button,
   Dialog,
+  Divider,
   IconButton,
   makeStyles,
   TextField,
@@ -14,10 +16,12 @@ import { useTheme } from "@material-ui/core/styles";
 import CloseIcon from "@material-ui/icons/Close";
 import syllable from "syllable";
 import Draggable from "react-draggable";
+import or from "../assets/or.png";
 
 export default function InteractiveHaikuBuilder(props) {
   const classes = useStyles();
   const [backgroundImage, setBackgroundImage] = useState();
+  const [fileInputRef, setFileInputRef] = useState();
   const [showImageCarousel, setShowImageCarousel] = useState(false);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
@@ -67,34 +71,39 @@ export default function InteractiveHaikuBuilder(props) {
     return firstMarkerPosition;
   }
 
+  const triggerInputFile = () => fileInputRef.click();
+
   return (
     <div
       style={{
-        height: "90%",
-        width: "90%",
-        marginTop: "30px",
+        display: "flex",
+        justifyContent: "center",
+        flexDirection: "column",
+        height: "100%",
       }}
     >
       <div
-        display={{
+        style={{
           display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
           flexDirection: "row",
-          height: "90%",
-          width: "90%",
+          flex: 1,
+          margin: "20px",
         }}
       >
         <div
           style={{
-            display: "flex",
+            flex: 2,
+            backgroundColor: colors.maikuu0,
+            height: "60%",
             justifyContent: "center",
-            alignItems: "center",
-            flexDirection: "column",
-            height: "90%",
-            width: "90%",
+            alignItems: "flex-start",
           }}
         >
           <input
             accept="image/*"
+            ref={(fileInput) => setFileInputRef(fileInput)}
             className={classes.input}
             id="image-input"
             type="file"
@@ -117,125 +126,139 @@ export default function InteractiveHaikuBuilder(props) {
               flexDirection: "row",
             }}
           >
-            <Typography style={{ fontWeight: "bold" }}>Pick</Typography>
-            <Typography style={{ marginLeft: "4px" }}>
-              one of your photos
+            <Typography className={classes.lightHeading}>
+              Pick one of your photos
             </Typography>
           </label>
-          <div
-            style={{
-              cursor: "pointer",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              flexDirection: "row",
-            }}
-            onClick={() => {
-              setShowImageCarousel(!showImageCarousel);
-            }}
-          >
-            <Typography>or</Typography>
-            <Typography
-              style={{
-                marginLeft: "4px",
-                fontWeight: "bold",
-                cursor: "pointer",
-              }}
-            >
-              select
-            </Typography>
-            <Typography style={{ marginLeft: "4px" }}>
-              one of ours for inspiration
-            </Typography>
-          </div>
         </div>
-      </div>
-
-      <div
-        style={{
-          marginTop: "10px",
-          backgroundImage: backgroundImage,
-          borderRadius: "10px",
-          backgroundRepeat: "no-repeat",
-          backgroundPosition: "center center",
-          backgroundSize: "cover",
-          height: "60%",
-          width: "90%",
-          boxShadow: backgroundImage ? "10px 10px  5px rgba(0,0,0,0.5)" : null,
-        }}
-      >
         <div
           style={{
             display: "flex",
+            flex: 1,
             justifyContent: "center",
             alignItems: "center",
+            height: "60% ",
+            backgroundColor: colors.maikuu5,
           }}
         >
-          {showFirstMarker && (
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-              }}
-            >
-              <Draggable>
-                <CircleIcon
-                  style={{
-                    color: colors.maikuu4,
-                    position: "relative",
-                    marginLeft: firstMarkerPosition.x,
-                    marginTop: firstMarkerPosition.y,
-                    cursor: "pointer",
-                  }}
-                  onClick={() => {
-                    setShowFirstLine(!showFirstLine);
-                  }}
-                />
-              </Draggable>
-              {showFirstLine && (
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    backgroundColor: "rgba(0,0,0,0.5",
-                  }}
-                >
-                  <TextField
-                    className={classes.fiveLine}
-                    margin="normal"
-                    required
-                    name="line-1"
-                    type="text"
-                    id="line-1"
-                    helperText={`${firstLine.syllables}/5 syllable line`}
-                    inputProps={{
-                      autoComplete: "off",
-                    }}
-                    value={firstLine.value}
-                    onChange={(event) => {
-                      let syllables = syllable(event.target.value);
-                      if (syllables !== 5) {
-                        setFirstLine({
-                          value: event.target.value,
-                          syllables: syllables,
-                          valid: false,
-                        });
-                      } else {
-                        setFirstLine({
-                          value: event.target.value,
-                          syllables: syllables,
-                          valid: true,
-                        });
-                      }
-                    }}
-                  />
-                </div>
-              )}
-            </div>
-          )}
+          <img
+            src={or}
+            alt="or"
+            style={{
+              height: "50%",
+              width: "50%",
+            }}
+          />
+        </div>
+        <div
+          style={{
+            cursor: "pointer",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "flex-end",
+            flexDirection: "row",
+            flex: 2,
+            height: "60% ",
+            backgroundColor: colors.maikuu0,
+          }}
+          onClick={() => {
+            setShowImageCarousel(!showImageCarousel);
+          }}
+        >
+          <Typography className={classes.lightHeading}>
+            Select one of ours for inspiration
+          </Typography>
         </div>
       </div>
+
+      {backgroundImage && (
+        <div
+          style={{
+            margin: "20px",
+            backgroundImage: backgroundImage,
+            borderRadius: "10px",
+            backgroundRepeat: "no-repeat",
+            backgroundPosition: "center center",
+            backgroundSize: "cover",
+            flex: 6,
+            boxShadow: backgroundImage
+              ? "10px 10px  5px rgba(0,0,0,0.5)"
+              : null,
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            {showFirstMarker && (
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                }}
+              >
+                <Draggable>
+                  <CircleIcon
+                    style={{
+                      color: colors.maikuu4,
+                      position: "relative",
+                      marginLeft: firstMarkerPosition.x,
+                      marginTop: firstMarkerPosition.y,
+                      cursor: "pointer",
+                    }}
+                    onClick={() => {
+                      setShowFirstLine(!showFirstLine);
+                    }}
+                  />
+                </Draggable>
+                {showFirstLine && (
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      backgroundColor: "rgba(0,0,0,0.5",
+                    }}
+                  >
+                    <TextField
+                      className={classes.fiveLine}
+                      margin="normal"
+                      required
+                      name="line-1"
+                      type="text"
+                      id="line-1"
+                      helperText={`${firstLine.syllables}/5 syllable line`}
+                      inputProps={{
+                        autoComplete: "off",
+                      }}
+                      value={firstLine.value}
+                      onChange={(event) => {
+                        let syllables = syllable(event.target.value);
+                        if (syllables !== 5) {
+                          setFirstLine({
+                            value: event.target.value,
+                            syllables: syllables,
+                            valid: false,
+                          });
+                        } else {
+                          setFirstLine({
+                            value: event.target.value,
+                            syllables: syllables,
+                            valid: true,
+                          });
+                        }
+                      }}
+                    />
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       <Dialog
         fullScreen={fullScreen}
@@ -298,6 +321,13 @@ const useStyles = makeStyles((theme) => ({
     color: colors.maikuu4,
     cursor: "pointer",
   },
+  labelSubmit: {
+    backgroundColor: colors.maikuu0,
+    color: colors.maikuu4,
+    cursor: "pointer",
+    padding: "5px",
+    borderRadius: "5px",
+  },
   disabledSubmit: {
     backgroundColor: colors.maikuu4,
     color: colors.maikuu5,
@@ -341,6 +371,15 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     alignItems: "center",
     marginTop: "10px",
+  },
+  lightHeading: {
+    color: colors.maikuu4,
+    userSelect: "none",
+    fontSize: "18px",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: "10px",
   },
   text: {
     color: colors.maikuu0,

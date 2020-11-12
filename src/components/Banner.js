@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
     position: "fixed",
     top: 0,
     height: "80px",
-    backgroundColor: colors.maikuu4,
+    backgroundColor: colors.maikuu5,
     boxShadow: "5px 5px  5px rgba(0,0,0,0.3)",
   },
   menuButton: {
