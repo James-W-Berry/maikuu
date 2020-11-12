@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import {
   Button,
+  CssBaseline,
   Dialog,
   Divider,
+  Grid,
   IconButton,
   makeStyles,
   TextField,
@@ -16,7 +18,8 @@ import { useTheme } from "@material-ui/core/styles";
 import CloseIcon from "@material-ui/icons/Close";
 import syllable from "syllable";
 import Draggable from "react-draggable";
-import or from "../assets/or.png";
+import ours from "../assets/ours.png";
+import yours from "../assets/yours.png";
 
 export default function InteractiveHaikuBuilder(props) {
   const classes = useStyles();
@@ -78,186 +81,337 @@ export default function InteractiveHaikuBuilder(props) {
       style={{
         display: "flex",
         justifyContent: "center",
+        alignItems: "center",
         flexDirection: "column",
+        width: "100%",
         height: "100%",
       }}
     >
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          flexDirection: "row",
-          flex: 1,
-          margin: "20px",
-        }}
-      >
-        <div
-          style={{
-            flex: 2,
-            backgroundColor: colors.maikuu0,
-            height: "60%",
-            justifyContent: "center",
-            alignItems: "flex-start",
-          }}
-        >
-          <input
-            accept="image/*"
-            ref={(fileInput) => setFileInputRef(fileInput)}
-            className={classes.input}
-            id="image-input"
-            type="file"
-            style={{
-              display: "none",
-            }}
-            onChange={(e) => {
-              if (e.target.files[0]) {
-                updatePreviewImage(e.target.files[0]);
-              }
-            }}
-          />
-          <label
-            for="image-input"
-            style={{
-              cursor: "pointer",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              flexDirection: "row",
-            }}
-          >
-            <Typography className={classes.lightHeading}>
-              Pick one of your photos
-            </Typography>
-          </label>
-        </div>
-        <div
-          style={{
-            display: "flex",
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
-            height: "60% ",
-            backgroundColor: colors.maikuu5,
-          }}
-        >
-          <img
-            src={or}
-            alt="or"
-            style={{
-              height: "50%",
-              width: "50%",
-            }}
-          />
-        </div>
-        <div
-          style={{
-            cursor: "pointer",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "flex-end",
-            flexDirection: "row",
-            flex: 2,
-            height: "60% ",
-            backgroundColor: colors.maikuu0,
-          }}
-          onClick={() => {
-            setShowImageCarousel(!showImageCarousel);
-          }}
-        >
-          <Typography className={classes.lightHeading}>
-            Select one of ours for inspiration
-          </Typography>
-        </div>
-      </div>
-
-      {backgroundImage && (
-        <div
+      {backgroundImage ? (
+        <Grid
+          container
+          spacing={1}
+          xl={11}
+          lg={11}
+          md={11}
+          sm={11}
+          xs={11}
           style={{
             margin: "20px",
-            backgroundImage: backgroundImage,
-            borderRadius: "10px",
-            backgroundRepeat: "no-repeat",
-            backgroundPosition: "center center",
-            backgroundSize: "cover",
-            flex: 6,
-            boxShadow: backgroundImage
-              ? "10px 10px  5px rgba(0,0,0,0.5)"
-              : null,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            // width: "100%",
+            // height: "100%",
           }}
         >
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
+          <Grid
+            key="userImage"
+            item
+            xs={6}
+            sm={6}
+            md={6}
+            lg={6}
+            xl={6}
+            style={{ width: "100%", height: "15%" }}
           >
-            {showFirstMarker && (
+            <CssBaseline />
+            <div
+              style={{
+                display: "flex",
+                cursor: "pointer",
+                backgroundColor: colors.lightBlue,
+                padding: "10px",
+                justifyContent: "center",
+                alignItems: "flex-start",
+                borderRadius: "10px",
+                flexDirection: "row",
+                boxShadow: "10px 10px  5px rgba(0,0,0,0.5)",
+              }}
+              onClick={() => triggerInputFile()}
+            >
+              <input
+                accept="image/*"
+                ref={(fileInput) => setFileInputRef(fileInput)}
+                className={classes.input}
+                id="image-input"
+                type="file"
+                style={{
+                  display: "none",
+                }}
+                onChange={(e) => {
+                  if (e.target.files[0]) {
+                    updatePreviewImage(e.target.files[0]);
+                  }
+                }}
+              />
+              <label
+                for="image-input"
+                style={{
+                  cursor: "pointer",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  flexDirection: "row",
+                }}
+              >
+                <Typography className={classes.lightHeading}>
+                  Pick one of your photos
+                </Typography>
+                <img
+                  src={yours}
+                  alt="or"
+                  style={{
+                    height: "10%",
+                    width: "10%",
+                  }}
+                />
+              </label>
+            </div>
+          </Grid>
+          <Grid
+            key="maikuuImage"
+            item
+            xs={6}
+            sm={6}
+            md={6}
+            lg={6}
+            xl={6}
+            style={{ width: "100%", height: "15%" }}
+          >
+            <CssBaseline />
+            <div
+              style={{
+                cursor: "pointer",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "flex-end",
+                flexDirection: "row",
+                padding: "10px",
+                backgroundColor: colors.lightBlue,
+                borderRadius: "10px",
+                boxShadow: "10px 10px  5px rgba(0,0,0,0.5)",
+              }}
+              onClick={() => {
+                setShowImageCarousel(!showImageCarousel);
+              }}
+            >
+              <img
+                src={ours}
+                alt="or"
+                style={{
+                  height: "10%",
+                  width: "10%",
+                }}
+              />
+              <Typography className={classes.lightHeading}>
+                or one of ours
+              </Typography>
+            </div>
+          </Grid>
+
+          <Grid
+            key="maikuuImage"
+            item
+            xs={12}
+            sm={12}
+            md={12}
+            lg={12}
+            xl={12}
+            style={{ width: "100%", height: "80%" }}
+          >
+            <div
+              style={{
+                backgroundImage: backgroundImage,
+                borderRadius: "10px",
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "center center",
+                backgroundSize: "cover",
+                boxShadow: backgroundImage
+                  ? "10px 10px  5px rgba(0,0,0,0.5)"
+                  : null,
+                width: "100%",
+                height: "100%",
+              }}
+            >
               <div
                 style={{
                   display: "flex",
-                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
                 }}
               >
-                <Draggable>
-                  <CircleIcon
-                    style={{
-                      color: colors.maikuu4,
-                      position: "relative",
-                      marginLeft: firstMarkerPosition.x,
-                      marginTop: firstMarkerPosition.y,
-                      cursor: "pointer",
-                    }}
-                    onClick={() => {
-                      setShowFirstLine(!showFirstLine);
-                    }}
-                  />
-                </Draggable>
-                {showFirstLine && (
+                {showFirstMarker && (
                   <div
                     style={{
                       display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      backgroundColor: "rgba(0,0,0,0.5",
+                      flexDirection: "column",
                     }}
                   >
-                    <TextField
-                      className={classes.fiveLine}
-                      margin="normal"
-                      required
-                      name="line-1"
-                      type="text"
-                      id="line-1"
-                      helperText={`${firstLine.syllables}/5 syllable line`}
-                      inputProps={{
-                        autoComplete: "off",
-                      }}
-                      value={firstLine.value}
-                      onChange={(event) => {
-                        let syllables = syllable(event.target.value);
-                        if (syllables !== 5) {
-                          setFirstLine({
-                            value: event.target.value,
-                            syllables: syllables,
-                            valid: false,
-                          });
-                        } else {
-                          setFirstLine({
-                            value: event.target.value,
-                            syllables: syllables,
-                            valid: true,
-                          });
-                        }
-                      }}
-                    />
+                    <Draggable>
+                      <CircleIcon
+                        style={{
+                          color: colors.maikuu4,
+                          position: "relative",
+                          marginLeft: firstMarkerPosition.x,
+                          marginTop: firstMarkerPosition.y,
+                          cursor: "pointer",
+                        }}
+                        onClick={() => {
+                          setShowFirstLine(!showFirstLine);
+                        }}
+                      />
+                    </Draggable>
+                    {showFirstLine && (
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          backgroundColor: "rgba(0,0,0,0.5",
+                        }}
+                      >
+                        <TextField
+                          className={classes.fiveLine}
+                          margin="normal"
+                          required
+                          name="line-1"
+                          type="text"
+                          id="line-1"
+                          helperText={`${firstLine.syllables}/5 syllable line`}
+                          inputProps={{
+                            autoComplete: "off",
+                          }}
+                          value={firstLine.value}
+                          onChange={(event) => {
+                            let syllables = syllable(event.target.value);
+                            if (syllables !== 5) {
+                              setFirstLine({
+                                value: event.target.value,
+                                syllables: syllables,
+                                valid: false,
+                              });
+                            } else {
+                              setFirstLine({
+                                value: event.target.value,
+                                syllables: syllables,
+                                valid: true,
+                              });
+                            }
+                          }}
+                        />
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
-            )}
-          </div>
-        </div>
+            </div>
+          </Grid>
+        </Grid>
+      ) : (
+        <Grid
+          container
+          spacing={4}
+          xl={11}
+          lg={11}
+          md={11}
+          sm={11}
+          xs={11}
+          style={{
+            margin: "20px",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: "column",
+          }}
+        >
+          <Grid key="userImage" item xs={10} sm={10} md={6} lg={6} xl={6}>
+            <CssBaseline />
+            <div
+              style={{
+                display: "flex",
+                cursor: "pointer",
+                backgroundColor: colors.lightBlue,
+                padding: "10px",
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: "10px",
+                flexDirection: "row",
+                boxShadow: "10px 10px  5px rgba(0,0,0,0.5)",
+              }}
+              onClick={() => triggerInputFile()}
+            >
+              <input
+                accept="image/*"
+                ref={(fileInput) => setFileInputRef(fileInput)}
+                className={classes.input}
+                id="image-input"
+                type="file"
+                style={{
+                  display: "none",
+                }}
+                onChange={(e) => {
+                  if (e.target.files[0]) {
+                    updatePreviewImage(e.target.files[0]);
+                  }
+                }}
+              />
+              <label
+                for="image-input"
+                style={{
+                  cursor: "pointer",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  flexDirection: "row",
+                }}
+              >
+                <Typography className={classes.lightHeading}>
+                  Pick one of your photos
+                </Typography>
+                <img
+                  src={yours}
+                  alt="or"
+                  style={{
+                    height: "50%",
+                    width: "50%",
+                  }}
+                />
+              </label>
+            </div>
+          </Grid>
+          <Grid key="maikuuImage" item xs={10} sm={10} md={6} lg={6} xl={6}>
+            <CssBaseline />
+            <div
+              style={{
+                cursor: "pointer",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "row",
+                padding: "50px",
+                backgroundColor: colors.lightBlue,
+                borderRadius: "10px",
+                boxShadow: "10px 10px  5px rgba(0,0,0,0.5)",
+              }}
+              onClick={() => {
+                setShowImageCarousel(!showImageCarousel);
+              }}
+            >
+              <Typography className={classes.lightHeading}>
+                or one of ours
+              </Typography>
+              <img
+                src={ours}
+                alt="or"
+                style={{
+                  height: "50%",
+                  width: "50%",
+                }}
+              />
+            </div>
+          </Grid>
+        </Grid>
       )}
 
       <Dialog
