@@ -74,7 +74,9 @@ export default function InteractiveHaikuBuilder(props) {
     return firstMarkerPosition;
   }
 
-  const triggerInputFile = () => fileInputRef.click();
+  function triggerInputFile() {
+    fileInputRef.click();
+  }
 
   return (
     <div
@@ -90,19 +92,17 @@ export default function InteractiveHaikuBuilder(props) {
       {backgroundImage ? (
         <Grid
           container
-          spacing={1}
+          spacing={2}
           xl={11}
           lg={11}
           md={11}
           sm={11}
           xs={11}
           style={{
-            margin: "20px",
+            margin: "10px",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            // width: "100%",
-            // height: "100%",
           }}
         >
           <Grid
@@ -113,7 +113,7 @@ export default function InteractiveHaikuBuilder(props) {
             md={6}
             lg={6}
             xl={6}
-            style={{ width: "100%", height: "15%" }}
+            style={{ width: "100%", height: "10%" }}
           >
             <CssBaseline />
             <div
@@ -121,14 +121,12 @@ export default function InteractiveHaikuBuilder(props) {
                 display: "flex",
                 cursor: "pointer",
                 backgroundColor: colors.lightBlue,
-                padding: "10px",
                 justifyContent: "center",
                 alignItems: "flex-start",
                 borderRadius: "10px",
                 flexDirection: "row",
                 boxShadow: "10px 10px  5px rgba(0,0,0,0.5)",
               }}
-              onClick={() => triggerInputFile()}
             >
               <input
                 accept="image/*"
@@ -153,19 +151,13 @@ export default function InteractiveHaikuBuilder(props) {
                   justifyContent: "center",
                   alignItems: "center",
                   flexDirection: "row",
+                  marginBottom: "0px",
+                  width: "100%",
                 }}
               >
-                <Typography className={classes.lightHeading}>
+                <Typography className={classes.inspirationLabel}>
                   Pick one of your photos
                 </Typography>
-                <img
-                  src={yours}
-                  alt="or"
-                  style={{
-                    height: "10%",
-                    width: "10%",
-                  }}
-                />
               </label>
             </div>
           </Grid>
@@ -177,7 +169,7 @@ export default function InteractiveHaikuBuilder(props) {
             md={6}
             lg={6}
             xl={6}
-            style={{ width: "100%", height: "15%" }}
+            style={{ width: "100%", height: "10%" }}
           >
             <CssBaseline />
             <div
@@ -185,9 +177,8 @@ export default function InteractiveHaikuBuilder(props) {
                 cursor: "pointer",
                 display: "flex",
                 justifyContent: "center",
-                alignItems: "flex-end",
+                alignItems: "center",
                 flexDirection: "row",
-                padding: "10px",
                 backgroundColor: colors.lightBlue,
                 borderRadius: "10px",
                 boxShadow: "10px 10px  5px rgba(0,0,0,0.5)",
@@ -196,16 +187,8 @@ export default function InteractiveHaikuBuilder(props) {
                 setShowImageCarousel(!showImageCarousel);
               }}
             >
-              <img
-                src={ours}
-                alt="or"
-                style={{
-                  height: "10%",
-                  width: "10%",
-                }}
-              />
-              <Typography className={classes.lightHeading}>
-                or one of ours
+              <Typography className={classes.inspirationLabel}>
+                or use one of ours
               </Typography>
             </div>
           </Grid>
@@ -218,7 +201,7 @@ export default function InteractiveHaikuBuilder(props) {
             md={12}
             lg={12}
             xl={12}
-            style={{ width: "100%", height: "80%" }}
+            style={{ width: "100%", height: "90%" }}
           >
             <div
               style={{
@@ -232,6 +215,7 @@ export default function InteractiveHaikuBuilder(props) {
                   : null,
                 width: "100%",
                 height: "100%",
+                marginTop: "15px",
               }}
             >
               <div
@@ -311,21 +295,33 @@ export default function InteractiveHaikuBuilder(props) {
       ) : (
         <Grid
           container
-          spacing={4}
-          xl={11}
-          lg={11}
-          md={11}
-          sm={11}
-          xs={11}
+          spacing={2}
+          xl={12}
+          lg={12}
+          md={12}
+          sm={12}
+          xs={12}
           style={{
-            margin: "20px",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            flexDirection: "column",
           }}
         >
-          <Grid key="userImage" item xs={10} sm={10} md={6} lg={6} xl={6}>
+          <Grid
+            key="userImage"
+            item
+            xs={11}
+            sm={11}
+            md={11}
+            lg={11}
+            xl={11}
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              marginTop: "10px",
+            }}
+          >
             <CssBaseline />
             <div
               style={{
@@ -338,8 +334,9 @@ export default function InteractiveHaikuBuilder(props) {
                 borderRadius: "10px",
                 flexDirection: "row",
                 boxShadow: "10px 10px  5px rgba(0,0,0,0.5)",
+                width: "85%",
+                height: "85%",
               }}
-              onClick={() => triggerInputFile()}
             >
               <input
                 accept="image/*"
@@ -361,52 +358,74 @@ export default function InteractiveHaikuBuilder(props) {
                 style={{
                   cursor: "pointer",
                   display: "flex",
-                  justifyContent: "center",
+                  justifyContent: "space-evenly",
                   alignItems: "center",
                   flexDirection: "row",
                 }}
               >
-                <Typography className={classes.lightHeading}>
+                <Typography
+                  className={classes.inspirationLabel}
+                  style={{ padding: "20px", textAlign: "center" }}
+                >
                   Pick one of your photos
                 </Typography>
                 <img
                   src={yours}
                   alt="or"
                   style={{
-                    height: "50%",
-                    width: "50%",
+                    padding: "20px",
+                    height: "40%",
+                    width: "40%",
                   }}
                 />
               </label>
             </div>
           </Grid>
-          <Grid key="maikuuImage" item xs={10} sm={10} md={6} lg={6} xl={6}>
+          <Grid
+            key="maikuuImage"
+            item
+            xs={11}
+            sm={11}
+            md={11}
+            lg={11}
+            xl={11}
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
             <CssBaseline />
             <div
               style={{
                 cursor: "pointer",
                 display: "flex",
-                justifyContent: "center",
+                justifyContent: "space-evenly",
                 alignItems: "center",
                 flexDirection: "row",
-                padding: "50px",
                 backgroundColor: colors.lightBlue,
                 borderRadius: "10px",
                 boxShadow: "10px 10px  5px rgba(0,0,0,0.5)",
+                width: "85%",
+                height: "85%",
               }}
               onClick={() => {
                 setShowImageCarousel(!showImageCarousel);
               }}
             >
-              <Typography className={classes.lightHeading}>
-                or one of ours
+              <Typography
+                className={classes.inspirationLabel}
+                style={{ padding: "20px", textAlign: "center" }}
+              >
+                or use one of ours
               </Typography>
               <img
                 src={ours}
                 alt="or"
                 style={{
-                  height: "50%",
-                  width: "50%",
+                  padding: "20px",
+                  height: "40%",
+                  width: "40%",
                 }}
               />
             </div>
@@ -528,6 +547,15 @@ const useStyles = makeStyles((theme) => ({
   },
   lightHeading: {
     color: colors.maikuu4,
+    userSelect: "none",
+    fontSize: "18px",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: "10px",
+  },
+  inspirationLabel: {
+    color: colors.maikuu0,
     userSelect: "none",
     fontSize: "18px",
     display: "flex",
