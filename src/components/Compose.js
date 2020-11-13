@@ -78,6 +78,7 @@ export default function Compose(props) {
   const [basic, setBasic] = useState(false);
   const [reflectionNoun, setReflectionNoun] = useState();
   const [loadingNewNoun, setLoadingNewNoun] = useState(true);
+  const [activeStep, setActiveStep] = useState("inspiration");
 
   useEffect(() => {
     fetchReflectionNoun();
@@ -148,7 +149,10 @@ export default function Compose(props) {
                       }}
                     >
                       <div
-                        onClick={() => setMode(0)}
+                        onClick={() => {
+                          setActiveStep("inspiration");
+                          setMode(0);
+                        }}
                         style={{
                           display: "flex",
                           flexDirection: "row",
@@ -185,7 +189,10 @@ export default function Compose(props) {
                       }}
                     >
                       <div
-                        onClick={() => setMode(1)}
+                        onClick={() => {
+                          setActiveStep("inspiration");
+                          setMode(1);
+                        }}
                         style={{
                           display: "flex",
                           flexDirection: "row",
@@ -286,6 +293,7 @@ export default function Compose(props) {
                                     }, 500);
                                   }}
                                   aria-label="new reflection"
+                                  style={{ outline: "none" }}
                                 >
                                   <LoopIcon style={{ color: colors.maikuu5 }} />
                                 </IconButton>
@@ -334,7 +342,11 @@ export default function Compose(props) {
                           }}
                         >
                           <Typography
-                            className={classes.lightHeading}
+                            className={
+                              activeStep === "inspiration"
+                                ? classes.lightHeading
+                                : classes.lightHeadingInactive
+                            }
                             style={{
                               display: "flex",
                               justifyContent: "flex-start",
@@ -356,7 +368,11 @@ export default function Compose(props) {
                           }}
                         >
                           <Typography
-                            className={classes.lightHeadingInactive}
+                            className={
+                              activeStep === "focus"
+                                ? classes.lightHeading
+                                : classes.lightHeadingInactive
+                            }
                             style={{
                               display: "flex",
                               justifyContent: "flex-start",
@@ -378,7 +394,11 @@ export default function Compose(props) {
                           }}
                         >
                           <Typography
-                            className={classes.lightHeadingInactive}
+                            className={
+                              activeStep === "compose"
+                                ? classes.lightHeading
+                                : classes.lightHeadingInactive
+                            }
                             style={{
                               display: "flex",
                               justifyContent: "flex-start",
@@ -429,6 +449,7 @@ export default function Compose(props) {
                         <InteractiveHaikuBuilder
                           user={user}
                           setMode={setMode}
+                          setActiveStep={setActiveStep}
                         />
                       </motion.div>
                     </AnimatePresence>
