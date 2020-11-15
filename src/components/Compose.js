@@ -8,6 +8,7 @@ import {
   Grid,
   IconButton,
   Divider,
+  Container,
 } from "@material-ui/core";
 import colors from "../assets/colors";
 import { NavLink } from "react-router-dom";
@@ -57,7 +58,8 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     backgroundColor: colors.maikuu0,
     color: colors.maikuu4,
-    marginTop: "30px",
+    marginTop: "10px",
+    marginBottom: "20px",
   },
   signin: {
     backgroundColor: colors.maikuu0,
@@ -459,39 +461,37 @@ export default function Compose(props) {
             </Grid>
           </div>
         ) : (
-          <div>
-            <Grid container spacing={2}>
-              <CssBaseline />
-              <div
+          <Container component="main" xl={12} lg={12} md={12}>
+            <CssBaseline />
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "70vh",
+              }}
+            >
+              <Typography className={classes.heading}>
+                Sign in to compose a haiku
+              </Typography>
+              <NavLink
+                to="/signin"
                 style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  height: "70vh",
+                  color: colors.maikuu0,
+                  textDecoration: "none",
                 }}
               >
-                <Typography className={classes.heading}>
-                  Sign in to compose a Haiku
-                </Typography>
-                <NavLink
-                  to="/signin"
-                  style={{
-                    color: colors.maikuu0,
-                    textDecoration: "none",
+                <Button
+                  classes={{
+                    root: classes.submit,
                   }}
                 >
-                  <Button
-                    classes={{
-                      root: classes.signin,
-                    }}
-                  >
-                    <Typography>Sign In</Typography>
-                  </Button>
-                </NavLink>
-              </div>
-            </Grid>
-          </div>
+                  <Typography>Sign In</Typography>
+                </Button>
+              </NavLink>
+            </div>
+          </Container>
         )}
       </motion.div>
     </AnimatePresence>

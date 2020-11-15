@@ -70,7 +70,7 @@ const useStyles = makeStyles((theme) => ({
   heading: {
     color: colors.maikuu0,
     userSelect: "none",
-    fontSize: "30px",
+    fontSize: "24px",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
@@ -423,7 +423,7 @@ export default function Profile(props) {
   return (
     <AnimatePresence>
       <motion.div
-        style={{ marginBottom: "60px", marginTop: "10px" }}
+        style={{ height: "100%" }}
         key="success"
         initial={{ opacity: 0 }}
         animate={{ opacity: [0.0, 1.0] }}

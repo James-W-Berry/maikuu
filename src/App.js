@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
+import Home from "./components/Home";
 import Feed from "./components/Feed";
 import Compose from "./components/Compose";
 import Profile from "./components/Profile";
@@ -63,6 +64,7 @@ function App() {
             transition={{ duration: 1 }}
           >
             <Switch location={location}>
+              <Route path="/home" render={() => <Home user={user} />} />
               <Route path="/feed" render={() => <Feed user={user} />} />
               <Route path="/compose" render={() => <Compose user={user} />} />
               <Route path="/profile" render={() => <Profile user={user} />} />

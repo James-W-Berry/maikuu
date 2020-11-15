@@ -87,6 +87,10 @@ export default function Banner(props) {
             width: "60px",
             cursor: "pointer",
           }}
+          onClick={() => {
+            setValue(2);
+            history.push("/home");
+          }}
         />
 
         <BottomNavigationAction
