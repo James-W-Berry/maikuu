@@ -473,7 +473,7 @@ export default function HaikuBuilder(props) {
               justifyContent: "center",
               alignItems: "center",
               height: "auto",
-              width: "90%",
+              width: "100%",
             }}
           >
             <div
@@ -753,14 +753,6 @@ export default function HaikuBuilder(props) {
                 >
                   <Typography>Preview</Typography>
                 </Button>
-                {/* <img
-                  src={line}
-                  alt="break"
-                  style={{
-                    width: "30px",
-                    height: "100px",
-                  }}
-                /> */}
               </div>
 
               <div
@@ -792,34 +784,6 @@ export default function HaikuBuilder(props) {
                   }}
                 >
                   <Typography>Post</Typography>
-                </Button>
-                {/* <img
-                  src={line}
-                  alt="break"
-                  style={{
-                    width: "30px",
-                    height: "100px",
-                  }}
-                /> */}
-              </div>
-
-              <div
-                style={{
-                  display: "flex",
-                  flex: 1,
-                  padding: "10px",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <Button
-                  id="change-mode-button"
-                  classes={{
-                    root: classes.submit,
-                  }}
-                  onClick={() => setMode(0)}
-                >
-                  <Typography>Interactive Mode</Typography>
                 </Button>
               </div>
             </div>
