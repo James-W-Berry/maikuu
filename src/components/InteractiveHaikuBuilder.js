@@ -29,10 +29,16 @@ export default function InteractiveHaikuBuilder(props) {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const setActiveStep = props.setActiveStep;
+  const updateParentTitle = props.setParentTitle;
+  const updateParentFirstLine = props.setFirstLine;
+  const updateParentSecondLine = props.setSecondLine;
+  const updateParentThirdLine = props.setThirdLine;
+  const setParentBackgroundImage = props.setParentBackgroundImage;
   const [showFirstMarker, setShowFirstMarker] = useState(true);
   const [showSecondMarker, setShowSecondMarker] = useState(true);
   const [showThirdMarker, setShowThirdMarker] = useState(true);
-
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [videoBackground, setVideoBackground] = useState();
   const [firstMarkerPosition, setFirstMarkerPosition] = useState({
     x: 50,
     y: 250,
@@ -77,24 +83,28 @@ export default function InteractiveHaikuBuilder(props) {
   function updatePreviewImage(file) {
     const fileReader = new FileReader();
 
+    if (file.name.includes(".mp4")) {
+      setVideoBackground(file);
+    } else {
+      setVideoBackground(null);
+    }
+
     fileReader.onload = () => {
-      setBackgroundImage(`url(${fileReader.result})`);
+      setBackgroundImage(fileReader.result);
+      setParentBackgroundImage(`url(${fileReader.result})`);
     };
     fileReader.readAsDataURL(file);
     setActiveStep("focus");
   }
 
   function updatePreviewImageFromCarousel(file) {
-    setBackgroundImage(`url(${file})`);
     setActiveStep("focus");
+    setBackgroundImage(file);
+    setParentBackgroundImage(`url(${file})`);
   }
 
   function generateRandomMarkerPosition() {
     return firstMarkerPosition;
-  }
-
-  function triggerInputFile() {
-    fileInputRef.click();
   }
 
   return (
@@ -112,13 +122,12 @@ export default function InteractiveHaikuBuilder(props) {
         <Grid
           container
           spacing={2}
-          xl={11}
-          lg={11}
-          md={11}
-          sm={11}
-          xs={11}
+          xl={12}
+          lg={12}
+          md={12}
+          sm={12}
+          xs={12}
           style={{
-            margin: "10px",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
@@ -132,7 +141,7 @@ export default function InteractiveHaikuBuilder(props) {
             md={6}
             lg={6}
             xl={6}
-            style={{ width: "100%", height: "10%" }}
+            style={{ width: "100%" }}
           >
             <CssBaseline />
             <div
@@ -149,7 +158,7 @@ export default function InteractiveHaikuBuilder(props) {
               className={classes.gridItem}
             >
               <input
-                accept="image/*"
+                accept="image/*|video/*"
                 ref={(fileInput) => setFileInputRef(fileInput)}
                 className={classes.input}
                 id="image-input"
@@ -175,9 +184,17 @@ export default function InteractiveHaikuBuilder(props) {
                   width: "100%",
                 }}
               >
-                <Typography className={classes.inspirationLabel}>
-                  Pick one of your photos
-                </Typography>
+                <img
+                  src={yours}
+                  alt="or"
+                  style={{
+                    padding: "5px",
+                    height: "40%",
+                    width: "40%",
+                    maxHeight: "100px",
+                    maxWidth: "100px",
+                  }}
+                />
               </label>
             </div>
           </Grid>
@@ -189,7 +206,7 @@ export default function InteractiveHaikuBuilder(props) {
             md={6}
             lg={6}
             xl={6}
-            style={{ width: "100%", height: "10%" }}
+            style={{ width: "100%" }}
           >
             <CssBaseline />
             <div
@@ -208,257 +225,322 @@ export default function InteractiveHaikuBuilder(props) {
                 setShowImageCarousel(!showImageCarousel);
               }}
             >
-              <Typography className={classes.inspirationLabel}>
-                or use one of ours
-              </Typography>
+              <label
+                for="holder"
+                style={{
+                  cursor: "pointer",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  flexDirection: "row",
+                  marginBottom: "0px",
+                  width: "100%",
+                }}
+              >
+                <img
+                  src={ours}
+                  alt="or"
+                  style={{
+                    padding: "5px",
+                    height: "40%",
+                    width: "40%",
+                    maxHeight: "100px",
+                    maxWidth: "100px",
+                  }}
+                />
+              </label>
             </div>
           </Grid>
 
           <Grid
-            key="maikuuImage"
+            key="selected"
             item
             xs={12}
             sm={12}
             md={12}
             lg={12}
             xl={12}
-            style={{ width: "100%", height: "90%" }}
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
           >
-            <div
-              style={{
-                backgroundColor: colors.maikuu0,
-                backgroundImage: backgroundImage,
-                borderRadius: "10px",
-                backgroundRepeat: "no-repeat",
-                backgroundSize: "contain",
-                boxShadow: backgroundImage
-                  ? "10px 10px  5px rgba(0,0,0,0.5)"
-                  : null,
-                width: "100%",
-                height: "100%",
-                marginTop: "15px",
-              }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                {showFirstMarker && (
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                    }}
-                  >
-                    <Draggable>
-                      <CircleIcon
-                        style={{
-                          color: colors.maikuu4,
-                          position: "absolute",
-                          marginLeft: firstMarkerPosition.x,
-                          marginTop: firstMarkerPosition.y,
-                          cursor: "pointer",
-                          borderRadius: "12px",
-                          backgroundColor: colors.maikuu0,
-                        }}
-                        onClick={() => {
-                          setShowFirstLine(!showFirstLine);
-                        }}
-                      />
-                    </Draggable>
-                    {showFirstLine && (
-                      <Draggable>
-                        <div
-                          style={{
-                            marginLeft: firstMarkerPosition.x + 25,
-                            marginTop: firstMarkerPosition.y,
-                            position: "absolute",
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            backgroundColor: "rgba(0,0,0,0.5",
-                          }}
-                        >
-                          <TextField
-                            className={classes.fiveLine}
-                            margin="normal"
-                            required
-                            name="line-1"
-                            type="text"
-                            id="line-1"
-                            helperText={`${firstLine.syllables}/5 syllable line`}
-                            inputProps={{
-                              autoComplete: "off",
-                            }}
-                            value={firstLine.value}
-                            onChange={(event) => {
-                              let syllables = syllable(event.target.value);
-                              if (syllables !== 5) {
-                                setFirstLine({
-                                  value: event.target.value,
-                                  syllables: syllables,
-                                  valid: false,
-                                });
-                              } else {
-                                setFirstLine({
-                                  value: event.target.value,
-                                  syllables: syllables,
-                                  valid: true,
-                                });
-                              }
-                            }}
-                          />
-                        </div>
-                      </Draggable>
-                    )}
-                  </div>
-                )}
-                {showSecondMarker && (
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                    }}
-                  >
-                    <Draggable>
-                      <CircleIcon
-                        style={{
-                          color: colors.maikuu4,
-                          position: "absolute",
-                          marginLeft: secondMarkerPosition.x,
-                          marginTop: secondMarkerPosition.y,
-                          cursor: "pointer",
-                          borderRadius: "12px",
-                          backgroundColor: colors.maikuu0,
-                        }}
-                        onClick={() => {
-                          setShowSecondLine(!showSecondLine);
-                        }}
-                      />
-                    </Draggable>
-                    {showSecondLine && (
-                      <Draggable>
-                        <div
-                          style={{
-                            marginLeft: secondMarkerPosition.x + 25,
-                            marginTop: secondMarkerPosition.y,
-                            position: "absolute",
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            backgroundColor: "rgba(0,0,0,0.5",
-                          }}
-                        >
-                          <TextField
-                            className={classes.sevenLine}
-                            margin="normal"
-                            required
-                            name="line-1"
-                            type="text"
-                            id="line-1"
-                            helperText={`${secondLine.syllables}/7 syllable line`}
-                            inputProps={{
-                              autoComplete: "off",
-                            }}
-                            value={secondLine.value}
-                            onChange={(event) => {
-                              let syllables = syllable(event.target.value);
-                              if (syllables !== 5) {
-                                setSecondLine({
-                                  value: event.target.value,
-                                  syllables: syllables,
-                                  valid: false,
-                                });
-                              } else {
-                                setSecondLine({
-                                  value: event.target.value,
-                                  syllables: syllables,
-                                  valid: true,
-                                });
-                              }
-                            }}
-                          />
-                        </div>
-                      </Draggable>
-                    )}
-                  </div>
-                )}
-                {showThirdMarker && (
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                    }}
-                  >
-                    <Draggable>
-                      <CircleIcon
-                        style={{
-                          color: colors.maikuu4,
-                          position: "absolute",
-                          marginLeft: thirdMarkerPosition.x,
-                          marginTop: thirdMarkerPosition.y,
-                          cursor: "pointer",
-                          borderRadius: "12px",
-                          backgroundColor: colors.maikuu0,
-                        }}
-                        onClick={() => {
-                          setShowThirdLine(!showThirdLine);
-                        }}
-                      />
-                    </Draggable>
-                    {showThirdLine && (
-                      <Draggable>
-                        <div
-                          style={{
-                            marginLeft: thirdMarkerPosition.x + 25,
-                            marginTop: thirdMarkerPosition.y,
-                            position: "absolute",
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            backgroundColor: "rgba(0,0,0,0.5",
-                          }}
-                        >
-                          <TextField
-                            className={classes.fiveLine}
-                            margin="normal"
-                            required
-                            name="line-1"
-                            type="text"
-                            id="line-1"
-                            helperText={`${thirdLine.syllables}/5 syllable line`}
-                            inputProps={{
-                              autoComplete: "off",
-                            }}
-                            value={thirdLine.value}
-                            onChange={(event) => {
-                              let syllables = syllable(event.target.value);
-                              if (syllables !== 5) {
-                                setThirdLine({
-                                  value: event.target.value,
-                                  syllables: syllables,
-                                  valid: false,
-                                });
-                              } else {
-                                setThirdLine({
-                                  value: event.target.value,
-                                  syllables: syllables,
-                                  valid: true,
-                                });
-                              }
-                            }}
-                          />
-                        </div>
-                      </Draggable>
-                    )}
-                  </div>
-                )}
-              </div>
+            <div>
+              {videoBackground ? (
+                <video
+                  tyle={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                  controls={true}
+                  width="90%"
+                  autoPlay
+                >
+                  <source
+                    src={URL.createObjectURL(videoBackground)}
+                    type="video/mp4"
+                  />
+                </video>
+              ) : (
+                <img
+                  src={backgroundImage}
+                  alt="inspiration"
+                  style={{
+                    padding: "0px",
+                    borderRadius: "10px",
+                    boxShadow: backgroundImage
+                      ? "10px 10px  5px rgba(0,0,0,0.5)"
+                      : null,
+                    maxHeight: "72vh",
+                  }}
+                />
+              )}
             </div>
           </Grid>
+          <div style={{ position: "absolute" }}>
+            {showFirstMarker && (
+              <Draggable
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  position: "absolute",
+                  left: firstMarkerPosition.x,
+                  top: firstMarkerPosition.y * 2,
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    cursor: "pointer",
+                  }}
+                >
+                  <CircleIcon
+                    style={{
+                      color: colors.maikuu0,
+                      borderRadius: "12px",
+                      backgroundColor: colors.lightBlue,
+                    }}
+                    onClick={() => {
+                      setShowFirstLine(!showFirstLine);
+                    }}
+                  />
+                  {showFirstLine && (
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        backgroundColor: "rgba(0,0,0,0.5)",
+                      }}
+                    >
+                      <TextField
+                        className={classes.fiveLine}
+                        margin="normal"
+                        required
+                        name="line-1"
+                        type="text"
+                        id="line-1"
+                        helperText={`${firstLine.syllables}/5 syllable line`}
+                        inputProps={{
+                          autoComplete: "off",
+                        }}
+                        value={firstLine.value}
+                        onChange={(event) => {
+                          let syllables = syllable(event.target.value);
+                          if (syllables !== 5) {
+                            setFirstLine({
+                              value: event.target.value,
+                              syllables: syllables,
+                              valid: false,
+                            });
+                            updateParentFirstLine({
+                              value: event.target.value,
+                              syllables: syllables,
+                              valid: false,
+                            });
+                          } else {
+                            setFirstLine({
+                              value: event.target.value,
+                              syllables: syllables,
+                              valid: true,
+                            });
+                            updateParentFirstLine({
+                              value: event.target.value,
+                              syllables: syllables,
+                              valid: true,
+                            });
+                          }
+                        }}
+                      />
+                    </div>
+                  )}
+                </div>
+              </Draggable>
+            )}
+            {showSecondMarker && (
+              <Draggable
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  position: "absolute",
+                  marginLeft: secondMarkerPosition.x,
+                  marginBottom: secondMarkerPosition.y,
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    cursor: "pointer",
+                  }}
+                >
+                  <CircleIcon
+                    style={{
+                      color: colors.maikuu0,
+                      borderRadius: "12px",
+                      backgroundColor: colors.lightBlue,
+                    }}
+                    onClick={() => {
+                      setShowSecondLine(!showSecondLine);
+                    }}
+                  />
+                  {showSecondLine && (
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        backgroundColor: "rgba(0,0,0,0.5)",
+                      }}
+                    >
+                      <TextField
+                        className={classes.sevenLine}
+                        margin="normal"
+                        required
+                        name="line-1"
+                        type="text"
+                        id="line-1"
+                        helperText={`${secondLine.syllables}/7 syllable line`}
+                        inputProps={{
+                          autoComplete: "off",
+                        }}
+                        value={secondLine.value}
+                        onChange={(event) => {
+                          let syllables = syllable(event.target.value);
+                          if (syllables !== 5) {
+                            setSecondLine({
+                              value: event.target.value,
+                              syllables: syllables,
+                              valid: false,
+                            });
+                            updateParentSecondLine({
+                              value: event.target.value,
+                              syllables: syllables,
+                              valid: false,
+                            });
+                          } else {
+                            setSecondLine({
+                              value: event.target.value,
+                              syllables: syllables,
+                              valid: true,
+                            });
+                            updateParentSecondLine({
+                              value: event.target.value,
+                              syllables: syllables,
+                              valid: true,
+                            });
+                          }
+                        }}
+                      />
+                    </div>
+                  )}
+                </div>
+              </Draggable>
+            )}
+            {showThirdMarker && (
+              <Draggable
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  position: "absolute",
+                  marginLeft: thirdMarkerPosition.x,
+                  marginBottom: thirdMarkerPosition.y,
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    cursor: "pointer",
+                  }}
+                >
+                  <CircleIcon
+                    style={{
+                      color: colors.maikuu0,
+                      borderRadius: "12px",
+                      backgroundColor: colors.lightBlue,
+                    }}
+                    onClick={() => {
+                      setShowThirdLine(!showThirdLine);
+                    }}
+                  />
+                  {showThirdLine && (
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        backgroundColor: "rgba(0,0,0,0.5)",
+                      }}
+                    >
+                      <TextField
+                        className={classes.fiveLine}
+                        margin="normal"
+                        required
+                        name="line-1"
+                        type="text"
+                        id="line-1"
+                        helperText={`${thirdLine.syllables}/5 syllable line`}
+                        inputProps={{
+                          autoComplete: "off",
+                        }}
+                        value={thirdLine.value}
+                        onChange={(event) => {
+                          let syllables = syllable(event.target.value);
+                          if (syllables !== 5) {
+                            setThirdLine({
+                              value: event.target.value,
+                              syllables: syllables,
+                              valid: false,
+                            });
+                            updateParentThirdLine({
+                              value: event.target.value,
+                              syllables: syllables,
+                              valid: false,
+                            });
+                          } else {
+                            setThirdLine({
+                              value: event.target.value,
+                              syllables: syllables,
+                              valid: true,
+                            });
+                            updateParentThirdLine({
+                              value: event.target.value,
+                              syllables: syllables,
+                              valid: true,
+                            });
+                          }
+                        }}
+                      />
+                    </div>
+                  )}
+                </div>
+              </Draggable>
+            )}
+          </div>
         </Grid>
       ) : (
         <Grid
