@@ -22,7 +22,6 @@ import Popover from "@material-ui/core/Popover";
 import { v4 as uuidv4 } from "uuid";
 import PuffLoader from "react-spinners/PuffLoader";
 import ImageIcon from "@material-ui/icons/Image";
-import line from "../assets/line.png";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -126,7 +125,6 @@ const AnonCheckbox = withStyles({
       color: colors.maikuu0,
     },
   },
-  checked: {},
 })((props) => <Checkbox color="default" {...props} />);
 
 export default function HaikuBuilder(props) {
@@ -462,6 +460,7 @@ export default function HaikuBuilder(props) {
             </Card>
           </div>
         </Modal>
+
         <div id="haiku-builder">
           <form
             onSubmit={(event) => {

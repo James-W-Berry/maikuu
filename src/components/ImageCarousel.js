@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-// import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
-// import { Carousel } from "react-responsive-carousel";
 import Carousel from "react-bootstrap/Carousel";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -17,46 +15,6 @@ export default function ImageCarousel(props) {
   };
 
   return (
-    // <Carousel
-    //   showArrows={true}
-    //   // onChange={onChange}
-    //   // onClickItem={onClickItem}
-    //   // onClickThumb={onClickThumb}
-    // >
-    //   <div
-    //     onSelect={() => {
-    //       props.setImage(image1);
-    //     }}
-    //   >
-    //     <img src={image1} style={{ maxWidth: "500px", height: "500px" }} />
-    //     {/* <p className="legend">Legend 1</p> */}
-    //   </div>
-    //   <div
-    //     onSelect={() => {
-    //       props.setImage(image2);
-    //     }}
-    //   >
-    //     <img src={image2} style={{ maxWidth: "500px", height: "500px" }} />
-    //     {/* <p className="legend">Legend 2</p> */}
-    //   </div>
-    //   <div
-    //     onSelect={() => {
-    //       props.setImage(image3);
-    //     }}
-    //   >
-    //     <img src={image3} style={{ maxWidth: "500px", height: "500px" }} />
-    //     {/* <p className="legend">Legend 3</p> */}
-    //   </div>
-    //   <div
-    //     onSelect={() => {
-    //       props.setImage(image4);
-    //     }}
-    //   >
-    //     <img src={image4} style={{ maxWidth: "500px", height: "500px" }} />
-    //     {/* <p className="legend">Legend 4</p> */}
-    //   </div>
-    // </Carousel>
-
     <Carousel activeIndex={index} onSelect={handleSelect}>
       <Carousel.Item>
         <img

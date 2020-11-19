@@ -9,8 +9,6 @@ import {
   IconButton,
   Divider,
   Container,
-  FormControlLabel,
-  withStyles,
 } from "@material-ui/core";
 import colors from "../assets/colors";
 import { NavLink } from "react-router-dom";
@@ -19,10 +17,6 @@ import InteractiveHaikuBuilder from "./InteractiveHaikuBuilder";
 import SwapHorizontalCircleIcon from "@material-ui/icons/SwapHorizontalCircle";
 import abstract_nouns from "../assets/abstract_nouns.json";
 import LoopIcon from "@material-ui/icons/Loop";
-import { CheckBox } from "@material-ui/icons";
-import { v4 as uuidv4 } from "uuid";
-import firebase from "../firebase";
-import moment from "moment";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -67,18 +61,6 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "10px",
     marginBottom: "20px",
   },
-  lightSubmit: {
-    backgroundColor: colors.maikuu4,
-    color: colors.maikuu0,
-    marginTop: "10px",
-    marginBottom: "20px",
-  },
-  disabledLightSubmit: {
-    backgroundColor: colors.maikuu5,
-    color: colors.maikuu0,
-    marginTop: "10px",
-    marginBottom: "20px",
-  },
   signin: {
     backgroundColor: colors.maikuu0,
     color: colors.maikuu4,
@@ -90,155 +72,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AnonCheckbox = withStyles({
-  root: {
-    color: colors.maikuu4,
-    "&$checked": {
-      color: colors.maikuu0,
-    },
-  },
-  checked: {},
-})((props) => <CheckBox color="default" {...props} />);
-
 export default function Compose(props) {
   const classes = useStyles();
   const user = props.user;
-  const [userInfo, setUserInfo] = useState({});
   const [interactive, setInteractive] = useState(true);
   const [basic, setBasic] = useState(false);
   const [reflectionNoun, setReflectionNoun] = useState();
   const [loadingNewNoun, setLoadingNewNoun] = useState(true);
   const [activeStep, setActiveStep] = useState("inspiration");
-  const [anon, setAnon] = useState(false);
-  const [isUploading, setIsUploading] = useState(false);
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [backgroundImage, setBackgroundImage] = useState();
-  const [success, setSuccess] = useState(false);
-  const [title, setTitle] = useState({ value: null });
-  const [firstLine, setFirstLine] = useState({
-    value: "",
-    valid: null,
-    syllables: 0,
-  });
-  const [secondLine, setSecondLine] = useState({
-    value: "",
-    valid: null,
-    syllables: 0,
-  });
-  const [thirdLine, setThirdLine] = useState({
-    value: "",
-    valid: null,
-    syllables: 0,
-  });
 
   useEffect(() => {
     fetchReflectionNoun();
   }, []);
-
-  useEffect(() => {
-    if (user.loggedIn) {
-      const userId = firebase.auth().currentUser.uid;
-      firebase
-        .firestore()
-        .collection("users")
-        .doc(userId)
-        .onSnapshot(function (doc) {
-          const user = doc.data();
-          setUserInfo(user);
-        });
-    }
-  }, [user]);
-
-  const handleClick = (event) => {
-    if (firstLine.value && secondLine.value && thirdLine.value && title.value) {
-      setAnchorEl(event.currentTarget);
-    }
-  };
-
-  async function uploadPic(id) {
-    if (backgroundImage !== "") {
-      const storageRef = firebase.storage().ref();
-      const picRef = storageRef.child(`images/${id}`);
-      let uploadProfilePicTask = picRef.put(backgroundImage);
-
-      let promise = new Promise((resolve, reject) => {
-        uploadProfilePicTask.on(
-          "state_changed",
-          function (snapshot) {
-            switch (snapshot.state) {
-              case firebase.storage.TaskState.PAUSED:
-                console.log("Upload is paused");
-                break;
-              case firebase.storage.TaskState.RUNNING:
-                console.log("Upload is running");
-                break;
-              default:
-                break;
-            }
-          },
-          function (error) {
-            console.log(error);
-          },
-          function () {
-            uploadProfilePicTask.snapshot.ref
-              .getDownloadURL()
-              .then(function (downloadURL) {
-                console.log("File available at", downloadURL);
-                resolve(downloadURL);
-              });
-          }
-        );
-      });
-
-      let downloadUrl = await promise;
-      return downloadUrl;
-    } else {
-      return "";
-    }
-  }
-
-  async function handleSubmit() {
-    setIsUploading(true);
-    let id = uuidv4();
-    let author;
-
-    if (anon) {
-      author = "anonymous";
-    } else if (user.displayName) {
-      author = user.displayName;
-    } else if (userInfo.displayName) {
-      author = userInfo.displayName;
-    } else {
-      author = "unknown";
-    }
-
-    let imageUrl = await uploadPic(id);
-
-    console.log(imageUrl);
-    firebase
-      .firestore()
-      .collection("posts")
-      .doc(id)
-      .set({
-        id: id,
-        author: author,
-        likes: 0,
-        line_1: firstLine.value,
-        line_2: secondLine.value,
-        line_3: thirdLine.value,
-        title: title.value,
-        date: moment.now(),
-        image: imageUrl,
-      })
-      .then(() => {
-        setSuccess(true);
-        setAnon(false);
-        addToAuthoredPosts(id);
-      })
-      .catch(function (error) {
-        console.log("Error getting documents: ", error);
-      });
-  }
 
   const fetchReflectionNoun = () => {
     const max = Object.entries(abstract_nouns).length;
@@ -256,25 +101,6 @@ export default function Compose(props) {
       setInteractive(false);
       setBasic(true);
     }
-  };
-
-  const addToAuthoredPosts = (postId) => {
-    const userId = firebase.auth().currentUser.uid;
-
-    firebase
-      .firestore()
-      .collection("users")
-      .doc(userId)
-      .set(
-        { authored: firebase.firestore.FieldValue.arrayUnion(postId) },
-        { merge: true }
-      )
-      .then(() => {
-        console.log(`Added ${postId} to authored posts`);
-      })
-      .catch((error) => {
-        console.log(`Error adding ${postId} to authored posts`);
-      });
   };
 
   return (
@@ -579,71 +405,6 @@ export default function Compose(props) {
                           </Typography>
                         </motion.div>
                       </AnimatePresence>
-                      <Divider
-                        variant="middle"
-                        className={classes.divider}
-                        style={{ width: "100%" }}
-                      />
-                      <AnimatePresence>
-                        <motion.div
-                          key="success"
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: [0.0, 1.0] }}
-                          exit={{ opacity: 0 }}
-                          transition={{ duration: 2 }}
-                          style={{
-                            display: "flex",
-                            flexDirection: "column ",
-                            width: "90%",
-                          }}
-                        >
-                          <FormControlLabel
-                            control={
-                              <AnonCheckbox
-                                checked={anon}
-                                onChange={(event) => {
-                                  setAnon(!anon);
-                                }}
-                                name="checkedG"
-                              />
-                            }
-                            label="Post Anonymously"
-                            className={classes.lightHeading}
-                          />
-
-                          <div
-                            style={{
-                              display: "flex",
-                              flex: 1,
-                              padding: "10px",
-                              justifyContent: "center",
-                              alignItems: "center",
-                            }}
-                          >
-                            <Button
-                              id="post-button"
-                              type="submit"
-                              classes={{
-                                root: classes.lightSubmit,
-                                disabled: classes.disabledLightSubmit,
-                              }}
-                              onClick={(event) => {
-                                if (
-                                  firstLine.valid &&
-                                  secondLine.valid &&
-                                  thirdLine.valid
-                                ) {
-                                  handleSubmit();
-                                } else {
-                                  handleClick(event);
-                                }
-                              }}
-                            >
-                              <Typography>Post</Typography>
-                            </Button>
-                          </div>
-                        </motion.div>
-                      </AnimatePresence>
                     </div>
                   )}
                 </div>
@@ -686,11 +447,6 @@ export default function Compose(props) {
                           user={user}
                           setMode={setMode}
                           setActiveStep={setActiveStep}
-                          setFirstLine={setFirstLine}
-                          setSecondLine={setSecondLine}
-                          setThirdLine={setThirdLine}
-                          setParentBackgroundImage={setBackgroundImage}
-                          setParentTitle={setTitle}
                         />
                       </motion.div>
                     </AnimatePresence>
