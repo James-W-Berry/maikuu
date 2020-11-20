@@ -15,6 +15,7 @@ import {
   CardContent,
   Checkbox,
   Popover,
+  ButtonBase,
 } from "@material-ui/core";
 import CircleIcon from "@material-ui/icons/RadioButtonUnchecked";
 import colors from "../assets/colors";
@@ -47,18 +48,18 @@ export default function InteractiveHaikuBuilder(props) {
   const [videoBackground, setVideoBackground] = useState();
   const [uploadImage, setUploadImage] = useState();
   const [firstMarkerPosition, setFirstMarkerPosition] = useState({
-    x: 50,
-    y: 250,
+    x: "0",
+    y: "25px",
   });
 
   const [secondMarkerPosition, setSecondMarkerPosition] = useState({
-    x: 50,
-    y: 350,
+    x: "0",
+    y: "-50px",
   });
 
   const [thirdMarkerPosition, setThirdMarkerPosition] = useState({
-    x: 50,
-    y: 450,
+    x: "0",
+    y: "-125px",
   });
 
   const [title, setTitle] = useState({ value: null });
@@ -569,7 +570,7 @@ export default function InteractiveHaikuBuilder(props) {
             <div>
               {videoBackground ? (
                 <video
-                  tyle={{
+                  style={{
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
@@ -581,6 +582,15 @@ export default function InteractiveHaikuBuilder(props) {
                   <source
                     src={URL.createObjectURL(videoBackground)}
                     type="video/mp4"
+                    style={{
+                      padding: "0px",
+                      borderRadius: "10px",
+                      boxShadow: videoBackground
+                        ? "10px 10px  5px rgba(0,0,0,0.5)"
+                        : null,
+                      maxHeight: "55vh",
+                      maxWidth: "95vw",
+                    }}
                   />
                 </video>
               ) : (
@@ -594,6 +604,7 @@ export default function InteractiveHaikuBuilder(props) {
                       ? "10px 10px  5px rgba(0,0,0,0.5)"
                       : null,
                     maxHeight: "55vh",
+                    maxWidth: "95vw",
                   }}
                 />
               )}
@@ -608,23 +619,16 @@ export default function InteractiveHaikuBuilder(props) {
             md={12}
             lg={12}
             xl={12}
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              backgroundColor: colors.maikuu0,
-              boxShadow: "10px 10px  5px rgba(0,0,0,0.5)",
-              borderRadius: "10px",
-            }}
+            style={{ width: "100%" }}
           >
-            <CssBaseline />
             <div
               style={{
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                flexDirection: "row",
-                width: "100%",
+                backgroundColor: colors.maikuu0,
+                boxShadow: "10px 10px  5px rgba(0,0,0,0.5)",
+                borderRadius: "10px",
               }}
             >
               <FormControlLabel
@@ -711,17 +715,16 @@ export default function InteractiveHaikuBuilder(props) {
             </div>
           </Grid>
 
-          <div style={{ position: "absolute" }}>
-            <Draggable
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                position: "absolute",
-                left: firstMarkerPosition.x,
-                top: firstMarkerPosition.y * 2,
-              }}
-            >
+          <div
+            style={{
+              position: "absolute",
+              marginLeft: firstMarkerPosition.x,
+              marginBottom: "175px",
+            }}
+          >
+            <Draggable>
               <div
+                className="handle"
                 style={{
                   display: "flex",
                   justifyContent: "center",
@@ -747,19 +750,28 @@ export default function InteractiveHaikuBuilder(props) {
                 />
               </div>
             </Draggable>
+          </div>
+
+          <div
+            style={{
+              position: "absolute",
+              marginLeft: firstMarkerPosition.x,
+              marginBottom: firstMarkerPosition.y,
+            }}
+          >
             {showFirstMarker && (
               <Draggable
-                style={{
-                  position: "absolute",
-                  left: firstMarkerPosition.x,
-                  top: firstMarkerPosition.y * 2,
+                handle=".handle"
+                onStart={() => {
+                  setShowFirstLine(!showFirstLine);
                 }}
               >
                 <div
+                  className="handle"
                   style={{
                     display: "flex",
-                    flexDirection: "row",
-                    cursor: "pointer",
+                    justifyContent: "center",
+                    alignItems: "center",
                   }}
                 >
                   <CircleIcon
@@ -767,9 +779,6 @@ export default function InteractiveHaikuBuilder(props) {
                       color: colors.maikuu0,
                       borderRadius: "12px",
                       backgroundColor: colors.lightBlue,
-                    }}
-                    onClick={() => {
-                      setShowFirstLine(!showFirstLine);
                     }}
                   />
                   {showFirstLine && (
@@ -815,19 +824,28 @@ export default function InteractiveHaikuBuilder(props) {
                 </div>
               </Draggable>
             )}
+          </div>
+
+          <div
+            style={{
+              position: "absolute",
+              marginLeft: secondMarkerPosition.x,
+              marginBottom: secondMarkerPosition.y,
+            }}
+          >
             {showSecondMarker && (
               <Draggable
-                style={{
-                  position: "absolute",
-                  marginLeft: secondMarkerPosition.x,
-                  marginBottom: secondMarkerPosition.y,
+                handle=".handle"
+                onStart={() => {
+                  setShowSecondLine(!showSecondLine);
                 }}
               >
                 <div
+                  className="handle"
                   style={{
                     display: "flex",
-                    flexDirection: "row",
-                    cursor: "pointer",
+                    justifyContent: "center",
+                    alignItems: "center",
                   }}
                 >
                   <CircleIcon
@@ -835,9 +853,6 @@ export default function InteractiveHaikuBuilder(props) {
                       color: colors.maikuu0,
                       borderRadius: "12px",
                       backgroundColor: colors.lightBlue,
-                    }}
-                    onClick={() => {
-                      setShowSecondLine(!showSecondLine);
                     }}
                   />
                   {showSecondLine && (
@@ -883,19 +898,28 @@ export default function InteractiveHaikuBuilder(props) {
                 </div>
               </Draggable>
             )}
+          </div>
+
+          <div
+            style={{
+              position: "absolute",
+              marginLeft: thirdMarkerPosition.x,
+              marginBottom: thirdMarkerPosition.y,
+            }}
+          >
             {showThirdMarker && (
               <Draggable
-                style={{
-                  position: "absolute",
-                  marginLeft: thirdMarkerPosition.x,
-                  marginBottom: thirdMarkerPosition.y,
+                handle=".handle"
+                onStart={() => {
+                  setShowThirdLine(!showThirdLine);
                 }}
               >
                 <div
+                  className="handle"
                   style={{
                     display: "flex",
-                    flexDirection: "row",
-                    cursor: "pointer",
+                    justifyContent: "center",
+                    alignItems: "center",
                   }}
                 >
                   <CircleIcon
@@ -903,9 +927,6 @@ export default function InteractiveHaikuBuilder(props) {
                       color: colors.maikuu0,
                       borderRadius: "12px",
                       backgroundColor: colors.lightBlue,
-                    }}
-                    onClick={() => {
-                      setShowThirdLine(!showThirdLine);
                     }}
                   />
                   {showThirdLine && (
@@ -1073,7 +1094,7 @@ export default function InteractiveHaikuBuilder(props) {
                 }}
               />
               <label
-                for="image-input"
+                htmlFor="image-input"
                 style={{
                   cursor: "pointer",
                   display: "flex",

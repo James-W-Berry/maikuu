@@ -116,7 +116,7 @@ export default function Compose(props) {
           <div
             style={{ display: "flex", flexDirection: "row", height: "100%" }}
           >
-            <Grid container xl={12} lg={12} md={12} spacing={2}>
+            <Grid container xl={12} lg={12} md={12} sm={12} xs={12}>
               <Grid
                 key="control"
                 style={{
@@ -186,7 +186,7 @@ export default function Compose(props) {
                         flexDirection: "column",
                         justifyContent: "center",
                         alignItems: "center",
-                        width: "90%",
+                        width: "100%",
                       }}
                     >
                       <div
@@ -419,6 +419,7 @@ export default function Compose(props) {
                     flexDirection: "column",
                     height: "100%",
                     width: "100%",
+                    paddingTop: "10px",
                   }}
                 >
                   {basic && (
@@ -456,7 +457,7 @@ export default function Compose(props) {
             </Grid>
           </div>
         ) : (
-          <Container component="main" xl={12} lg={12} md={12}>
+          <Container component="main" xl={12} lg={12} md={12} sm={12} xs={12}>
             <CssBaseline />
             <div
               style={{
