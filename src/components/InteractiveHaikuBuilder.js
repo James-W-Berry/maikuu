@@ -30,6 +30,8 @@ import yours from "../assets/yours.png";
 import { v4 as uuidv4 } from "uuid";
 import firebase from "../firebase";
 import moment from "moment";
+import Cursor from "./Cursor/Cursor";
+import "../App.css";
 
 export default function InteractiveHaikuBuilder(props) {
   const classes = useStyles();
@@ -41,26 +43,19 @@ export default function InteractiveHaikuBuilder(props) {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const setActiveStep = props.setActiveStep;
-  const [showFirstMarker, setShowFirstMarker] = useState(true);
-  const [showSecondMarker, setShowSecondMarker] = useState(true);
-  const [showThirdMarker, setShowThirdMarker] = useState(true);
   const [anchorEl, setAnchorEl] = useState(null);
   const [videoBackground, setVideoBackground] = useState();
   const [uploadImage, setUploadImage] = useState();
-  const [firstMarkerPosition, setFirstMarkerPosition] = useState({
-    x: "0",
-    y: "25px",
+  const [markers, setMarkers] = useState({
+    one: { visible: false, x: 0, y: 0 },
+    two: { visible: false, x: 0, y: 0 },
+    three: { visible: false, x: 0, y: 0 },
   });
 
-  const [secondMarkerPosition, setSecondMarkerPosition] = useState({
-    x: "0",
-    y: "-50px",
-  });
-
-  const [thirdMarkerPosition, setThirdMarkerPosition] = useState({
-    x: "0",
-    y: "-125px",
-  });
+  const placeMarkers = (newMarkers) => {
+    console.log(newMarkers);
+    setMarkers(newMarkers);
+  };
 
   const [title, setTitle] = useState({ value: null });
   const [firstLine, setFirstLine] = useState({
@@ -78,9 +73,6 @@ export default function InteractiveHaikuBuilder(props) {
     valid: null,
     syllables: 0,
   });
-  const [showFirstLine, setShowFirstLine] = useState(false);
-  const [showSecondLine, setShowSecondLine] = useState(false);
-  const [showThirdLine, setShowThirdLine] = useState(false);
   const [anon, setAnon] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -97,12 +89,6 @@ export default function InteractiveHaikuBuilder(props) {
       },
     },
   })((props) => <Checkbox color="default" {...props} />);
-
-  useEffect(() => {
-    let position = generateRandomMarkerPosition();
-    setFirstMarkerPosition(position);
-    backgroundImage ? setShowFirstMarker(true) : setShowFirstMarker(false);
-  }, [backgroundImage]);
 
   useEffect(() => {
     if (user.loggedIn) {
@@ -148,10 +134,6 @@ export default function InteractiveHaikuBuilder(props) {
     setUploadImage(file);
     setActiveStep("focus");
     setBackgroundImage(file);
-  }
-
-  function generateRandomMarkerPosition() {
-    return firstMarkerPosition;
   }
 
   const addToAuthoredPosts = (postId) => {
@@ -434,6 +416,8 @@ export default function InteractiveHaikuBuilder(props) {
             alignItems: "center",
           }}
         >
+          <Cursor placeMarkers={placeMarkers} />
+
           <Grid
             key="userImage"
             item
@@ -567,7 +551,38 @@ export default function InteractiveHaikuBuilder(props) {
               alignItems: "center",
             }}
           >
-            <div>
+            <div
+              style={{
+                position: "absolute",
+                zIndex: 100,
+                left: `${markers.one.x}px`,
+                top: `${markers.one.y}px`,
+                opacity: `${markers.one.visible ? 0 : 1}`,
+              }}
+            >
+              <Typography className={classes.title}>1</Typography>
+            </div>
+            <div
+              style={{
+                zIndex: 100,
+                left: `${markers.two.x}px`,
+                top: `${markers.two.y}px`,
+                opacity: `${markers.two.visible ? 0 : 1}`,
+              }}
+            >
+              <Typography className={classes.title}>2</Typography>
+            </div>
+            <div
+              style={{
+                zIndex: 100,
+                left: `${markers.three.x}px`,
+                top: `${markers.three.y}px`,
+                opacity: `${markers.three.visible ? 0 : 1}`,
+              }}
+            >
+              <Typography className={classes.title}>3</Typography>
+            </div>
+            <div id="backgroundImageGrid">
               {videoBackground ? (
                 <video
                   style={{
@@ -575,6 +590,7 @@ export default function InteractiveHaikuBuilder(props) {
                     justifyContent: "center",
                     alignItems: "center",
                   }}
+                  draggable="false"
                   controls={true}
                   width="90%"
                   autoPlay
@@ -606,6 +622,7 @@ export default function InteractiveHaikuBuilder(props) {
                     maxHeight: "55vh",
                     maxWidth: "95vw",
                   }}
+                  draggable="false"
                 />
               )}
             </div>
@@ -714,7 +731,7 @@ export default function InteractiveHaikuBuilder(props) {
               </div>
             </div>
           </Grid>
-
+          {/* 
           <div
             style={{
               position: "absolute",
@@ -972,7 +989,7 @@ export default function InteractiveHaikuBuilder(props) {
                 </div>
               </Draggable>
             )}
-          </div>
+          </div> */}
 
           <Popover
             id={id}
@@ -1213,6 +1230,22 @@ export default function InteractiveHaikuBuilder(props) {
 }
 
 const useStyles = makeStyles((theme) => ({
+  cursor: {
+    width: "40px",
+    height: "40px",
+    border: "2px solid #fefefe",
+    borderRadius: "100%",
+    position: "fixed",
+    transform: "translate(-50%, -50%)",
+    pointerEvents: "none",
+    zIndex: 9999,
+    mixBlendMode: "difference",
+    transition: "all 150ms ease",
+    transitionProperty: "opacity",
+    ".cursor--hidden": {
+      opacity: 0,
+    },
+  },
   title: {
     "& .MuiInputBase-input": {
       fontFamily: "BadScript",

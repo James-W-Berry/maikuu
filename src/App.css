@@ -110,3 +110,11 @@ select:-webkit-autofill:focus {
   flex: 1;
   background-color: #d7e1ec;
 }
+
+.selectDisable {
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
