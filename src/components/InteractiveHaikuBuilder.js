@@ -557,27 +557,29 @@ export default function InteractiveHaikuBuilder(props) {
                 zIndex: 100,
                 left: `${markers.one.x}px`,
                 top: `${markers.one.y}px`,
-                opacity: `${markers.one.visible ? 0 : 1}`,
+                opacity: `${markers.one.visible ? 1 : 0}`,
               }}
             >
               <Typography className={classes.title}>1</Typography>
             </div>
             <div
               style={{
+                position: "absolute",
                 zIndex: 100,
                 left: `${markers.two.x}px`,
                 top: `${markers.two.y}px`,
-                opacity: `${markers.two.visible ? 0 : 1}`,
+                opacity: `${markers.two.visible ? 1 : 0}`,
               }}
             >
               <Typography className={classes.title}>2</Typography>
             </div>
             <div
               style={{
+                position: "absolute",
                 zIndex: 100,
                 left: `${markers.three.x}px`,
                 top: `${markers.three.y}px`,
-                opacity: `${markers.three.visible ? 0 : 1}`,
+                opacity: `${markers.three.visible ? 1 : 0}`,
               }}
             >
               <Typography className={classes.title}>3</Typography>

@@ -69,13 +69,26 @@ export default function Cursor(props) {
     setPosition({ x: e.clientX, y: e.clientY });
   };
 
-  const onMouseDown = () => {
+  const onMouseDown = (e) => {
     setClicked(true);
     setShowLineWriter(!showLineWriter);
     let _markers = markers;
-    console.log(position);
-    _markers.one.x = position.x;
-    _markers.one.y = position.y;
+    if (!_markers.one.visible) {
+      _markers.one.visible = true;
+      _markers.one.x = e.clientX;
+      _markers.one.y = e.clientY;
+    } else if (!_markers.two.visible) {
+      _markers.two.visible = true;
+      _markers.two.x = e.clientX;
+      _markers.two.y = e.clientY;
+    } else if (!_markers.three.visible) {
+      _markers.three.visible = true;
+      _markers.three.x = e.clientX;
+      _markers.three.y = e.clientY;
+    } else {
+      console.log("all visible");
+    }
+
     setMarkers(_markers);
     placeMarkers(_markers);
   };
