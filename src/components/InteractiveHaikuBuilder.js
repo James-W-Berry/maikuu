@@ -33,6 +33,7 @@ import firebase from "../firebase";
 import moment from "moment";
 import Cursor from "./Cursor/Cursor";
 import "../App.css";
+import { motion } from "framer-motion";
 
 export default function InteractiveHaikuBuilder(props) {
   const classes = useStyles();
@@ -615,14 +616,16 @@ export default function InteractiveHaikuBuilder(props) {
                   className="handle"
                   style={{
                     position: "absolute",
-                    cursor: "pointer",
+                    cursor: "none",
                     zIndex: 100,
                     left: `${markers.one.x}px`,
                     top: `${markers.one.y}px`,
                     visibility: markers.one.visible,
                   }}
                 >
-                  <div
+                  <motion.button
+                    whileHover={{ scale: 1.3 }}
+                    whileTap={{ scale: 0.9 }}
                     className={classes.marker}
                     onClick={() => {
                       setShowFirstLine(!showFirstLine);
@@ -631,10 +634,12 @@ export default function InteractiveHaikuBuilder(props) {
                       display: "flex",
                       justifyContent: "center",
                       alignItems: "center",
+                      outlineWidth: 0,
+                      cursor: "none",
                     }}
                   >
                     <Typography style={{ textAlign: "center" }}>1</Typography>
-                  </div>
+                  </motion.button>
                 </div>
               </Draggable>
 
@@ -697,7 +702,7 @@ export default function InteractiveHaikuBuilder(props) {
                 <div
                   className="handle"
                   style={{
-                    cursor: "pointer",
+                    cursor: "none",
                     position: "absolute",
                     zIndex: 100,
                     left: `${markers.two.x}px`,
@@ -705,7 +710,9 @@ export default function InteractiveHaikuBuilder(props) {
                     visibility: markers.two.visible,
                   }}
                 >
-                  <div
+                  <motion.button
+                    whileHover={{ scale: 1.3 }}
+                    whileTap={{ scale: 0.9 }}
                     className={classes.marker}
                     onClick={() => {
                       setShowSecondLine(!showSecondLine);
@@ -714,10 +721,12 @@ export default function InteractiveHaikuBuilder(props) {
                       display: "flex",
                       justifyContent: "center",
                       alignItems: "center",
+                      outlineWidth: 0,
+                      cursor: "none",
                     }}
                   >
                     <Typography style={{ textAlign: "center" }}>2</Typography>
-                  </div>
+                  </motion.button>
                 </div>
               </Draggable>
 
@@ -780,7 +789,7 @@ export default function InteractiveHaikuBuilder(props) {
                 <div
                   className="handle"
                   style={{
-                    cursor: "pointer",
+                    cursor: "none",
                     position: "absolute",
                     zIndex: 100,
                     left: `${markers.three.x}px`,
@@ -788,7 +797,9 @@ export default function InteractiveHaikuBuilder(props) {
                     visibility: markers.three.visible,
                   }}
                 >
-                  <div
+                  <motion.button
+                    whileHover={{ scale: 1.3 }}
+                    whileTap={{ scale: 0.9 }}
                     className={classes.marker}
                     onClick={() => {
                       setShowThirdLine(!showThirdLine);
@@ -797,10 +808,12 @@ export default function InteractiveHaikuBuilder(props) {
                       display: "flex",
                       justifyContent: "center",
                       alignItems: "center",
+                      outlineWidth: 0,
+                      cursor: "none",
                     }}
                   >
                     <Typography style={{ textAlign: "center" }}>3</Typography>
-                  </div>
+                  </motion.button>
                 </div>
               </Draggable>
 
@@ -1226,6 +1239,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: colors.lightBlue,
     height: 35,
     width: 35,
+    outlineWidth: 0,
   },
   title: {
     "& .MuiInputBase-input": {
