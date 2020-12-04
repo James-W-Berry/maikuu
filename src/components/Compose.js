@@ -375,7 +375,7 @@ export default function Compose(props) {
                               justifyContent: "flex-start",
                             }}
                           >
-                            Focus your reflection
+                            Focus your reflection and compose
                           </Typography>
                         </motion.div>
                         <motion.div
@@ -392,7 +392,7 @@ export default function Compose(props) {
                         >
                           <Typography
                             className={
-                              activeStep === "compose"
+                              activeStep === "title"
                                 ? classes.lightHeading
                                 : classes.lightHeadingInactive
                             }
@@ -401,7 +401,33 @@ export default function Compose(props) {
                               justifyContent: "flex-start",
                             }}
                           >
-                            Compose
+                            Title
+                          </Typography>
+                        </motion.div>
+                        <motion.div
+                          key="success"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: [0.0, 1.0] }}
+                          transition={{ duration: 8 }}
+                          exit={{ opacity: 0 }}
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            width: "90%",
+                          }}
+                        >
+                          <Typography
+                            className={
+                              activeStep === "Post"
+                                ? classes.lightHeading
+                                : classes.lightHeadingInactive
+                            }
+                            style={{
+                              display: "flex",
+                              justifyContent: "flex-start",
+                            }}
+                          >
+                            Post
                           </Typography>
                         </motion.div>
                       </AnimatePresence>

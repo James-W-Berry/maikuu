@@ -638,7 +638,11 @@ export default function InteractiveHaikuBuilder(props) {
                       cursor: "none",
                     }}
                   >
-                    <Typography style={{ textAlign: "center" }}>1</Typography>
+                    <Typography
+                      style={{ textAlign: "center", color: colors.maikuu0 }}
+                    >
+                      1
+                    </Typography>
                   </motion.button>
                 </div>
               </Draggable>
@@ -673,6 +677,7 @@ export default function InteractiveHaikuBuilder(props) {
                     name="line-1"
                     type="text"
                     id="line-1"
+                    autoFocus
                     helperText={`${firstLine.syllables}/5 syllable line`}
                     inputProps={{
                       autoComplete: "off",
@@ -725,7 +730,11 @@ export default function InteractiveHaikuBuilder(props) {
                       cursor: "none",
                     }}
                   >
-                    <Typography style={{ textAlign: "center" }}>2</Typography>
+                    <Typography
+                      style={{ textAlign: "center", color: colors.maikuu0 }}
+                    >
+                      2
+                    </Typography>
                   </motion.button>
                 </div>
               </Draggable>
@@ -760,6 +769,7 @@ export default function InteractiveHaikuBuilder(props) {
                     name="line-1"
                     type="text"
                     id="line-1"
+                    autoFocus
                     helperText={`${secondLine.syllables}/7 syllable line`}
                     inputProps={{
                       autoComplete: "off",
@@ -812,7 +822,11 @@ export default function InteractiveHaikuBuilder(props) {
                       cursor: "none",
                     }}
                   >
-                    <Typography style={{ textAlign: "center" }}>3</Typography>
+                    <Typography
+                      style={{ textAlign: "center", color: colors.maikuu0 }}
+                    >
+                      3
+                    </Typography>
                   </motion.button>
                 </div>
               </Draggable>
@@ -847,6 +861,7 @@ export default function InteractiveHaikuBuilder(props) {
                     name="line-1"
                     type="text"
                     id="line-1"
+                    autoFocus
                     helperText={`${thirdLine.syllables}/5 syllable line`}
                     inputProps={{
                       autoComplete: "off",
