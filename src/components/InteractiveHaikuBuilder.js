@@ -16,8 +16,9 @@ import {
   Checkbox,
   Popover,
   ButtonBase,
+  Divider,
 } from "@material-ui/core";
-import CircleIcon from "@material-ui/icons/RadioButtonUnchecked";
+import FilterCenterFocusIcon from "@material-ui/icons/FilterCenterFocus";
 import colors from "../assets/colors";
 import ImageCarousel from "./ImageCarousel";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
@@ -43,18 +44,24 @@ export default function InteractiveHaikuBuilder(props) {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const setActiveStep = props.setActiveStep;
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorEl, setAnchorEl] = useState(
+    document.querySelector("#backgroundImageGrid")
+  );
   const [videoBackground, setVideoBackground] = useState();
   const [uploadImage, setUploadImage] = useState();
   const [markers, setMarkers] = useState({
-    one: { visible: false, x: 0, y: 0 },
-    two: { visible: false, x: 0, y: 0 },
-    three: { visible: false, x: 0, y: 0 },
+    one: { visible: "hidden", x: 0, y: 0 },
+    two: { visible: "hidden", x: 0, y: 0 },
+    three: { visible: "hidden", x: 0, y: 0 },
   });
-
+  const [showTitle, setShowTitle] = useState(true);
+  const [showFirstLine, setShowFirstLine] = useState(false);
+  const [showSecondLine, setShowSecondLine] = useState(false);
+  const [showThirdLine, setShowThirdLine] = useState(false);
+  let doc = document.querySelector("#backgroundImageGrid");
   const placeMarkers = (newMarkers) => {
-    console.log(newMarkers);
     setMarkers(newMarkers);
+    console.log(newMarkers);
   };
 
   const [title, setTitle] = useState({ value: null });
@@ -124,6 +131,10 @@ export default function InteractiveHaikuBuilder(props) {
 
   const handleClose = () => {
     setAnchorEl(null);
+    setShowFirstLine(false);
+    setShowSecondLine(false);
+    setShowThirdLine(false);
+    setShowTitle(false);
   };
 
   const closePreview = () => {
@@ -552,39 +563,9 @@ export default function InteractiveHaikuBuilder(props) {
             }}
           >
             <div
-              style={{
-                position: "absolute",
-                zIndex: 100,
-                left: `${markers.one.x}px`,
-                top: `${markers.one.y}px`,
-                opacity: `${markers.one.visible ? 1 : 0}`,
-              }}
+              id="backgroundImageGrid"
+              style={{ cursor: "none", position: "relative" }}
             >
-              <Typography className={classes.title}>1</Typography>
-            </div>
-            <div
-              style={{
-                position: "absolute",
-                zIndex: 100,
-                left: `${markers.two.x}px`,
-                top: `${markers.two.y}px`,
-                opacity: `${markers.two.visible ? 1 : 0}`,
-              }}
-            >
-              <Typography className={classes.title}>2</Typography>
-            </div>
-            <div
-              style={{
-                position: "absolute",
-                zIndex: 100,
-                left: `${markers.three.x}px`,
-                top: `${markers.three.y}px`,
-                opacity: `${markers.three.visible ? 1 : 0}`,
-              }}
-            >
-              <Typography className={classes.title}>3</Typography>
-            </div>
-            <div id="backgroundImageGrid">
               {videoBackground ? (
                 <video
                   style={{
@@ -627,6 +608,255 @@ export default function InteractiveHaikuBuilder(props) {
                   draggable="false"
                 />
               )}
+
+              <Draggable>
+                <div
+                  className="handle"
+                  style={{
+                    position: "absolute",
+                    cursor: "pointer",
+                    zIndex: 100,
+                    left: `${markers.one.x}px`,
+                    top: `${markers.one.y}px`,
+                    visibility: markers.one.visible,
+                  }}
+                >
+                  <div
+                    className={classes.marker}
+                    onClick={() => {
+                      setShowFirstLine(!showFirstLine);
+                    }}
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Typography style={{ textAlign: "center" }}>1</Typography>
+                  </div>
+                </div>
+              </Draggable>
+
+              <Popover
+                open={showFirstLine}
+                anchorEl={doc}
+                onClose={handleClose}
+                clickHandle={handleClose}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "center",
+                }}
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "center",
+                }}
+              >
+                <div
+                  className="handle"
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    backgroundColor: "rgba(0,0,0,1.0)",
+                  }}
+                >
+                  <TextField
+                    className={classes.fiveLine}
+                    margin="normal"
+                    required
+                    name="line-1"
+                    type="text"
+                    id="line-1"
+                    helperText={`${firstLine.syllables}/5 syllable line`}
+                    inputProps={{
+                      autoComplete: "off",
+                    }}
+                    value={firstLine.value}
+                    onChange={(event) => {
+                      let syllables = syllable(event.target.value);
+                      if (syllables !== 5) {
+                        setFirstLine({
+                          value: event.target.value,
+                          syllables: syllables,
+                          valid: false,
+                        });
+                      } else {
+                        setFirstLine({
+                          value: event.target.value,
+                          syllables: syllables,
+                          valid: true,
+                        });
+                      }
+                    }}
+                  />
+                </div>
+              </Popover>
+
+              <Draggable>
+                <div
+                  className="handle"
+                  style={{
+                    cursor: "pointer",
+                    position: "absolute",
+                    zIndex: 100,
+                    left: `${markers.two.x}px`,
+                    top: `${markers.two.y}px`,
+                    visibility: markers.two.visible,
+                  }}
+                >
+                  <div
+                    className={classes.marker}
+                    onClick={() => {
+                      setShowSecondLine(!showSecondLine);
+                    }}
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Typography style={{ textAlign: "center" }}>2</Typography>
+                  </div>
+                </div>
+              </Draggable>
+
+              <Popover
+                open={showSecondLine}
+                anchorEl={doc}
+                onClose={handleClose}
+                clickHandle={handleClose}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "center",
+                }}
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "center",
+                }}
+              >
+                <div
+                  className="handle"
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    backgroundColor: "rgba(0,0,0,1.0)",
+                  }}
+                >
+                  <TextField
+                    className={classes.sevenLine}
+                    margin="normal"
+                    required
+                    name="line-1"
+                    type="text"
+                    id="line-1"
+                    helperText={`${secondLine.syllables}/7 syllable line`}
+                    inputProps={{
+                      autoComplete: "off",
+                    }}
+                    value={secondLine.value}
+                    onChange={(event) => {
+                      let syllables = syllable(event.target.value);
+                      if (syllables !== 5) {
+                        setSecondLine({
+                          value: event.target.value,
+                          syllables: syllables,
+                          valid: false,
+                        });
+                      } else {
+                        setSecondLine({
+                          value: event.target.value,
+                          syllables: syllables,
+                          valid: true,
+                        });
+                      }
+                    }}
+                  />
+                </div>
+              </Popover>
+
+              <Draggable>
+                <div
+                  className="handle"
+                  style={{
+                    cursor: "pointer",
+                    position: "absolute",
+                    zIndex: 100,
+                    left: `${markers.three.x}px`,
+                    top: `${markers.three.y}px`,
+                    visibility: markers.three.visible,
+                  }}
+                >
+                  <div
+                    className={classes.marker}
+                    onClick={() => {
+                      setShowThirdLine(!showThirdLine);
+                    }}
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Typography style={{ textAlign: "center" }}>3</Typography>
+                  </div>
+                </div>
+              </Draggable>
+
+              <Popover
+                open={showThirdLine}
+                anchorEl={doc}
+                onClose={handleClose}
+                clickHandle={handleClose}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "center",
+                }}
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "center",
+                }}
+              >
+                <div
+                  className="handle"
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    backgroundColor: "rgba(0,0,0,1.0)",
+                  }}
+                >
+                  <TextField
+                    className={classes.fiveLine}
+                    margin="normal"
+                    required
+                    name="line-1"
+                    type="text"
+                    id="line-1"
+                    helperText={`${thirdLine.syllables}/5 syllable line`}
+                    inputProps={{
+                      autoComplete: "off",
+                    }}
+                    value={thirdLine.value}
+                    onChange={(event) => {
+                      let syllables = syllable(event.target.value);
+                      if (syllables !== 5) {
+                        setThirdLine({
+                          value: event.target.value,
+                          syllables: syllables,
+                          valid: false,
+                        });
+                      } else {
+                        setThirdLine({
+                          value: event.target.value,
+                          syllables: syllables,
+                          valid: true,
+                        });
+                      }
+                    }}
+                  />
+                </div>
+              </Popover>
             </div>
           </Grid>
 
@@ -733,265 +963,6 @@ export default function InteractiveHaikuBuilder(props) {
               </div>
             </div>
           </Grid>
-          {/* 
-          <div
-            style={{
-              position: "absolute",
-              marginLeft: firstMarkerPosition.x,
-              marginBottom: "175px",
-            }}
-          >
-            <Draggable>
-              <div
-                className="handle"
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  backgroundColor: "rgba(0,0,0,0.5)",
-                }}
-              >
-                <TextField
-                  className={classes.title}
-                  margin="normal"
-                  required
-                  name="title"
-                  type="text"
-                  id="title"
-                  helperText="Title"
-                  inputProps={{
-                    autoComplete: "off",
-                  }}
-                  value={title.value}
-                  onChange={(event) => {
-                    setTitle({ value: event.target.value });
-                  }}
-                />
-              </div>
-            </Draggable>
-          </div>
-
-          <div
-            style={{
-              position: "absolute",
-              marginLeft: firstMarkerPosition.x,
-              marginBottom: firstMarkerPosition.y,
-            }}
-          >
-            {showFirstMarker && (
-              <Draggable
-                handle=".handle"
-                onStart={() => {
-                  setShowFirstLine(!showFirstLine);
-                }}
-              >
-                <div
-                  className="handle"
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <CircleIcon
-                    style={{
-                      color: colors.maikuu0,
-                      borderRadius: "12px",
-                      backgroundColor: colors.lightBlue,
-                    }}
-                  />
-                  {showFirstLine && (
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        backgroundColor: "rgba(0,0,0,0.5)",
-                      }}
-                    >
-                      <TextField
-                        className={classes.fiveLine}
-                        margin="normal"
-                        required
-                        name="line-1"
-                        type="text"
-                        id="line-1"
-                        helperText={`${firstLine.syllables}/5 syllable line`}
-                        inputProps={{
-                          autoComplete: "off",
-                        }}
-                        value={firstLine.value}
-                        onChange={(event) => {
-                          let syllables = syllable(event.target.value);
-                          if (syllables !== 5) {
-                            setFirstLine({
-                              value: event.target.value,
-                              syllables: syllables,
-                              valid: false,
-                            });
-                          } else {
-                            setFirstLine({
-                              value: event.target.value,
-                              syllables: syllables,
-                              valid: true,
-                            });
-                          }
-                        }}
-                      />
-                    </div>
-                  )}
-                </div>
-              </Draggable>
-            )}
-          </div>
-
-          <div
-            style={{
-              position: "absolute",
-              marginLeft: secondMarkerPosition.x,
-              marginBottom: secondMarkerPosition.y,
-            }}
-          >
-            {showSecondMarker && (
-              <Draggable
-                handle=".handle"
-                onStart={() => {
-                  setShowSecondLine(!showSecondLine);
-                }}
-              >
-                <div
-                  className="handle"
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <CircleIcon
-                    style={{
-                      color: colors.maikuu0,
-                      borderRadius: "12px",
-                      backgroundColor: colors.lightBlue,
-                    }}
-                  />
-                  {showSecondLine && (
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        backgroundColor: "rgba(0,0,0,0.5)",
-                      }}
-                    >
-                      <TextField
-                        className={classes.sevenLine}
-                        margin="normal"
-                        required
-                        name="line-1"
-                        type="text"
-                        id="line-1"
-                        helperText={`${secondLine.syllables}/7 syllable line`}
-                        inputProps={{
-                          autoComplete: "off",
-                        }}
-                        value={secondLine.value}
-                        onChange={(event) => {
-                          let syllables = syllable(event.target.value);
-                          if (syllables !== 5) {
-                            setSecondLine({
-                              value: event.target.value,
-                              syllables: syllables,
-                              valid: false,
-                            });
-                          } else {
-                            setSecondLine({
-                              value: event.target.value,
-                              syllables: syllables,
-                              valid: true,
-                            });
-                          }
-                        }}
-                      />
-                    </div>
-                  )}
-                </div>
-              </Draggable>
-            )}
-          </div>
-
-          <div
-            style={{
-              position: "absolute",
-              marginLeft: thirdMarkerPosition.x,
-              marginBottom: thirdMarkerPosition.y,
-            }}
-          >
-            {showThirdMarker && (
-              <Draggable
-                handle=".handle"
-                onStart={() => {
-                  setShowThirdLine(!showThirdLine);
-                }}
-              >
-                <div
-                  className="handle"
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <CircleIcon
-                    style={{
-                      color: colors.maikuu0,
-                      borderRadius: "12px",
-                      backgroundColor: colors.lightBlue,
-                    }}
-                  />
-                  {showThirdLine && (
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        backgroundColor: "rgba(0,0,0,0.5)",
-                      }}
-                    >
-                      <TextField
-                        className={classes.fiveLine}
-                        margin="normal"
-                        required
-                        name="line-1"
-                        type="text"
-                        id="line-1"
-                        helperText={`${thirdLine.syllables}/5 syllable line`}
-                        inputProps={{
-                          autoComplete: "off",
-                        }}
-                        value={thirdLine.value}
-                        onChange={(event) => {
-                          let syllables = syllable(event.target.value);
-                          if (syllables !== 5) {
-                            setThirdLine({
-                              value: event.target.value,
-                              syllables: syllables,
-                              valid: false,
-                            });
-                          } else {
-                            setThirdLine({
-                              value: event.target.value,
-                              syllables: syllables,
-                              valid: true,
-                            });
-                          }
-                        }}
-                      />
-                    </div>
-                  )}
-                </div>
-              </Draggable>
-            )}
-          </div> */}
 
           <Popover
             id={id}
@@ -1247,6 +1218,13 @@ const useStyles = makeStyles((theme) => ({
     ".cursor--hidden": {
       opacity: 0,
     },
+  },
+  marker: {
+    color: colors.maikuu4,
+    borderRadius: "17px",
+    backgroundColor: colors.lightBlue,
+    height: 35,
+    width: 35,
   },
   title: {
     "& .MuiInputBase-input": {
