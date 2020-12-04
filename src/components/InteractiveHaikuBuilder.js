@@ -575,8 +575,9 @@ export default function InteractiveHaikuBuilder(props) {
                   }}
                   draggable="false"
                   controls={true}
-                  width="90%"
+                  width="100%"
                   autoPlay
+                  loop
                 >
                   <source
                     src={URL.createObjectURL(videoBackground)}
