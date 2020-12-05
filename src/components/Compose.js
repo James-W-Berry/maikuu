@@ -401,7 +401,7 @@ export default function Compose(props) {
                               justifyContent: "flex-start",
                             }}
                           >
-                            Title
+                            Title your haiku
                           </Typography>
                         </motion.div>
                         <motion.div

@@ -65,19 +65,19 @@ export default function InteractiveHaikuBuilder(props) {
     console.log(newMarkers);
   };
 
-  const [title, setTitle] = useState({ value: null });
+  const [title, setTitle] = useState({ value: "untitled" });
   const [firstLine, setFirstLine] = useState({
-    value: "",
+    value: null,
     valid: null,
     syllables: 0,
   });
   const [secondLine, setSecondLine] = useState({
-    value: "",
+    value: null,
     valid: null,
     syllables: 0,
   });
   const [thirdLine, setThirdLine] = useState({
-    value: "",
+    value: null,
     valid: null,
     syllables: 0,
   });
@@ -85,9 +85,10 @@ export default function InteractiveHaikuBuilder(props) {
   const [isUploading, setIsUploading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [isPreviewVisible, setIsPreviewVisible] = useState(false);
-  const [calculatedAuthor, setCalculatedAuthor] = useState();
+  const [calculatedAuthor, setCalculatedAuthor] = useState(user.displayName);
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
+  const [hint, setHint] = useState("");
 
   const AnonCheckbox = withStyles({
     root: {
@@ -253,10 +254,12 @@ export default function InteractiveHaikuBuilder(props) {
   }
 
   const handleClick = (event) => {
-    if (firstLine.value && secondLine.value && thirdLine.value && title.value) {
-      setAnchorEl(event.currentTarget);
-    }
+    setIsPreviewVisible(true);
   };
+
+  function showHint(event) {
+    setAnchorEl(event.currentTarget);
+  }
 
   async function handleSubmit() {
     setIsUploading(true);
@@ -359,6 +362,7 @@ export default function InteractiveHaikuBuilder(props) {
           <Card
             className={classes.root}
             style={{
+              flex: 8,
               backgroundImage: `url(${backgroundImage})`,
               backgroundRepeat: "no-repeat",
               backgroundPosition: "center center",
@@ -410,6 +414,100 @@ export default function InteractiveHaikuBuilder(props) {
               </Typography>
             </CardContent>
           </Card>
+          <div
+            style={{
+              display: "flex",
+              flex: 2,
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundColor: colors.maikuu0,
+              boxShadow: "10px 10px  5px rgba(0,0,0,0.5)",
+              borderRadius: "10px",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: colors.maikuu0,
+              }}
+            >
+              <TextField
+                className={classes.title}
+                margin="normal"
+                required
+                name="title"
+                type="text"
+                id="title"
+                helperText="Title"
+                inputProps={{
+                  autoComplete: "off",
+                }}
+                value={title.value}
+                onChange={(event) => {
+                  setTitle({ value: event.target.value });
+                }}
+              />
+              <FormControlLabel
+                control={
+                  <AnonCheckbox
+                    checked={anon}
+                    onChange={(event) => {
+                      setAnon(!anon);
+                      !anon
+                        ? setCalculatedAuthor("anonymous")
+                        : setCalculatedAuthor(user.displayName);
+                    }}
+                    name="checkedG"
+                  />
+                }
+                label="Post Anonymously"
+                className={classes.lightHeading}
+              />
+
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  padding: "10px",
+                  backgroundColor: colors.maikuu0,
+                }}
+              >
+                <Typography style={{ color: colors.maikuu4 }}>
+                  {`Haiku has irregular syllable count: ${firstLine.syllables}, ${secondLine.syllables}, ${thirdLine.syllables}`}
+                </Typography>
+              </div>
+            </div>
+
+            <div
+              style={{
+                display: "flex",
+                flex: 1,
+                padding: "10px",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Button
+                id="post-button"
+                type="submit"
+                classes={{
+                  root: classes.lightSubmit,
+                  disabled: classes.disabledLightSubmit,
+                }}
+                onClick={(event) => {
+                  handleSubmit();
+                }}
+              >
+                <Typography>Post</Typography>
+              </Button>
+            </div>
+          </div>
         </div>
       </Modal>
 
@@ -909,7 +1007,7 @@ export default function InteractiveHaikuBuilder(props) {
                 borderRadius: "10px",
               }}
             >
-              <FormControlLabel
+              {/* <FormControlLabel
                 control={
                   <AnonCheckbox
                     checked={anon}
@@ -921,7 +1019,7 @@ export default function InteractiveHaikuBuilder(props) {
                 }
                 label="Post Anonymously"
                 className={classes.lightHeading}
-              />
+              /> */}
 
               <div
                 style={{
@@ -940,22 +1038,31 @@ export default function InteractiveHaikuBuilder(props) {
                     disabled: classes.disabledLightSubmit,
                   }}
                   onClick={(event) => {
+                    // if (
+                    //   firstLine.valid &&
+                    //   secondLine.valid &&
+                    //   thirdLine.valid
+                    // ) {
+                    //   handleSubmit();
+                    // } else {
                     if (
-                      firstLine.valid &&
-                      secondLine.valid &&
-                      thirdLine.valid
+                      firstLine.value &&
+                      secondLine.value &&
+                      thirdLine.value
                     ) {
-                      handleSubmit();
-                    } else {
                       handleClick(event);
+                    } else {
+                      setHint("Complete your haiku before posting");
+                      showHint(event);
                     }
+                    // }
                   }}
                 >
                   <Typography>Post</Typography>
                 </Button>
               </div>
 
-              <div
+              {/* <div
                 style={{
                   display: "flex",
                   flex: 1,
@@ -990,6 +1097,7 @@ export default function InteractiveHaikuBuilder(props) {
                   <Typography>Preview</Typography>
                 </Button>
               </div>
+             */}
             </div>
           </Grid>
 
@@ -1017,9 +1125,7 @@ export default function InteractiveHaikuBuilder(props) {
                 backgroundColor: colors.lightBlue,
               }}
             >
-              <Typography style={{ color: colors.maikuu0 }}>
-                {`Post Haiku with irregular syllable count? (${firstLine.syllables}, ${secondLine.syllables}, ${thirdLine.syllables})`}
-              </Typography>
+              <Typography style={{ color: colors.maikuu0 }}>{hint}</Typography>
 
               <div
                 style={{
@@ -1034,17 +1140,9 @@ export default function InteractiveHaikuBuilder(props) {
                   classes={{
                     root: classes.lightSubmit,
                   }}
-                  onClick={handleConfirmSubmit}
-                >
-                  <Typography>Confirm</Typography>
-                </Button>
-                <Button
-                  classes={{
-                    root: classes.lightSubmit,
-                  }}
                   onClick={handleClose}
                 >
-                  <Typography>Cancel</Typography>
+                  <Typography>Ok</Typography>
                 </Button>
               </div>
             </div>
