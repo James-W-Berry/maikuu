@@ -13,7 +13,7 @@ import {
 import colors from "../assets/colors";
 import { NavLink } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import InteractiveHaikuBuilder from "./InteractiveHaikuBuilder";
+import InteractiveHaikuBuilder from "./InteractiveHaikuBuilder/InteractiveHaikuBuilder";
 import SwapHorizontalCircleIcon from "@material-ui/icons/SwapHorizontalCircle";
 import abstract_nouns from "../assets/abstract_nouns.json";
 import LoopIcon from "@material-ui/icons/Loop";

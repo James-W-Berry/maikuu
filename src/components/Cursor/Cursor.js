@@ -4,7 +4,7 @@ import "./Cursor.css";
 
 export default function Cursor() {
   const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [hidden, setHidden] = useState(false);
+  const [hidden, setHidden] = useState(true);
   const [clicked, setClicked] = useState(false);
 
   let doc = document.querySelector("#backgroundImageGrid");

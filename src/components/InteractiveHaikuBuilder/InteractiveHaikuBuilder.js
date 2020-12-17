@@ -10,30 +10,27 @@ import {
   Typography,
   FormControlLabel,
   withStyles,
-  Modal,
   Card,
   CardContent,
   Checkbox,
   Popover,
-  ButtonBase,
-  Divider,
 } from "@material-ui/core";
-import FilterCenterFocusIcon from "@material-ui/icons/FilterCenterFocus";
-import colors from "../assets/colors";
-import ImageCarousel from "./ImageCarousel";
+import colors from "../../assets/colors";
+import ImageCarousel from "../ImageCarousel";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 import CloseIcon from "@material-ui/icons/Close";
 import syllable from "syllable";
 import Draggable from "react-draggable";
-import ours from "../assets/ours.png";
-import yours from "../assets/yours.png";
+import ours from "../../assets/ours.png";
+import yours from "../../assets/yours.png";
 import { v4 as uuidv4 } from "uuid";
-import firebase from "../firebase";
+import firebase from "../../firebase";
 import moment from "moment";
-import Cursor from "./Cursor/Cursor";
-import "../App.css";
+import Cursor from "../Cursor/Cursor";
+import "../../App.css";
 import { motion } from "framer-motion";
+import "./InteractiveHaikuBuilder.css";
 
 export default function InteractiveHaikuBuilder(props) {
   const classes = useStyles();
@@ -62,10 +59,9 @@ export default function InteractiveHaikuBuilder(props) {
   let doc = document.querySelector("#backgroundImageGrid");
   const placeMarkers = (newMarkers) => {
     setMarkers(newMarkers);
-    console.log(newMarkers);
   };
 
-  const [title, setTitle] = useState({ value: "untitled" });
+  const [title, setTitle] = useState({ value: "" });
   const [firstLine, setFirstLine] = useState({
     value: null,
     valid: null,
@@ -107,7 +103,7 @@ export default function InteractiveHaikuBuilder(props) {
       );
     } else {
       if (!window.localStorage.isReturningVisitor) {
-        window.localStorage.isReturningVisitor = true;
+        //window.localStorage.isReturningVisitor = true;
         setShowHelpOne(true);
       }
     }
@@ -295,7 +291,7 @@ export default function InteractiveHaikuBuilder(props) {
         height: "100%",
       }}
     >
-      <Modal
+      <Dialog
         style={{
           display: "flex",
           justifyContent: "center",
@@ -304,6 +300,8 @@ export default function InteractiveHaikuBuilder(props) {
         }}
         open={isPreviewVisible}
         onClose={closePreview}
+        fullScreen
+        fullWidth
         aria-labelledby="preview"
         aria-describedby="preview of haiku"
       >
@@ -313,32 +311,15 @@ export default function InteractiveHaikuBuilder(props) {
             justifyContent: "center",
             alignItems: "center",
             alignSelf: "center",
-            width: "75vw",
-            height: "75vw",
-            maxHeight: "75vh",
+            width: "100vw",
+            height: "100vh",
             flexDirection: "column",
+            backgroundColor: colors.maikuu0,
           }}
         >
-          <div
-            style={{
-              width: "100%",
-              display: "flex",
-              justifyContent: "flex-end",
-              alignItems: "flex-end",
-            }}
-          >
-            <IconButton
-              onClick={() => closePreview()}
-              aria-label="close carousel"
-              style={{
-                backgroundColor: colors.maikuu4,
-                width: "40px",
-                height: "40px",
-              }}
-            >
-              <CloseIcon />
-            </IconButton>
-          </div>
+          <Typography style={{ color: colors.maikuu4, fontSize: "30px" }}>
+            Preview
+          </Typography>
           <Card
             className={classes.root}
             style={{
@@ -347,8 +328,9 @@ export default function InteractiveHaikuBuilder(props) {
               backgroundRepeat: "no-repeat",
               backgroundPosition: "center center",
               backgroundSize: "cover",
-              width: "100%",
-              height: "100%",
+              width: "75vw",
+              height: "75vw",
+              minHeight: "50vh",
             }}
           >
             <CardContent className={classes.content}>
@@ -398,12 +380,11 @@ export default function InteractiveHaikuBuilder(props) {
             style={{
               display: "flex",
               flex: 2,
-              flexDirection: "row",
+              flexDirection: "column",
               justifyContent: "center",
               alignItems: "center",
-              backgroundColor: colors.maikuu0,
-              boxShadow: "10px 10px  5px rgba(0,0,0,0.5)",
-              borderRadius: "10px",
+              marginTop: "15px",
+              width: "90%",
             }}
           >
             <div
@@ -412,20 +393,18 @@ export default function InteractiveHaikuBuilder(props) {
                 flexDirection: "column",
                 justifyContent: "center",
                 alignItems: "center",
-                backgroundColor: colors.maikuu0,
               }}
             >
               <TextField
                 className={classes.title}
                 margin="normal"
-                required
                 name="title"
                 type="text"
                 id="title"
-                helperText="Title"
                 inputProps={{
                   autoComplete: "off",
                 }}
+                label="Title your haiku"
                 value={title.value}
                 onChange={(event) => {
                   setTitle({ value: event.target.value });
@@ -483,13 +462,28 @@ export default function InteractiveHaikuBuilder(props) {
                 onClick={(event) => {
                   handleConfirmSubmit();
                 }}
+                style={{ marginRight: "10px" }}
               >
                 <Typography>Post</Typography>
+              </Button>
+              <Button
+                id="post-button"
+                type="submit"
+                classes={{
+                  root: classes.lightSubmit,
+                  disabled: classes.disabledLightSubmit,
+                }}
+                onClick={(event) => {
+                  closePreview();
+                }}
+                style={{ marginLeft: "10px" }}
+              >
+                <Typography>Cancel</Typography>
               </Button>
             </div>
           </div>
         </div>
-      </Modal>
+      </Dialog>
 
       {backgroundImage ? (
         <Grid
@@ -643,7 +637,12 @@ export default function InteractiveHaikuBuilder(props) {
           >
             <div
               id="backgroundImageGrid"
-              style={{ cursor: "none", position: "relative" }}
+              style={{
+                cursor: "none",
+                position: "relative",
+                boxShadow: showHelpOne ? "0 0 0 1000px rgba(0,0,0,0.8)" : null,
+                backgroundColor: "rgba(0,0,0,0.8)",
+              }}
             >
               {videoBackground ? (
                 <video
@@ -679,6 +678,7 @@ export default function InteractiveHaikuBuilder(props) {
                   style={{
                     padding: "0px",
                     borderRadius: "10px",
+                    backgroundColor: "rgba(0,0,0,0)",
                     boxShadow: backgroundImage
                       ? "10px 10px  5px rgba(0,0,0,0.5)"
                       : null,
@@ -694,7 +694,9 @@ export default function InteractiveHaikuBuilder(props) {
                 anchorEl={document.querySelector("#backgroundImageGrid")}
                 onClose={handleClose}
                 clickHandle={handleClose}
-                style={{ top: "10%" }}
+                style={{
+                  top: "10%",
+                }}
                 anchorOrigin={{
                   vertical: "top",
                   horizontal: "center",
@@ -727,6 +729,7 @@ export default function InteractiveHaikuBuilder(props) {
               <Draggable>
                 <div
                   className="handle"
+                  class={showHelpOne ? "markerPulse" : null}
                   style={{
                     position: "absolute",
                     cursor: "none",
@@ -734,10 +737,8 @@ export default function InteractiveHaikuBuilder(props) {
                     left: markers.one.x,
                     top: markers.one.y,
                     visibility: markers.one.visible,
-                    boxShadow: showHelpOne
-                      ? "0 0 0 1000px rgba(0,0,0,0.8)"
-                      : null,
-                    borderRadius: "20",
+
+                    // borderRadius: "20",
                   }}
                 >
                   <motion.button
@@ -777,6 +778,9 @@ export default function InteractiveHaikuBuilder(props) {
                   vertical: "top",
                   horizontal: "center",
                 }}
+                PaperProps={{
+                  style: { width: "100%" },
+                }}
               >
                 <div
                   className="handle"
@@ -795,7 +799,7 @@ export default function InteractiveHaikuBuilder(props) {
                     type="text"
                     id="line-1"
                     autoFocus
-                    helperText={`${firstLine.syllables}/5 syllable line`}
+                    helperText={`First line - ${firstLine.syllables}/5 syllables`}
                     inputProps={{
                       autoComplete: "off",
                     }}
@@ -869,6 +873,9 @@ export default function InteractiveHaikuBuilder(props) {
                   vertical: "top",
                   horizontal: "center",
                 }}
+                PaperProps={{
+                  style: { width: "100%" },
+                }}
               >
                 <div
                   className="handle"
@@ -887,7 +894,7 @@ export default function InteractiveHaikuBuilder(props) {
                     type="text"
                     id="line-1"
                     autoFocus
-                    helperText={`${secondLine.syllables}/7 syllable line`}
+                    helperText={`Second line - ${secondLine.syllables}/7 syllables`}
                     inputProps={{
                       autoComplete: "off",
                     }}
@@ -961,6 +968,9 @@ export default function InteractiveHaikuBuilder(props) {
                   vertical: "top",
                   horizontal: "center",
                 }}
+                PaperProps={{
+                  style: { width: "100%" },
+                }}
               >
                 <div
                   className="handle"
@@ -979,7 +989,7 @@ export default function InteractiveHaikuBuilder(props) {
                     type="text"
                     id="line-1"
                     autoFocus
-                    helperText={`${thirdLine.syllables}/5 syllable line`}
+                    helperText={`Third line ${thirdLine.syllables}/5 syllables`}
                     inputProps={{
                       autoComplete: "off",
                     }}
@@ -1332,6 +1342,15 @@ const useStyles = makeStyles((theme) => ({
       borderBottom: "1px solid rgba(255, 255, 255, 1)",
     },
     width: "80%",
+    "& label ": {
+      color: colors.maikuu4,
+    },
+    "& label.Mui-focused": {
+      color: colors.maikuu4,
+    },
+    "& .MuiInput-underline:after": {
+      borderBottomColor: colors.maikuu4,
+    },
   },
   submit: {
     backgroundColor: colors.maikuu0,
@@ -1384,7 +1403,7 @@ const useStyles = makeStyles((theme) => ({
     "& .MuiInput-underline:after": {
       borderBottom: "1px solid rgba(255, 255, 255, 1)",
     },
-    width: "80%",
+    width: "90%",
   },
   sevenLine: {
     "& .MuiInputBase-input": {
@@ -1403,7 +1422,7 @@ const useStyles = makeStyles((theme) => ({
     "& .MuiInput-underline:after": {
       borderBottom: "1px solid rgba(255, 255, 255, 1)",
     },
-    width: "100%",
+    width: "90%",
   },
   heading: {
     color: colors.maikuu0,
