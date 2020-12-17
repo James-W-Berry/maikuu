@@ -51,9 +51,9 @@ export default function InteractiveHaikuBuilder(props) {
   const [videoBackground, setVideoBackground] = useState();
   const [uploadImage, setUploadImage] = useState();
   const [markers, setMarkers] = useState({
-    one: { visible: "hidden", x: 0, y: 0 },
-    two: { visible: "hidden", x: 0, y: 0 },
-    three: { visible: "hidden", x: 0, y: 0 },
+    one: { visible: "visible", x: "25%", y: "25%" },
+    two: { visible: "visible", x: "50%", y: "50%" },
+    three: { visible: "visible", x: "75%", y: "75%" },
   });
   const [showTitle, setShowTitle] = useState(true);
   const [showFirstLine, setShowFirstLine] = useState(false);
@@ -89,6 +89,7 @@ export default function InteractiveHaikuBuilder(props) {
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
   const [hint, setHint] = useState("");
+  const [showHelpOne, setShowHelpOne] = useState(false);
 
   const AnonCheckbox = withStyles({
     root: {
@@ -98,6 +99,19 @@ export default function InteractiveHaikuBuilder(props) {
       },
     },
   })((props) => <Checkbox color="default" {...props} />);
+
+  useEffect(() => {
+    if (!window.localStorage) {
+      console.log(
+        "no localStorage API found - will not show hints for new user"
+      );
+    } else {
+      if (!window.localStorage.isReturningVisitor) {
+        window.localStorage.isReturningVisitor = true;
+        setShowHelpOne(true);
+      }
+    }
+  }, []);
 
   useEffect(() => {
     if (user.loggedIn) {
@@ -115,6 +129,7 @@ export default function InteractiveHaikuBuilder(props) {
 
   function updatePreviewImage(file) {
     setUploadImage(file);
+    console.log(file);
 
     const fileReader = new FileReader();
 
@@ -137,16 +152,23 @@ export default function InteractiveHaikuBuilder(props) {
     setShowSecondLine(false);
     setShowThirdLine(false);
     setShowTitle(false);
+    setShowHelpOne(false);
   };
 
   const closePreview = () => {
     setIsPreviewVisible(false);
   };
 
-  function updatePreviewImageFromCarousel(file) {
-    setUploadImage(file);
-    setActiveStep("focus");
-    setBackgroundImage(file);
+  async function updatePreviewImageFromCarousel(file) {
+    const blob = new File([file], "inspiration.jpeg");
+    const fileReader = new FileReader();
+    fileReader.onload = () => {
+      console.log(fileReader.result);
+      setUploadImage(blob);
+      setActiveStep("focus");
+      setBackgroundImage(file);
+    };
+    fileReader.readAsDataURL(blob);
   }
 
   const addToAuthoredPosts = (postId) => {
@@ -169,7 +191,8 @@ export default function InteractiveHaikuBuilder(props) {
   };
 
   async function uploadPic(id) {
-    if (uploadImage !== "") {
+    console.log(uploadImage);
+    if (uploadImage) {
       const storageRef = firebase.storage().ref();
       const picRef = storageRef.child(`images/${id}`);
       let uploadProfilePicTask = picRef.put(uploadImage);
@@ -259,49 +282,6 @@ export default function InteractiveHaikuBuilder(props) {
 
   function showHint(event) {
     setAnchorEl(event.currentTarget);
-  }
-
-  async function handleSubmit() {
-    setIsUploading(true);
-    let id = uuidv4();
-    let author;
-
-    if (anon) {
-      author = "anonymous";
-    } else if (user.displayName) {
-      author = user.displayName;
-    } else if (userInfo.displayName) {
-      author = userInfo.displayName;
-    } else {
-      author = "unknown";
-    }
-
-    let imageUrl = await uploadPic(id);
-
-    console.log(imageUrl);
-    firebase
-      .firestore()
-      .collection("posts")
-      .doc(id)
-      .set({
-        id: id,
-        author: author,
-        likes: 0,
-        line_1: firstLine.value,
-        line_2: secondLine.value,
-        line_3: thirdLine.value,
-        title: title.value,
-        date: moment.now(),
-        image: imageUrl,
-      })
-      .then(() => {
-        setSuccess(true);
-        setAnon(false);
-        addToAuthoredPosts(id);
-      })
-      .catch(function (error) {
-        console.log("Error getting documents: ", error);
-      });
   }
 
   return (
@@ -479,7 +459,7 @@ export default function InteractiveHaikuBuilder(props) {
                 }}
               >
                 <Typography style={{ color: colors.maikuu4 }}>
-                  {`Haiku has irregular syllable count: ${firstLine.syllables}, ${secondLine.syllables}, ${thirdLine.syllables}`}
+                  {`Haiku has syllable count: ${firstLine.syllables}, ${secondLine.syllables}, ${thirdLine.syllables}`}
                 </Typography>
               </div>
             </div>
@@ -501,7 +481,7 @@ export default function InteractiveHaikuBuilder(props) {
                   disabled: classes.disabledLightSubmit,
                 }}
                 onClick={(event) => {
-                  handleSubmit();
+                  handleConfirmSubmit();
                 }}
               >
                 <Typography>Post</Typography>
@@ -709,6 +689,41 @@ export default function InteractiveHaikuBuilder(props) {
                 />
               )}
 
+              <Popover
+                open={showHelpOne}
+                anchorEl={document.querySelector("#backgroundImageGrid")}
+                onClose={handleClose}
+                clickHandle={handleClose}
+                style={{ top: "10%" }}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "center",
+                }}
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "center",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    padding: "10px",
+                    // backgroundColor: colors.lightBlue,
+                    zIndex: 110,
+                  }}
+                >
+                  <Typography style={{ color: colors.maikuu0 }}>
+                    Click and drag the markers to focus your reflections on
+                  </Typography>
+                  <Typography style={{ color: colors.maikuu0 }}>
+                    the image for each haiku line
+                  </Typography>
+                </div>
+              </Popover>
+
               <Draggable>
                 <div
                   className="handle"
@@ -716,9 +731,13 @@ export default function InteractiveHaikuBuilder(props) {
                     position: "absolute",
                     cursor: "none",
                     zIndex: 100,
-                    left: `${markers.one.x}px`,
-                    top: `${markers.one.y}px`,
+                    left: markers.one.x,
+                    top: markers.one.y,
                     visibility: markers.one.visible,
+                    boxShadow: showHelpOne
+                      ? "0 0 0 1000px rgba(0,0,0,0.8)"
+                      : null,
+                    borderRadius: "20",
                   }}
                 >
                   <motion.button
@@ -808,8 +827,8 @@ export default function InteractiveHaikuBuilder(props) {
                     cursor: "none",
                     position: "absolute",
                     zIndex: 100,
-                    left: `${markers.two.x}px`,
-                    top: `${markers.two.y}px`,
+                    left: markers.two.x,
+                    top: markers.two.y,
                     visibility: markers.two.visible,
                   }}
                 >
@@ -900,8 +919,8 @@ export default function InteractiveHaikuBuilder(props) {
                     cursor: "none",
                     position: "absolute",
                     zIndex: 100,
-                    left: `${markers.three.x}px`,
-                    top: `${markers.three.y}px`,
+                    left: `${markers.three.x}`,
+                    top: markers.three.y,
                     visibility: markers.three.visible,
                   }}
                 >
@@ -1007,20 +1026,6 @@ export default function InteractiveHaikuBuilder(props) {
                 borderRadius: "10px",
               }}
             >
-              {/* <FormControlLabel
-                control={
-                  <AnonCheckbox
-                    checked={anon}
-                    onChange={(event) => {
-                      setAnon(!anon);
-                    }}
-                    name="checkedG"
-                  />
-                }
-                label="Post Anonymously"
-                className={classes.lightHeading}
-              /> */}
-
               <div
                 style={{
                   display: "flex",
@@ -1038,13 +1043,6 @@ export default function InteractiveHaikuBuilder(props) {
                     disabled: classes.disabledLightSubmit,
                   }}
                   onClick={(event) => {
-                    // if (
-                    //   firstLine.valid &&
-                    //   secondLine.valid &&
-                    //   thirdLine.valid
-                    // ) {
-                    //   handleSubmit();
-                    // } else {
                     if (
                       firstLine.value &&
                       secondLine.value &&
@@ -1055,49 +1053,11 @@ export default function InteractiveHaikuBuilder(props) {
                       setHint("Complete your haiku before posting");
                       showHint(event);
                     }
-                    // }
                   }}
                 >
                   <Typography>Post</Typography>
                 </Button>
               </div>
-
-              {/* <div
-                style={{
-                  display: "flex",
-                  flex: 1,
-                  padding: "10px",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <Button
-                  id="preview-button"
-                  aria-describedby={id}
-                  classes={{
-                    root: classes.lightSubmit,
-                    disabled: classes.disabledSubmit,
-                  }}
-                  onClick={(event) => {
-                    let author;
-
-                    if (anon) {
-                      author = "anonymous";
-                    } else if (user.displayName) {
-                      author = user.displayName;
-                    } else if (userInfo.displayName) {
-                      author = userInfo.displayName;
-                    } else {
-                      author = "unknown";
-                    }
-                    setCalculatedAuthor(author);
-                    setIsPreviewVisible(true);
-                  }}
-                >
-                  <Typography>Preview</Typography>
-                </Button>
-              </div>
-             */}
             </div>
           </Grid>
 
