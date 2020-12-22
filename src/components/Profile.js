@@ -9,7 +9,6 @@ import {
   Button,
   CardActions,
   IconButton,
-  Popover,
 } from "@material-ui/core";
 import colors from "../assets/colors";
 import { AnimatePresence, motion } from "framer-motion";
@@ -22,80 +21,6 @@ import LogInOutIcon from "@material-ui/icons/ExitToApp";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import LikeIcon from "@material-ui/icons/ThumbUp";
 import { red, blue } from "@material-ui/core/colors";
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    "& .MuiCardActions-root": {
-      backgroundColor: "rgba(255, 255, 255, 0.7)",
-      width: "100%",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-    },
-    "& .MuiCardContent-root": {
-      padding: "0px",
-    },
-  },
-  content: {
-    backgroundColor: "rgba(0,0,0, 0.5)",
-    width: "100%",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  gridTile: {
-    width: "fitContent",
-    height: "100% !important",
-  },
-  paper: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    background: colors.maikuu5,
-  },
-  title: {
-    fontSize: 14,
-    textAlign: "center",
-    color: colors.maikuu4,
-  },
-  numberLabel: {
-    fontSize: 14,
-    textAlign: "left",
-  },
-  heading: {
-    color: colors.maikuu0,
-    userSelect: "none",
-    fontSize: "24px",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: "10px",
-  },
-  pos: {
-    marginBottom: 12,
-  },
-  post: {
-    align: "center",
-    textAlign: "center",
-    fontFamily: "BadScript",
-    color: colors.maikuu4,
-  },
-  submit: {
-    backgroundColor: colors.maikuu0,
-    color: colors.maikuu4,
-    marginTop: "10px",
-    marginBottom: "20px",
-  },
-  media: {
-    // ⚠️ object-fit is not supported by IE 11.
-    objectFit: "cover",
-  },
-}));
 
 function logout(history) {
   firebase
@@ -193,7 +118,7 @@ export default function Profile(props) {
 
   const requestLogout = useCallback(() => {
     logout(history);
-  }, []);
+  }, [history]);
 
   function handleFavorite(postId) {
     const userId = firebase.auth().currentUser.uid;
@@ -557,3 +482,77 @@ export default function Profile(props) {
     </AnimatePresence>
   );
 }
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    "& .MuiCardActions-root": {
+      backgroundColor: "rgba(255, 255, 255, 0.7)",
+      width: "100%",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    "& .MuiCardContent-root": {
+      padding: "0px",
+    },
+  },
+  content: {
+    backgroundColor: "rgba(0,0,0, 0.5)",
+    width: "100%",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  gridTile: {
+    width: "fitContent",
+    height: "100% !important",
+  },
+  paper: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    background: colors.maikuu5,
+  },
+  title: {
+    fontSize: 14,
+    textAlign: "center",
+    color: colors.maikuu4,
+  },
+  numberLabel: {
+    fontSize: 14,
+    textAlign: "left",
+  },
+  heading: {
+    color: colors.maikuu0,
+    userSelect: "none",
+    fontSize: "24px",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: "10px",
+  },
+  pos: {
+    marginBottom: 12,
+  },
+  post: {
+    align: "center",
+    textAlign: "center",
+    fontFamily: "BadScript",
+    color: colors.maikuu4,
+  },
+  submit: {
+    backgroundColor: colors.maikuu0,
+    color: colors.maikuu4,
+    marginTop: "10px",
+    marginBottom: "20px",
+  },
+  media: {
+    // ⚠️ object-fit is not supported by IE 11.
+    objectFit: "cover",
+  },
+}));

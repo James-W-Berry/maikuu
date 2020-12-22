@@ -88,7 +88,6 @@ export default function Compose(props) {
   const [basic, setBasic] = useState(false);
   const [reflectionNoun, setReflectionNoun] = useState();
   const [loadingNewNoun, setLoadingNewNoun] = useState(true);
-  const [activeStep, setActiveStep] = useState("inspiration");
 
   useEffect(() => {
     fetchReflectionNoun();
@@ -155,7 +154,6 @@ export default function Compose(props) {
                     >
                       <div
                         onClick={() => {
-                          setActiveStep("inspiration");
                           setMode(0);
                         }}
                         style={{
@@ -359,7 +357,6 @@ export default function Compose(props) {
                         <InteractiveHaikuBuilder
                           user={user}
                           setMode={setMode}
-                          setActiveStep={setActiveStep}
                         />
                       </motion.div>
                     </AnimatePresence>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useHistory } from "react-router-dom";
 import {
   makeStyles,
@@ -11,91 +11,13 @@ import {
 } from "@material-ui/core";
 import colors from "../assets/colors";
 import { AnimatePresence, motion } from "framer-motion";
-import PuffLoader from "react-spinners/PuffLoader";
 import feedGif from "../assets/feed.gif";
 import pickGif from "../assets/compose-pick.gif";
 import writeGif from "../assets/compose-write.gif";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    "& .MuiCardActions-root": {
-      backgroundColor: "rgba(0,0,0, 0.5)",
-      width: "100%",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-    },
-    "& .MuiCardContent-root": {
-      padding: "0px",
-    },
-  },
-  content: {
-    backgroundColor: "rgba(0,0,0, 0.5)",
-    width: "100%",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  gridTile: {
-    width: "fitContent",
-    height: "100% !important",
-  },
-  paper: {
-    display: "flex",
-    flexDirection: "column",
-    //alignItems: "center",
-    background: colors.maikuu5,
-  },
-  submit: {
-    backgroundColor: colors.maikuu0,
-    color: colors.maikuu4,
-    cursor: "pointer",
-  },
-  title: {
-    fontSize: 14,
-    textAlign: "center",
-    color: colors.maikuu4,
-  },
-  numberLabel: {
-    fontSize: 14,
-    textAlign: "left",
-  },
-  heading: {
-    color: colors.maikuu0,
-    userSelect: "none",
-    fontSize: "36px",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: "10px",
-    fontFamily: "BadScript",
-  },
-  pos: {
-    marginBottom: 12,
-  },
-  post: {
-    align: "center",
-    textAlign: "center",
-    fontFamily: "BadScript",
-    color: colors.maikuu4,
-  },
-  divider: {
-    background: colors.maikuu0,
-    width: "100%",
-    marginTop: "20px",
-    marginBottom: "20px",
-  },
-}));
-
-export default function Home(props) {
+export default function Home() {
   const classes = useStyles();
   const history = useHistory();
-  const [value, setValue] = useState(0);
 
   return (
     <AnimatePresence>
@@ -151,7 +73,6 @@ export default function Home(props) {
                   <Button
                     className={classes.submit}
                     onClick={() => {
-                      setValue(0);
                       history.push("/feed");
                     }}
                   >
@@ -183,7 +104,6 @@ export default function Home(props) {
                     <Button
                       className={classes.submit}
                       onClick={() => {
-                        setValue(3);
                         history.push("/compose");
                       }}
                     >
@@ -228,3 +148,78 @@ export default function Home(props) {
     </AnimatePresence>
   );
 }
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    "& .MuiCardActions-root": {
+      backgroundColor: "rgba(0,0,0, 0.5)",
+      width: "100%",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    "& .MuiCardContent-root": {
+      padding: "0px",
+    },
+  },
+  content: {
+    backgroundColor: "rgba(0,0,0, 0.5)",
+    width: "100%",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  gridTile: {
+    width: "fitContent",
+    height: "100% !important",
+  },
+  paper: {
+    display: "flex",
+    flexDirection: "column",
+    background: colors.maikuu5,
+  },
+  submit: {
+    backgroundColor: colors.maikuu0,
+    color: colors.maikuu4,
+    cursor: "pointer",
+  },
+  title: {
+    fontSize: 14,
+    textAlign: "center",
+    color: colors.maikuu4,
+  },
+  numberLabel: {
+    fontSize: 14,
+    textAlign: "left",
+  },
+  heading: {
+    color: colors.maikuu0,
+    userSelect: "none",
+    fontSize: "36px",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: "10px",
+    fontFamily: "BadScript",
+  },
+  pos: {
+    marginBottom: 12,
+  },
+  post: {
+    align: "center",
+    textAlign: "center",
+    fontFamily: "BadScript",
+    color: colors.maikuu4,
+  },
+  divider: {
+    background: colors.maikuu0,
+    width: "100%",
+    marginTop: "20px",
+    marginBottom: "20px",
+  },
+}));

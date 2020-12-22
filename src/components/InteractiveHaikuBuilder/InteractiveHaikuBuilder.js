@@ -22,7 +22,6 @@ import { useTheme } from "@material-ui/core/styles";
 import CloseIcon from "@material-ui/icons/Close";
 import syllable from "syllable";
 import Draggable from "react-draggable";
-import ours from "../../assets/ours.png";
 import yours from "../../assets/yours.png";
 import { v4 as uuidv4 } from "uuid";
 import firebase from "../../firebase";
@@ -41,7 +40,6 @@ export default function InteractiveHaikuBuilder(props) {
   const [showImageCarousel, setShowImageCarousel] = useState(false);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
-  const setActiveStep = props.setActiveStep;
   const [anchorEl, setAnchorEl] = useState(
     document.querySelector("#backgroundImageGrid")
   );
@@ -139,7 +137,6 @@ export default function InteractiveHaikuBuilder(props) {
       setBackgroundImage(fileReader.result);
     };
     fileReader.readAsDataURL(file);
-    setActiveStep("focus");
   }
 
   const handleClose = () => {
@@ -161,7 +158,6 @@ export default function InteractiveHaikuBuilder(props) {
     fileReader.onload = () => {
       console.log(fileReader.result);
       setUploadImage(blob);
-      setActiveStep("focus");
       setBackgroundImage(file);
     };
     fileReader.readAsDataURL(blob);
@@ -1306,6 +1302,7 @@ const useStyles = makeStyles((theme) => ({
     },
     "& .MuiInput-underline:after": {
       borderBottom: "1px solid rgba(255, 255, 255, 1)",
+      borderBottomColor: colors.maikuu4,
     },
     width: "80%",
     "& label ": {
@@ -1313,9 +1310,6 @@ const useStyles = makeStyles((theme) => ({
     },
     "& label.Mui-focused": {
       color: colors.maikuu4,
-    },
-    "& .MuiInput-underline:after": {
-      borderBottomColor: colors.maikuu4,
     },
   },
   submit: {

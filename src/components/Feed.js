@@ -7,7 +7,6 @@ import {
   Tooltip,
   MenuItem,
   Select,
-  Popover,
 } from "@material-ui/core";
 import colors from "../assets/colors";
 import firebase from "../firebase";
@@ -23,70 +22,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import { red, blue } from "@material-ui/core/colors";
 import VizSensor from "react-visibility-sensor";
 import PuffLoader from "react-spinners/PuffLoader";
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    "& .MuiCardActions-root": {
-      backgroundColor: "rgba(0,0,0, 0.5)",
-      width: "100%",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-    },
-    "& .MuiCardContent-root": {
-      padding: "0px",
-    },
-  },
-  content: {
-    backgroundColor: "rgba(0,0,0, 0.5)",
-    width: "100%",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  gridTile: {
-    width: "fitContent",
-    height: "100% !important",
-  },
-  paper: {
-    display: "flex",
-    flexDirection: "column",
-    //alignItems: "center",
-    background: colors.maikuu5,
-  },
-  title: {
-    fontSize: 14,
-    textAlign: "center",
-    color: colors.maikuu4,
-  },
-  numberLabel: {
-    fontSize: 14,
-    textAlign: "left",
-  },
-  heading: {
-    color: colors.maikuu0,
-    userSelect: "none",
-    fontSize: "30px",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: "10px",
-  },
-  pos: {
-    marginBottom: 12,
-  },
-  post: {
-    align: "center",
-    textAlign: "center",
-    fontFamily: "BadScript",
-    color: colors.maikuu4,
-  },
-}));
 
 const SORT_OPTIONS = {
   LIKES_ASC: { column: "likes", direction: "asc" },
@@ -139,7 +74,7 @@ export default function Main(props) {
           setUserInfo(user);
         });
     }
-  }, []);
+  }, [user.loggedIn]);
 
   const retrieveMorePosts = () => {
     console.log("retrieving more posts");
@@ -641,3 +576,66 @@ export default function Main(props) {
     </AnimatePresence>
   );
 }
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    "& .MuiCardActions-root": {
+      backgroundColor: "rgba(0,0,0, 0.5)",
+      width: "100%",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    "& .MuiCardContent-root": {
+      padding: "0px",
+    },
+  },
+  content: {
+    backgroundColor: "rgba(0,0,0, 0.5)",
+    width: "100%",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  gridTile: {
+    width: "fitContent",
+    height: "100% !important",
+  },
+  paper: {
+    display: "flex",
+    flexDirection: "column",
+    background: colors.maikuu5,
+  },
+  title: {
+    fontSize: 14,
+    textAlign: "center",
+    color: colors.maikuu4,
+  },
+  numberLabel: {
+    fontSize: 14,
+    textAlign: "left",
+  },
+  heading: {
+    color: colors.maikuu0,
+    userSelect: "none",
+    fontSize: "30px",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: "10px",
+  },
+  pos: {
+    marginBottom: 12,
+  },
+  post: {
+    align: "center",
+    textAlign: "center",
+    fontFamily: "BadScript",
+    color: colors.maikuu4,
+  },
+}));
