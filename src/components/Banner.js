@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
     position: "fixed",
     top: 0,
     height: "80px",
-    backgroundColor: colors.maikuu5,
+    backgroundColor: colors.maikuu0,
     boxShadow: "5px 5px  5px rgba(0,0,0,0.3)",
   },
   menuButton: {
@@ -28,19 +28,20 @@ const useStyles = makeStyles((theme) => ({
     color: "#f7f7f5",
     flexGrow: 1,
   },
-  appbar: {
-    background: colors.maikuu0,
-  },
 }));
 
 const useNavStyles = makeStyles((theme) => ({
   selected: {
     "& .MuiBottomNavigationAction-label": {
-      color: colors.maikuu1,
+      color: colors.maikuu5,
       outline: "none !important",
     },
   },
   root: {
+    "& .MuiBottomNavigationAction-label": {
+      fontSize: "18px",
+      color: colors.maikuu4,
+    },
     outline: "none !important",
   },
 }));
@@ -59,26 +60,6 @@ export default function Banner(props) {
         showLabels
         className={classes.stickToTop}
       >
-        <BottomNavigationAction
-          showLabel
-          label="Feed"
-          classes={navClasses}
-          onClick={() => {
-            setValue(0);
-            history.push("/feed");
-          }}
-        />
-
-        <BottomNavigationAction
-          showLabel
-          classes={navClasses}
-          label="Profile"
-          onClick={() => {
-            setValue(1);
-            history.push("/profile");
-          }}
-        />
-
         <img
           src={logo}
           alt="Logo"
@@ -95,6 +76,16 @@ export default function Banner(props) {
 
         <BottomNavigationAction
           showLabel
+          label="Feed"
+          classes={navClasses}
+          onClick={() => {
+            setValue(0);
+            history.push("/feed");
+          }}
+        />
+
+        <BottomNavigationAction
+          showLabel
           classes={navClasses}
           label="Compose"
           onClick={() => {
@@ -106,9 +97,9 @@ export default function Banner(props) {
         <BottomNavigationAction
           showLabel
           classes={navClasses}
-          // label=""
+          label="Profile"
           onClick={() => {
-            setValue(4);
+            setValue(1);
             history.push("/profile");
           }}
         />

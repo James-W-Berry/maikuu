@@ -45,6 +45,15 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     padding: "10px",
   },
+  controlHeading: {
+    color: colors.maikuu0,
+    userSelect: "none",
+    fontSize: "18px",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: "10px",
+  },
   lightHeadingInactive: {
     color: colors.maikuu4,
     opacity: "0.5",
@@ -68,7 +77,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: "20px",
   },
   divider: {
-    background: colors.maikuu5,
+    background: colors.maikuu0,
   },
 }));
 
@@ -110,25 +119,21 @@ export default function Compose(props) {
         initial={{ opacity: 0 }}
         animate={{ opacity: [0.0, 1.0] }}
         exit={{ opacity: 0 }}
-        style={{ height: "100%" }}
       >
         {user?.loggedIn ? (
-          <div
-            style={{ display: "flex", flexDirection: "row", height: "100%" }}
-          >
+          <div style={{ display: "flex", flexDirection: "row" }}>
             <Grid container xl={12} lg={12} md={12} sm={12} xs={12}>
               <Grid
                 key="control"
                 style={{
-                  backgroundColor: colors.maikuu0,
                   boxShadow: "5px 5px  5px rgba(0,0,0,0.3)",
                 }}
                 item
                 xs={12}
                 sm={12}
-                md={3}
-                lg={3}
-                xl={3}
+                md={12}
+                lg={12}
+                xl={12}
               >
                 <CssBaseline />
                 <div
@@ -136,7 +141,6 @@ export default function Compose(props) {
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
-                    flexDirection: "column",
                   }}
                 >
                   {basic ? (
@@ -169,11 +173,11 @@ export default function Compose(props) {
                           style={{
                             justifyContent: "center",
                             alignItems: "center",
-                            color: colors.maikuu4,
+                            color: colors.maikuu0,
                           }}
                         />
 
-                        <Typography className={classes.lightHeading}>
+                        <Typography className={classes.controlHeading}>
                           Interactive Mode
                         </Typography>
                       </div>
@@ -186,12 +190,11 @@ export default function Compose(props) {
                         flexDirection: "column",
                         justifyContent: "center",
                         alignItems: "center",
-                        width: "100%",
+                        width: "100vw",
                       }}
                     >
                       <div
                         onClick={() => {
-                          setActiveStep("inspiration");
                           setMode(1);
                         }}
                         style={{
@@ -209,25 +212,21 @@ export default function Compose(props) {
                           style={{
                             justifyContent: "center",
                             alignItems: "center",
-                            color: colors.maikuu4,
+                            color: colors.maikuu0,
                           }}
                         />
-                        <Typography className={classes.lightHeading}>
+                        <Typography className={classes.controlHeading}>
                           Basic Mode
                         </Typography>
                       </div>
-                      <Divider
-                        variant="middle"
-                        className={classes.divider}
-                        style={{ width: "100%" }}
-                      />
+
                       <div
                         style={{
                           display: "flex",
-                          flexDirection: "column",
+                          flexDirection: "row",
                           justifyContent: "center",
                           alignItems: "center",
-                          height: "90%",
+                          textAlign: "center",
                           width: "100%",
                         }}
                       >
@@ -240,11 +239,12 @@ export default function Compose(props) {
                             style={{
                               display: "flex",
                               flexDirection: "row",
-                              width: "90%",
+                              justifyContent: "center",
+                              alignItems: "center",
                             }}
                           >
                             <Typography
-                              className={classes.lightHeading}
+                              className={classes.controlHeading}
                               style={{ display: "flex" }}
                             >
                               Reflect on
@@ -257,7 +257,6 @@ export default function Compose(props) {
                               display: "flex",
                               justifyContent: "flex-start",
                               height: "90%",
-                              width: "90%",
                             }}
                           >
                             <AnimatePresence>
@@ -271,11 +270,10 @@ export default function Compose(props) {
                                   display: "flex",
                                   flexDirection: "row",
                                   height: "90%",
-                                  width: "90%",
                                 }}
                               >
                                 <Typography
-                                  className={classes.lightHeading}
+                                  className={classes.controlHeading}
                                   style={{
                                     fontFamily: "BadScript",
                                     fontSize: "32px",
@@ -293,7 +291,7 @@ export default function Compose(props) {
                                   aria-label="new reflection"
                                   style={{ outline: "none" }}
                                 >
-                                  <LoopIcon style={{ color: colors.maikuu5 }} />
+                                  <LoopIcon style={{ color: colors.maikuu0 }} />
                                 </IconButton>
                               </motion.div>
                             </AnimatePresence>
@@ -304,7 +302,6 @@ export default function Compose(props) {
                               display: "flex",
                               justifyContent: "flex-start",
                               height: "90%",
-                              width: "90%",
                             }}
                           >
                             <Typography
@@ -312,7 +309,7 @@ export default function Compose(props) {
                               style={{
                                 fontFamily: "BadScript",
                                 fontSize: "32px",
-                                color: colors.maikuu0,
+                                color: colors.maikuu5,
                               }}
                             >
                               Loading
@@ -320,122 +317,11 @@ export default function Compose(props) {
                           </div>
                         )}
                       </div>
-                      <Divider
-                        variant="middle"
-                        className={classes.divider}
-                        style={{ width: "100%" }}
-                      />
-                      <AnimatePresence>
-                        <motion.div
-                          key="success"
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: [0.0, 1.0] }}
-                          exit={{ opacity: 0 }}
-                          transition={{ duration: 2 }}
-                          style={{
-                            display: "flex",
-                            flexDirection: "row ",
-                            width: "90%",
-                          }}
-                        >
-                          <Typography
-                            className={
-                              activeStep === "inspiration"
-                                ? classes.lightHeading
-                                : classes.lightHeadingInactive
-                            }
-                            style={{
-                              display: "flex",
-                              justifyContent: "flex-start",
-                            }}
-                          >
-                            Select inspiration
-                          </Typography>
-                        </motion.div>
-                        <motion.div
-                          key="success"
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: [0.0, 1.0] }}
-                          transition={{ duration: 4 }}
-                          exit={{ opacity: 0 }}
-                          style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            width: "90%",
-                          }}
-                        >
-                          <Typography
-                            className={
-                              activeStep === "focus"
-                                ? classes.lightHeading
-                                : classes.lightHeadingInactive
-                            }
-                            style={{
-                              display: "flex",
-                              justifyContent: "flex-start",
-                            }}
-                          >
-                            Focus your reflection and compose
-                          </Typography>
-                        </motion.div>
-                        <motion.div
-                          key="success"
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: [0.0, 1.0] }}
-                          transition={{ duration: 6 }}
-                          exit={{ opacity: 0 }}
-                          style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            width: "90%",
-                          }}
-                        >
-                          <Typography
-                            className={
-                              activeStep === "title"
-                                ? classes.lightHeading
-                                : classes.lightHeadingInactive
-                            }
-                            style={{
-                              display: "flex",
-                              justifyContent: "flex-start",
-                            }}
-                          >
-                            Title your haiku
-                          </Typography>
-                        </motion.div>
-                        <motion.div
-                          key="success"
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: [0.0, 1.0] }}
-                          transition={{ duration: 8 }}
-                          exit={{ opacity: 0 }}
-                          style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            width: "90%",
-                          }}
-                        >
-                          <Typography
-                            className={
-                              activeStep === "Post"
-                                ? classes.lightHeading
-                                : classes.lightHeadingInactive
-                            }
-                            style={{
-                              display: "flex",
-                              justifyContent: "flex-start",
-                            }}
-                          >
-                            Post
-                          </Typography>
-                        </motion.div>
-                      </AnimatePresence>
                     </div>
                   )}
                 </div>
               </Grid>
-              <Grid key="write" item xs={12} sm={12} md={9} lg={9} xl={9}>
+              <Grid key="write" item xs={12} sm={12} md={12} lg={12} xl={12}>
                 <CssBaseline />
                 <div
                   style={{

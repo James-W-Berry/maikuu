@@ -286,7 +286,7 @@ export default function InteractiveHaikuBuilder(props) {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        flexDirection: "column",
+        flexDirection: "row",
         width: "100%",
         height: "100%",
       }}
@@ -498,137 +498,118 @@ export default function InteractiveHaikuBuilder(props) {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
+            flexDirection: "row",
           }}
         >
           <Cursor placeMarkers={placeMarkers} />
-
-          <Grid
-            key="userImage"
-            item
-            xs={6}
-            sm={6}
-            md={6}
-            lg={6}
-            xl={6}
-            style={{ width: "100%" }}
-          >
-            <CssBaseline />
-            <div
-              style={{
-                display: "flex",
-                cursor: "pointer",
-                backgroundColor: colors.lightBlue,
-                justifyContent: "center",
-                alignItems: "flex-start",
-                borderRadius: "10px",
-                flexDirection: "row",
-                boxShadow: "10px 10px  5px rgba(0,0,0,0.5)",
-              }}
-              className={classes.gridItem}
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <Grid
+              key="userImage"
+              item
+              xs={6}
+              sm={6}
+              md={3}
+              lg={3}
+              xl={3}
+              style={{ width: "100%" }}
             >
-              <input
-                accept="image/*|video/*"
-                ref={(fileInput) => setFileInputRef(fileInput)}
-                className={classes.input}
-                id="image-input"
-                type="file"
+              <CssBaseline />
+              <div
                 style={{
-                  display: "none",
+                  display: "flex",
+                  cursor: "pointer",
+                  justifyContent: "center",
+                  alignItems: "flex-start",
+                  flexDirection: "row",
                 }}
-                onChange={(e) => {
-                  if (e.target.files[0]) {
-                    updatePreviewImage(e.target.files[0]);
-                  }
-                }}
-              />
-              <label
-                for="image-input"
+                className={classes.gridItem}
+              >
+                <input
+                  accept="image/*|video/*"
+                  ref={(fileInput) => setFileInputRef(fileInput)}
+                  className={classes.input}
+                  id="image-input"
+                  type="file"
+                  style={{
+                    display: "none",
+                  }}
+                  onChange={(e) => {
+                    if (e.target.files[0]) {
+                      updatePreviewImage(e.target.files[0]);
+                    }
+                  }}
+                />
+                <label
+                  for="image-input"
+                  style={{
+                    cursor: "pointer",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    flexDirection: "row",
+                    marginBottom: "0px",
+                    width: "100%",
+                  }}
+                >
+                  <img
+                    src={yours}
+                    alt="or"
+                    style={{
+                      padding: "5px",
+                      height: "100px",
+                      width: "100px",
+                      maxHeight: "100px",
+                      maxWidth: "100px",
+                    }}
+                  />
+                </label>
+              </div>
+            </Grid>
+            <Grid
+              key="maikuuImage"
+              item
+              xs={6}
+              sm={6}
+              md={3}
+              lg={3}
+              xl={3}
+              style={{ width: "100%" }}
+            >
+              <CssBaseline />
+              <div
                 style={{
                   cursor: "pointer",
                   display: "flex",
-                  justifyContent: "center",
+                  justifyContent: "space-evenly",
                   alignItems: "center",
                   flexDirection: "row",
-                  marginBottom: "0px",
-                  width: "100%",
+                }}
+                className={classes.gridItem}
+                onClick={() => {
+                  setShowImageCarousel(!showImageCarousel);
                 }}
               >
-                <img
-                  src={yours}
-                  alt="or"
+                <Typography
+                  className={classes.inspirationLabel}
                   style={{
-                    padding: "5px",
-                    height: "40%",
-                    width: "40%",
-                    maxHeight: "100px",
-                    maxWidth: "100px",
+                    padding: "20px",
+                    textAlign: "center",
+                    fontSize: "16px",
                   }}
-                />
-              </label>
-            </div>
-          </Grid>
-          <Grid
-            key="maikuuImage"
-            item
-            xs={6}
-            sm={6}
-            md={6}
-            lg={6}
-            xl={6}
-            style={{ width: "100%" }}
-          >
-            <CssBaseline />
-            <div
-              style={{
-                cursor: "pointer",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                flexDirection: "row",
-                backgroundColor: colors.lightBlue,
-                borderRadius: "10px",
-                boxShadow: "10px 10px  5px rgba(0,0,0,0.5)",
-              }}
-              className={classes.gridItem}
-              onClick={() => {
-                setShowImageCarousel(!showImageCarousel);
-              }}
-            >
-              <label
-                for="holder"
-                style={{
-                  cursor: "pointer",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  flexDirection: "row",
-                  marginBottom: "0px",
-                  width: "100%",
-                }}
-              >
-                <img
-                  src={ours}
-                  alt="or"
-                  style={{
-                    padding: "5px",
-                    height: "40%",
-                    width: "40%",
-                    maxHeight: "100px",
-                    maxWidth: "100px",
-                  }}
-                />
-              </label>
-            </div>
-          </Grid>
-
+                >
+                  sample pictures
+                </Typography>
+              </div>
+            </Grid>
+          </div>
           <Grid
             key="selected"
             item
             xs={12}
             sm={12}
-            md={12}
-            lg={12}
-            xl={12}
+            md={9}
+            lg={9}
+            xl={9}
             style={{
               display: "flex",
               justifyContent: "center",
@@ -1016,23 +997,17 @@ export default function InteractiveHaikuBuilder(props) {
             </div>
           </Grid>
 
-          <Grid
+          <div
             key="submit"
-            item
-            xs={12}
-            sm={12}
-            md={12}
-            lg={12}
-            xl={12}
-            style={{ width: "100%" }}
+            style={{
+              width: "100%",
+            }}
           >
             <div
               style={{
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                backgroundColor: colors.maikuu0,
-                boxShadow: "10px 10px  5px rgba(0,0,0,0.5)",
                 borderRadius: "10px",
               }}
             >
@@ -1069,7 +1044,7 @@ export default function InteractiveHaikuBuilder(props) {
                 </Button>
               </div>
             </div>
-          </Grid>
+          </div>
 
           <Popover
             id={id}
@@ -1131,16 +1106,17 @@ export default function InteractiveHaikuBuilder(props) {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
+            flexDirection: "column",
           }}
         >
           <Grid
             key="userImage"
             item
-            xs={11}
-            sm={11}
-            md={11}
-            lg={11}
-            xl={11}
+            xs={12}
+            sm={12}
+            md={6}
+            lg={6}
+            xl={6}
             style={{
               display: "flex",
               justifyContent: "center",
@@ -1194,7 +1170,7 @@ export default function InteractiveHaikuBuilder(props) {
                   className={classes.inspirationLabel}
                   style={{ padding: "20px", textAlign: "center" }}
                 >
-                  Pick one of your photos
+                  Pick a picture for inspiration
                 </Typography>
                 <img
                   src={yours}
@@ -1211,11 +1187,11 @@ export default function InteractiveHaikuBuilder(props) {
           <Grid
             key="maikuuImage"
             item
-            xs={11}
-            sm={11}
-            md={11}
-            lg={11}
-            xl={11}
+            xs={6}
+            sm={6}
+            md={6}
+            lg={6}
+            xl={6}
             style={{
               display: "flex",
               justifyContent: "center",
@@ -1230,11 +1206,6 @@ export default function InteractiveHaikuBuilder(props) {
                 justifyContent: "space-evenly",
                 alignItems: "center",
                 flexDirection: "row",
-                backgroundColor: colors.lightBlue,
-                borderRadius: "10px",
-                boxShadow: "10px 10px  5px rgba(0,0,0,0.5)",
-                width: "85%",
-                height: "85%",
               }}
               className={classes.gridItem}
               onClick={() => {
@@ -1243,19 +1214,14 @@ export default function InteractiveHaikuBuilder(props) {
             >
               <Typography
                 className={classes.inspirationLabel}
-                style={{ padding: "20px", textAlign: "center" }}
-              >
-                or use one of ours
-              </Typography>
-              <img
-                src={ours}
-                alt="or"
                 style={{
                   padding: "20px",
-                  height: "40%",
-                  width: "40%",
+                  textAlign: "center",
+                  fontSize: "16px",
                 }}
-              />
+              >
+                sample pictures
+              </Typography>
             </div>
           </Grid>
         </Grid>
