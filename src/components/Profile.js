@@ -22,14 +22,14 @@ import FavoriteIcon from "@material-ui/icons/Favorite";
 import LikeIcon from "@material-ui/icons/ThumbUp";
 import { red, blue } from "@material-ui/core/colors";
 
-function logout(history) {
-  firebase
-    .auth()
-    .signOut()
-    .then(() => {
-      history.push("/signin");
-    });
-}
+// function logout(history) {
+//   firebase
+//     .auth()
+//     .signOut()
+//     .then(() => {
+//       history.push("/signin");
+//     });
+// }
 
 export default function Profile(props) {
   const classes = useStyles();
@@ -116,9 +116,9 @@ export default function Profile(props) {
     }
   }, [userInfo]);
 
-  const requestLogout = useCallback(() => {
-    logout(history);
-  }, [history]);
+  // const requestLogout = useCallback(() => {
+  //   logout(history);
+  // }, [history]);
 
   function handleFavorite(postId) {
     const userId = firebase.auth().currentUser.uid;
@@ -361,7 +361,7 @@ export default function Profile(props) {
               <Typography className={classes.heading}>
                 {user.displayName ? user.displayName : userInfo.displayName}
               </Typography>
-              <div
+              {/* <div
                 style={{
                   display: "flex",
                   justifyContent: "center",
@@ -404,7 +404,7 @@ export default function Profile(props) {
                     </Button>
                   </NavLink>
                 )}
-              </div>
+              </div> */}
 
               <div
                 style={{
