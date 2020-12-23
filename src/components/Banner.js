@@ -219,7 +219,7 @@ export default function Banner(props) {
           }}
           onClick={() => {
             setValue(2);
-            history.push("/home");
+            history.push("/feed");
           }}
         >
           <img

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import {
   makeStyles,
   Grid,
@@ -16,20 +16,10 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import firebase from "../firebase";
-import { NavLink, useHistory } from "react-router-dom";
-import LogInOutIcon from "@material-ui/icons/ExitToApp";
+import { NavLink } from "react-router-dom";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import LikeIcon from "@material-ui/icons/ThumbUp";
 import { red, blue } from "@material-ui/core/colors";
-
-// function logout(history) {
-//   firebase
-//     .auth()
-//     .signOut()
-//     .then(() => {
-//       history.push("/signin");
-//     });
-// }
 
 export default function Profile(props) {
   const classes = useStyles();
@@ -39,7 +29,6 @@ export default function Profile(props) {
   const [likes, setLikes] = useState([]);
   const [userInfo, setUserInfo] = useState({});
   const [authoredPosts, setAuthoredPosts] = useState([]);
-  const history = useHistory();
 
   useEffect(() => {
     if (user.loggedIn) {
@@ -115,10 +104,6 @@ export default function Profile(props) {
       });
     }
   }, [userInfo]);
-
-  // const requestLogout = useCallback(() => {
-  //   logout(history);
-  // }, [history]);
 
   function handleFavorite(postId) {
     const userId = firebase.auth().currentUser.uid;
@@ -361,51 +346,6 @@ export default function Profile(props) {
               <Typography className={classes.heading}>
                 {user.displayName ? user.displayName : userInfo.displayName}
               </Typography>
-              {/* <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                {user?.loggedIn ? (
-                  <NavLink
-                    to="/signin"
-                    style={{
-                      color: colors.maikuu0,
-                      textDecoration: "none",
-                    }}
-                  >
-                    <Button
-                      variant="contained"
-                      className={classes.submit}
-                      endIcon={<LogInOutIcon />}
-                      onClick={() => {
-                        requestLogout();
-                      }}
-                    >
-                      Logout
-                    </Button>
-                  </NavLink>
-                ) : (
-                  <NavLink
-                    to="/signin"
-                    style={{
-                      color: colors.maikuu0,
-                      textDecoration: "none",
-                    }}
-                  >
-                    <Button
-                      variant="contained"
-                      className={classes.submit}
-                      endIcon={<LogInOutIcon />}
-                    >
-                      Login
-                    </Button>
-                  </NavLink>
-                )}
-              </div> */}
-
               <div
                 style={{
                   display: "flex",
