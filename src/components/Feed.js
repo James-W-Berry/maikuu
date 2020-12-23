@@ -7,6 +7,7 @@ import {
   Tooltip,
   MenuItem,
   Select,
+  Dialog,
 } from "@material-ui/core";
 import colors from "../assets/colors";
 import firebase from "../firebase";
@@ -22,6 +23,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { red, blue } from "@material-ui/core/colors";
 import VizSensor from "react-visibility-sensor";
 import PuffLoader from "react-spinners/PuffLoader";
+import CloseIcon from "@material-ui/icons/Close";
 
 const SORT_OPTIONS = {
   LIKES_ASC: { column: "likes", direction: "asc" },
@@ -38,6 +40,8 @@ export default function Main(props) {
   const user = props.user;
   const [lastVisiblePost, setLastVisiblePost] = useState(null);
   const [loadingMorePosts, setLoadingMorePosts] = useState(false);
+  const [focusedCardVisible, setFocusedCardVisible] = useState(false);
+  const [focusedPost, setFocusedPost] = useState({});
 
   useEffect(() => {
     let retrievedPosts = [];
@@ -212,6 +216,11 @@ export default function Main(props) {
     }
   }
 
+  function showFocusedCard(post) {
+    setFocusedPost(post);
+    setFocusedCardVisible(true);
+  }
+
   function createFeedPost(post, userInfo) {
     return (
       <Grid
@@ -230,6 +239,10 @@ export default function Main(props) {
             initial={{ opacity: 0 }}
             animate={{ opacity: [0.0, 1.0] }}
             exit={{ opacity: 0 }}
+            onClick={() => {
+              showFocusedCard(post);
+            }}
+            style={{ cursor: "pointer" }}
           >
             {post.id === lastVisiblePost?.id ? (
               <VizSensor
@@ -533,6 +546,111 @@ export default function Main(props) {
             <CssBaseline />
 
             <div className={classes.paper}>
+              <Dialog
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  alignSelf: "center",
+                }}
+                open={focusedCardVisible}
+                onClose={() => {
+                  setFocusedCardVisible(false);
+                }}
+                fullScreen
+                fullWidth
+                aria-labelledby="post"
+                aria-describedby="focus on post"
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    alignSelf: "center",
+                    width: "100vw",
+                    height: "100vh",
+                    flexDirection: "column",
+                    backgroundColor: colors.maikuu0,
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      width: "inherit",
+                      justifyContent: "flex-end",
+                    }}
+                  >
+                    <IconButton
+                      onClick={() => setFocusedCardVisible(false)}
+                      aria-label="close carousel"
+                      style={{
+                        width: "40px",
+                        alignSelf: "flex-end",
+                        color: colors.maikuu4,
+                      }}
+                    >
+                      <CloseIcon />
+                    </IconButton>
+                  </div>
+                  <Card
+                    className={classes.root}
+                    style={{
+                      flex: 8,
+                      backgroundColor: colors.maikuu0,
+                      backgroundImage: `url(${focusedPost.image})`,
+                      backgroundRepeat: "no-repeat",
+                      backgroundPosition: "center center",
+                      backgroundSize: "contain",
+                      width: "100vw",
+                    }}
+                  >
+                    <CardContent className={classes.content}>
+                      <Typography
+                        color="textSecondary"
+                        gutterBottom
+                        className={classes.post}
+                      >
+                        {focusedPost.title}
+                      </Typography>
+                      <Typography
+                        gutterBottom
+                        variant="h5"
+                        component="h2"
+                        className={classes.post}
+                      >
+                        {focusedPost.line_1}
+                      </Typography>
+
+                      <Typography
+                        gutterBottom
+                        variant="h5"
+                        component="h2"
+                        className={classes.post}
+                      >
+                        {focusedPost.line_2}
+                      </Typography>
+
+                      <Typography
+                        gutterBottom
+                        variant="h5"
+                        component="h2"
+                        className={classes.post}
+                      >
+                        {focusedPost.line_3}
+                      </Typography>
+
+                      <Typography
+                        className={classes.title}
+                        color="textSecondary"
+                      >
+                        {`-${focusedPost.author}`}
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </div>
+              </Dialog>
+
               <div
                 style={{
                   display: "flex",
