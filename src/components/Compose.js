@@ -30,7 +30,7 @@ export default function Compose(props) {
   const user = props.user;
   const [interactive, setInteractive] = useState(true);
   const [basic, setBasic] = useState(false);
-  const [reflectionNoun, setReflectionNoun] = useState();
+  const [reflectionNoun, setReflectionNoun] = useState("");
   const [loadingNewNoun, setLoadingNewNoun] = useState(true);
   const theme = useTheme();
   const [showImageCarousel, setShowImageCarousel] = useState(false);
@@ -567,6 +567,7 @@ export default function Compose(props) {
                         backgroundImage={backgroundImage}
                         videoBackground={videoBackground}
                         uploadImage={uploadImage}
+                        concept={reflectionNoun}
                       />
                     </motion.div>
                   </AnimatePresence>

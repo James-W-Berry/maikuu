@@ -8,6 +8,9 @@ import {
   MenuItem,
   Select,
   Dialog,
+  FormControlLabel,
+  withStyles,
+  Checkbox,
 } from "@material-ui/core";
 import colors from "../assets/colors";
 import firebase from "../firebase";
@@ -42,6 +45,16 @@ export default function Main(props) {
   const [loadingMorePosts, setLoadingMorePosts] = useState(false);
   const [focusedCardVisible, setFocusedCardVisible] = useState(false);
   const [focusedPost, setFocusedPost] = useState({});
+  const [focusPointsVisible, setFocusPointsVisible] = useState(false);
+
+  const FocusPointsCheckbox = withStyles({
+    root: {
+      color: colors.maikuu4,
+      "&$checked": {
+        color: colors.maikuu0,
+      },
+    },
+  })((props) => <Checkbox color="default" {...props} />);
 
   useEffect(() => {
     let retrievedPosts = [];
@@ -579,6 +592,7 @@ export default function Main(props) {
                       display: "flex",
                       width: "inherit",
                       justifyContent: "flex-end",
+                      marginRight: "20px",
                     }}
                   >
                     <IconButton
@@ -592,6 +606,19 @@ export default function Main(props) {
                     >
                       <CloseIcon />
                     </IconButton>
+                  </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      width: "inherit",
+                      justifyContent: "center",
+                      alignItems: "flex-end",
+                      flex: 1,
+                    }}
+                  >
+                    <Typography className={classes.focusHeading}>
+                      {focusedPost.concept}
+                    </Typography>
                   </div>
                   <Card
                     className={classes.root}
@@ -648,6 +675,30 @@ export default function Main(props) {
                       </Typography>
                     </CardContent>
                   </Card>
+                  <div
+                    style={{
+                      display: "flex",
+                      width: "inherit",
+                      justifyContent: "center",
+                      alignItems: "flex-start",
+                      flex: 1,
+                    }}
+                  >
+                    <FormControlLabel
+                      control={
+                        <FocusPointsCheckbox
+                          checked={focusPointsVisible}
+                          onChange={(event) => {
+                            setFocusPointsVisible(!focusPointsVisible);
+                            console.log("toggle focus points");
+                          }}
+                          name="checkedG"
+                        />
+                      }
+                      label="Focus Points"
+                      className={classes.lightHeading}
+                    />
+                  </div>
                 </div>
               </Dialog>
 
@@ -734,6 +785,16 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center",
     color: colors.maikuu4,
   },
+  focusHeading: {
+    color: colors.maikuu4,
+    userSelect: "none",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: "10px",
+    fontFamily: "BadScript",
+    fontSize: "32px",
+  },
   numberLabel: {
     fontSize: 14,
     textAlign: "left",
@@ -755,5 +816,25 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center",
     fontFamily: "BadScript",
     color: colors.maikuu4,
+  },
+  lightSubmit: {
+    backgroundColor: colors.maikuu4,
+    color: colors.maikuu0,
+    marginTop: "10px",
+    marginBottom: "20px",
+    "&:hover": {
+      backgroundColor: colors.maikuu4,
+      color: colors.maikuu0,
+      opacity: "0.7",
+    },
+  },
+  lightHeading: {
+    color: colors.maikuu4,
+    userSelect: "none",
+    fontSize: "18px",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: "10px",
   },
 }));

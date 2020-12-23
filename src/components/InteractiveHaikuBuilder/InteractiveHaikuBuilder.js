@@ -49,6 +49,7 @@ export default function InteractiveHaikuBuilder(props) {
   );
   const [videoBackground, setVideoBackground] = useState(props.videoBackground);
   const [uploadImage, setUploadImage] = useState(props.uploadImage);
+  const [concept, setConcept] = useState("");
   const [markers, setMarkers] = useState({
     one: { visible: "visible", x: "25%", y: "25%" },
     two: { visible: "visible", x: "50%", y: "50%" },
@@ -119,7 +120,13 @@ export default function InteractiveHaikuBuilder(props) {
     setBackgroundImage(props.backgroundImage);
     setVideoBackground(props.videoBackground);
     setUploadImage(props.uploadImage);
-  }, [props.backgroundImage, props.videoBackground, props.uploadImage]);
+    setConcept(props.concept);
+  }, [
+    props.backgroundImage,
+    props.videoBackground,
+    props.uploadImage,
+    props.concept,
+  ]);
 
   useEffect(() => {
     if (user.loggedIn) {
@@ -260,6 +267,7 @@ export default function InteractiveHaikuBuilder(props) {
         title: title.value,
         date: moment.now(),
         image: imageUrl,
+        concept: concept,
       })
       .then(() => {
         setSuccess(true);
