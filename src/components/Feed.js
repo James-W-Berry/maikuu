@@ -611,29 +611,21 @@ export default function Main(props) {
                       <CloseIcon />
                     </IconButton>
                   </div>
-                  <div
-                    style={{
-                      display: "flex",
-                      width: "inherit",
-                      justifyContent: "center",
-                      alignItems: "flex-end",
-                      flex: 1,
-                    }}
-                  >
-                    <Typography className={classes.focusHeading}>
-                      {focusedPost.concept}
-                    </Typography>
-                  </div>
+
+                  <Typography className={classes.focusHeading}>
+                    {focusedPost.concept}
+                  </Typography>
                   <Card
                     className={classes.root}
                     style={{
-                      flex: 8,
                       backgroundColor: colors.maikuu0,
                       backgroundImage: `url(${focusedPost.image})`,
                       backgroundRepeat: "no-repeat",
                       backgroundPosition: "center center",
                       backgroundSize: "contain",
                       width: "100vw",
+                      height: "100vw",
+                      maxHeight: "75vh",
                     }}
                   >
                     <CardContent className={classes.content}>
@@ -679,30 +671,21 @@ export default function Main(props) {
                       </Typography>
                     </CardContent>
                   </Card>
-                  <div
-                    style={{
-                      display: "flex",
-                      width: "inherit",
-                      justifyContent: "center",
-                      alignItems: "flex-start",
-                      flex: 1,
-                    }}
-                  >
-                    <FormControlLabel
-                      control={
-                        <FocusPointsCheckbox
-                          checked={focusPointsVisible}
-                          onChange={(event) => {
-                            setFocusPointsVisible(!focusPointsVisible);
-                            console.log("toggle focus points");
-                          }}
-                          name="checkedG"
-                        />
-                      }
-                      label="Focus Points"
-                      className={classes.lightHeading}
-                    />
-                  </div>
+
+                  <FormControlLabel
+                    control={
+                      <FocusPointsCheckbox
+                        checked={focusPointsVisible}
+                        onChange={(event) => {
+                          setFocusPointsVisible(!focusPointsVisible);
+                          console.log("toggle focus points");
+                        }}
+                        name="checkedG"
+                      />
+                    }
+                    label="Focus Points"
+                    className={classes.lightHeading}
+                  />
                 </div>
               </Dialog>
 
