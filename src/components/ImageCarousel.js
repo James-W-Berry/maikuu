@@ -19,7 +19,7 @@ export default function ImageCarousel(props) {
       <Carousel.Item>
         <img
           onClick={() => {
-            props.updatePreviewImageFromCarousel(image1);
+            props.updatePreviewImageFromCarousel(image1, "inspiration_1");
             props.setShowImageCarousel(false);
           }}
           className="d-block w-100 h-100"
@@ -31,7 +31,7 @@ export default function ImageCarousel(props) {
       <Carousel.Item>
         <img
           onClick={() => {
-            props.updatePreviewImageFromCarousel(image2);
+            props.updatePreviewImageFromCarousel(image2, "inspiration_2");
             props.setShowImageCarousel(false);
           }}
           className="d-block w-100"
@@ -46,7 +46,7 @@ export default function ImageCarousel(props) {
       <Carousel.Item>
         <img
           onClick={() => {
-            props.updatePreviewImageFromCarousel(image3);
+            props.updatePreviewImageFromCarousel(image3, "inspiration_3");
             props.setShowImageCarousel(false);
           }}
           className="d-block w-100"
@@ -58,7 +58,7 @@ export default function ImageCarousel(props) {
       <Carousel.Item>
         <img
           onClick={() => {
-            props.updatePreviewImageFromCarousel(image4);
+            props.updatePreviewImageFromCarousel(image4, "inspiration_4");
             props.setShowImageCarousel(false);
           }}
           className="d-block w-100"

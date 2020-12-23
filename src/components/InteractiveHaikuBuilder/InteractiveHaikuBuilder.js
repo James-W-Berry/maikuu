@@ -119,12 +119,7 @@ export default function InteractiveHaikuBuilder(props) {
     setBackgroundImage(props.backgroundImage);
     setVideoBackground(props.videoBackground);
     setUploadImage(props.uploadImage);
-  }, [
-    props.backgroundImage,
-    props.videoBackground,
-    props.uploadImage,
-    props.showFirstTimeHelp,
-  ]);
+  }, [props.backgroundImage, props.videoBackground, props.uploadImage]);
 
   useEffect(() => {
     if (user.loggedIn) {
@@ -172,7 +167,6 @@ export default function InteractiveHaikuBuilder(props) {
   };
 
   async function uploadPic(id) {
-    console.log(uploadImage);
     if (uploadImage) {
       const storageRef = firebase.storage().ref();
       const picRef = storageRef.child(`images/${id}`);
@@ -214,6 +208,21 @@ export default function InteractiveHaikuBuilder(props) {
     }
   }
 
+  async function getTemplateImageUrl(id) {
+    switch (id) {
+      case "inspiration_1":
+        return "https://firebasestorage.googleapis.com/v0/b/maikuu-c3715.appspot.com/o/images%2Finspiration_1.jpeg?alt=media&token=7e7f9295-1d64-486d-9d99-0b36a10c0b88";
+      case "inspiration_2":
+        return "https://firebasestorage.googleapis.com/v0/b/maikuu-c3715.appspot.com/o/images%2Finspiration_2.jpeg?alt=media&token=b9924486-e292-44bb-8e3f-f08e7d2d8d30";
+      case "inspiration_3":
+        return "https://firebasestorage.googleapis.com/v0/b/maikuu-c3715.appspot.com/o/images%2Finspiration_3.jpeg?alt=media&token=7bca8c0c-5e87-4293-b942-95d67d3e7de7";
+      case "inspiration_4":
+        return "https://firebasestorage.googleapis.com/v0/b/maikuu-c3715.appspot.com/o/images%2Finspiration_4.jpeg?alt=media&token=bd6952eb-a0f7-45e2-a498-0aaf33c43485";
+      default:
+        return "";
+    }
+  }
+
   async function handleConfirmSubmit() {
     handleClose();
     setIsUploading(true);
@@ -230,7 +239,12 @@ export default function InteractiveHaikuBuilder(props) {
       author = "unknown";
     }
 
-    let imageUrl = await uploadPic(id);
+    let imageUrl;
+    if (uploadImage.includes("inspiration_")) {
+      imageUrl = await getTemplateImageUrl(uploadImage);
+    } else {
+      imageUrl = await uploadPic(id);
+    }
 
     firebase
       .firestore()

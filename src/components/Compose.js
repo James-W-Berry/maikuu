@@ -62,20 +62,13 @@ export default function Compose(props) {
     }
   };
 
-  async function updatePreviewImageFromCarousel(file) {
-    const blob = new File([file], "inspiration.jpeg");
-    const fileReader = new FileReader();
-    fileReader.onload = () => {
-      console.log(fileReader.result);
-      setUploadImage(blob);
-      setBackgroundImage(file);
-    };
-    fileReader.readAsDataURL(blob);
+  async function updatePreviewImageFromCarousel(file, template) {
+    setBackgroundImage(file);
+    setUploadImage(template);
   }
 
   function updatePreviewImage(file) {
     setUploadImage(file);
-    console.log(file);
 
     const fileReader = new FileReader();
 
