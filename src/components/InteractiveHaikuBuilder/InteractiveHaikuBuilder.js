@@ -1,12 +1,8 @@
 import React, { useEffect, useState } from "react";
 import {
   Button,
-  CssBaseline,
-  Dialog,
   Grid,
-  IconButton,
   makeStyles,
-  TextField,
   Typography,
   FormControlLabel,
   withStyles,
@@ -14,15 +10,15 @@ import {
   CardContent,
   Checkbox,
   Popover,
+  Dialog,
+  TextField,
+  IconButton,
 } from "@material-ui/core";
 import colors from "../../assets/colors";
-import ImageCarousel from "../ImageCarousel";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
-import CloseIcon from "@material-ui/icons/Close";
 import syllable from "syllable";
 import Draggable from "react-draggable";
-import yours from "../../assets/yours.png";
 import { v4 as uuidv4 } from "uuid";
 import firebase from "../../firebase";
 import moment from "moment";
@@ -30,20 +26,20 @@ import Cursor from "../Cursor/Cursor";
 import "../../App.css";
 import { motion } from "framer-motion";
 import "./InteractiveHaikuBuilder.css";
+import Tooltip from "@material-ui/core/Tooltip";
+import CloseIcon from "@material-ui/icons/Close";
 
 export default function InteractiveHaikuBuilder(props) {
   const classes = useStyles();
   const user = props.user;
   const [userInfo, setUserInfo] = useState({});
-  const [backgroundImage, setBackgroundImage] = useState();
-  const [fileInputRef, setFileInputRef] = useState();
-  const [showImageCarousel, setShowImageCarousel] = useState(false);
+  const [backgroundImage, setBackgroundImage] = useState(props.backgroundImage);
   const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const largerThanSm = useMediaQuery(theme.breakpoints.between("md", "xl"));
   const [anchorEl, setAnchorEl] = useState(
     document.querySelector("#backgroundImageGrid")
   );
-  const [videoBackground, setVideoBackground] = useState();
+  const [videoBackground, setVideoBackground] = useState(props.videoBackground);
   const [uploadImage, setUploadImage] = useState();
   const [markers, setMarkers] = useState({
     one: { visible: "visible", x: "25%", y: "25%" },
@@ -84,7 +80,7 @@ export default function InteractiveHaikuBuilder(props) {
   const id = open ? "simple-popover" : undefined;
   const [hint, setHint] = useState("");
   const [showHelpOne, setShowHelpOne] = useState(false);
-
+  const [showFirstTimeHelp, setShowFirstTimeHelp] = useState(false);
   const AnonCheckbox = withStyles({
     root: {
       color: colors.maikuu4,
@@ -108,6 +104,18 @@ export default function InteractiveHaikuBuilder(props) {
   }, []);
 
   useEffect(() => {
+    setBackgroundImage(props.backgroundImage);
+    setVideoBackground(props.videoBackground);
+    setUploadImage(props.uploadImage);
+    setShowFirstTimeHelp(props.showFirstTimeHelp);
+  }, [
+    props.backgroundImage,
+    props.videoBackground,
+    props.uploadImage,
+    props.showFirstTimeHelp,
+  ]);
+
+  useEffect(() => {
     if (user.loggedIn) {
       const userId = firebase.auth().currentUser.uid;
       firebase
@@ -121,24 +129,6 @@ export default function InteractiveHaikuBuilder(props) {
     }
   }, [user]);
 
-  function updatePreviewImage(file) {
-    setUploadImage(file);
-    console.log(file);
-
-    const fileReader = new FileReader();
-
-    if (file.name.includes(".mp4")) {
-      setVideoBackground(file);
-    } else {
-      setVideoBackground(null);
-    }
-
-    fileReader.onload = () => {
-      setBackgroundImage(fileReader.result);
-    };
-    fileReader.readAsDataURL(file);
-  }
-
   const handleClose = () => {
     setAnchorEl(null);
     setShowFirstLine(false);
@@ -151,17 +141,6 @@ export default function InteractiveHaikuBuilder(props) {
   const closePreview = () => {
     setIsPreviewVisible(false);
   };
-
-  async function updatePreviewImageFromCarousel(file) {
-    const blob = new File([file], "inspiration.jpeg");
-    const fileReader = new FileReader();
-    fileReader.onload = () => {
-      console.log(fileReader.result);
-      setUploadImage(blob);
-      setBackgroundImage(file);
-    };
-    fileReader.readAsDataURL(blob);
-  }
 
   const addToAuthoredPosts = (postId) => {
     const userId = firebase.auth().currentUser.uid;
@@ -498,114 +477,14 @@ export default function InteractiveHaikuBuilder(props) {
           }}
         >
           <Cursor placeMarkers={placeMarkers} />
-          <div style={{ display: "flex", flexDirection: "column" }}>
-            <Grid
-              key="userImage"
-              item
-              xs={6}
-              sm={6}
-              md={3}
-              lg={3}
-              xl={3}
-              style={{ width: "100%" }}
-            >
-              <CssBaseline />
-              <div
-                style={{
-                  display: "flex",
-                  cursor: "pointer",
-                  justifyContent: "center",
-                  alignItems: "flex-start",
-                  flexDirection: "row",
-                }}
-                className={classes.gridItem}
-              >
-                <input
-                  accept="image/*|video/*"
-                  ref={(fileInput) => setFileInputRef(fileInput)}
-                  className={classes.input}
-                  id="image-input"
-                  type="file"
-                  style={{
-                    display: "none",
-                  }}
-                  onChange={(e) => {
-                    if (e.target.files[0]) {
-                      updatePreviewImage(e.target.files[0]);
-                    }
-                  }}
-                />
-                <label
-                  for="image-input"
-                  style={{
-                    cursor: "pointer",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    flexDirection: "row",
-                    marginBottom: "0px",
-                    width: "100%",
-                  }}
-                >
-                  <img
-                    src={yours}
-                    alt="or"
-                    style={{
-                      padding: "5px",
-                      height: "100px",
-                      width: "100px",
-                      maxHeight: "100px",
-                      maxWidth: "100px",
-                    }}
-                  />
-                </label>
-              </div>
-            </Grid>
-            <Grid
-              key="maikuuImage"
-              item
-              xs={6}
-              sm={6}
-              md={3}
-              lg={3}
-              xl={3}
-              style={{ width: "100%" }}
-            >
-              <CssBaseline />
-              <div
-                style={{
-                  cursor: "pointer",
-                  display: "flex",
-                  justifyContent: "space-evenly",
-                  alignItems: "center",
-                  flexDirection: "row",
-                }}
-                className={classes.gridItem}
-                onClick={() => {
-                  setShowImageCarousel(!showImageCarousel);
-                }}
-              >
-                <Typography
-                  className={classes.inspirationLabel}
-                  style={{
-                    padding: "20px",
-                    textAlign: "center",
-                    fontSize: "16px",
-                  }}
-                >
-                  sample pictures
-                </Typography>
-              </div>
-            </Grid>
-          </div>
           <Grid
             key="selected"
             item
             xs={12}
             sm={12}
-            md={9}
-            lg={9}
-            xl={9}
+            md={12}
+            lg={12}
+            xl={12}
             style={{
               display: "flex",
               justifyContent: "center",
@@ -659,7 +538,7 @@ export default function InteractiveHaikuBuilder(props) {
                     boxShadow: backgroundImage
                       ? "10px 10px  5px rgba(0,0,0,0.5)"
                       : null,
-                    maxHeight: "55vh",
+                    maxHeight: "90vh",
                     maxWidth: "95vw",
                   }}
                   draggable="false"
@@ -690,7 +569,6 @@ export default function InteractiveHaikuBuilder(props) {
                     justifyContent: "center",
                     alignItems: "center",
                     padding: "10px",
-                    // backgroundColor: colors.lightBlue,
                     zIndex: 110,
                   }}
                 >
@@ -714,8 +592,6 @@ export default function InteractiveHaikuBuilder(props) {
                     left: markers.one.x,
                     top: markers.one.y,
                     visibility: markers.one.visible,
-
-                    // borderRadius: "20",
                   }}
                 >
                   <motion.button
@@ -755,9 +631,7 @@ export default function InteractiveHaikuBuilder(props) {
                   vertical: "top",
                   horizontal: "center",
                 }}
-                PaperProps={{
-                  style: { width: "100%" },
-                }}
+                PaperProps={{ style: { width: largerThanSm ? "50%" : "100%" } }}
               >
                 <div
                   className="handle"
@@ -850,9 +724,7 @@ export default function InteractiveHaikuBuilder(props) {
                   vertical: "top",
                   horizontal: "center",
                 }}
-                PaperProps={{
-                  style: { width: "100%" },
-                }}
+                PaperProps={{ style: { width: largerThanSm ? "50%" : "100%" } }}
               >
                 <div
                   className="handle"
@@ -945,9 +817,7 @@ export default function InteractiveHaikuBuilder(props) {
                   vertical: "top",
                   horizontal: "center",
                 }}
-                PaperProps={{
-                  style: { width: "100%" },
-                }}
+                PaperProps={{ style: { width: largerThanSm ? "50%" : "100%" } }}
               >
                 <div
                   className="handle"
@@ -992,55 +862,6 @@ export default function InteractiveHaikuBuilder(props) {
               </Popover>
             </div>
           </Grid>
-
-          <div
-            key="submit"
-            style={{
-              width: "100%",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: "10px",
-              }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  flex: 1,
-                  padding: "10px",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <Button
-                  id="post-button"
-                  type="submit"
-                  classes={{
-                    root: classes.lightSubmit,
-                    disabled: classes.disabledLightSubmit,
-                  }}
-                  onClick={(event) => {
-                    if (
-                      firstLine.value &&
-                      secondLine.value &&
-                      thirdLine.value
-                    ) {
-                      handleClick(event);
-                    } else {
-                      setHint("Complete your haiku before posting");
-                      showHint(event);
-                    }
-                  }}
-                >
-                  <Typography>Post</Typography>
-                </Button>
-              </div>
-            </div>
-          </div>
 
           <Popover
             id={id}
@@ -1088,175 +909,77 @@ export default function InteractiveHaikuBuilder(props) {
               </div>
             </div>
           </Popover>
-        </Grid>
-      ) : (
-        <Grid
-          container
-          spacing={2}
-          xl={12}
-          lg={12}
-          md={12}
-          sm={12}
-          xs={12}
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            flexDirection: "column",
-          }}
-        >
-          <Grid
-            key="userImage"
-            item
-            xs={12}
-            sm={12}
-            md={6}
-            lg={6}
-            xl={6}
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              marginTop: "10px",
-            }}
+          <Tooltip
+            title={
+              firstLine.value && secondLine.value && thirdLine.value
+                ? ""
+                : "Complete your haiku before posting"
+            }
           >
-            <CssBaseline />
             <div
               style={{
                 display: "flex",
-                cursor: "pointer",
-                backgroundColor: colors.lightBlue,
+                flex: 1,
                 padding: "10px",
                 justifyContent: "center",
                 alignItems: "center",
-                borderRadius: "10px",
-                flexDirection: "row",
-                boxShadow: "10px 10px  5px rgba(0,0,0,0.5)",
-                width: "85%",
-                height: "85%",
+                zIndex: 0,
               }}
-              className={classes.gridItem}
             >
-              <input
-                accept="image/*"
-                ref={(fileInput) => setFileInputRef(fileInput)}
-                className={classes.input}
-                id="image-input"
-                type="file"
-                style={{
-                  display: "none",
+              <Button
+                id="post-button"
+                type="submit"
+                disabled={
+                  !(firstLine.value && secondLine.value && thirdLine.value)
+                }
+                classes={{
+                  root: classes.lightSubmit,
+                  disabled: classes.disabledLightSubmit,
                 }}
-                onChange={(e) => {
-                  if (e.target.files[0]) {
-                    updatePreviewImage(e.target.files[0]);
+                onClick={(event) => {
+                  if (firstLine.value && secondLine.value && thirdLine.value) {
+                    handleClick(event);
+                  } else {
+                    setHint("Complete your haiku before posting");
+                    showHint(event);
                   }
                 }}
-              />
-              <label
-                htmlFor="image-input"
-                style={{
-                  cursor: "pointer",
-                  display: "flex",
-                  justifyContent: "space-evenly",
-                  alignItems: "center",
-                  flexDirection: "row",
-                }}
               >
-                <Typography
-                  className={classes.inspirationLabel}
-                  style={{ padding: "20px", textAlign: "center" }}
-                >
-                  Pick a picture for inspiration
-                </Typography>
-                <img
-                  src={yours}
-                  alt="or"
-                  style={{
-                    padding: "20px",
-                    height: "40%",
-                    width: "40%",
-                  }}
-                />
-              </label>
+                <Typography>Post</Typography>
+              </Button>
             </div>
-          </Grid>
-          <Grid
-            key="maikuuImage"
-            item
-            xs={6}
-            sm={6}
-            md={6}
-            lg={6}
-            xl={6}
+          </Tooltip>
+        </Grid>
+      ) : (
+        <Dialog aria-labelledby="hints" open={showFirstTimeHelp}>
+          <div
             style={{
               display: "flex",
-              justifyContent: "center",
               alignItems: "center",
+              justifyContent: "center",
+              flexDirection: "column",
+              width: "100%",
+              height: "100%",
+              backgroundColor: colors.maikuu5,
             }}
           >
-            <CssBaseline />
-            <div
+            <IconButton
+              onClick={() => setShowFirstTimeHelp(false)}
+              aria-label="close carousel"
               style={{
-                cursor: "pointer",
-                display: "flex",
-                justifyContent: "space-evenly",
-                alignItems: "center",
-                flexDirection: "row",
-              }}
-              className={classes.gridItem}
-              onClick={() => {
-                setShowImageCarousel(!showImageCarousel);
+                width: "40px",
+                alignSelf: "flex-end",
+                justifyContent: "flex-end",
               }}
             >
-              <Typography
-                className={classes.inspirationLabel}
-                style={{
-                  padding: "20px",
-                  textAlign: "center",
-                  fontSize: "16px",
-                }}
-              >
-                sample pictures
-              </Typography>
-            </div>
-          </Grid>
-        </Grid>
+              <CloseIcon />
+            </IconButton>
+            <Typography>
+              show helpful hints for first time users here
+            </Typography>
+          </div>
+        </Dialog>
       )}
-
-      <Dialog
-        fullScreen={fullScreen}
-        fullWidth={true}
-        aria-labelledby="customized-dialog-title"
-        open={showImageCarousel}
-      >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            flexDirection: "column",
-            width: "100%",
-            height: "100%",
-            backgroundColor: colors.maikuu5,
-          }}
-        >
-          <IconButton
-            onClick={() => setShowImageCarousel(false)}
-            aria-label="close carousel"
-            style={{
-              width: "40px",
-              alignSelf: "flex-end",
-              justifyContent: "flex-end",
-            }}
-          >
-            <CloseIcon />
-          </IconButton>
-          <ImageCarousel
-            updatePreviewImageFromCarousel={updatePreviewImageFromCarousel}
-            setShowImageCarousel={setShowImageCarousel}
-          />
-        </div>
-      </Dialog>
     </div>
   );
 }
@@ -1328,6 +1051,11 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: colors.maikuu4,
     color: colors.maikuu5,
     marginTop: "30px",
+    "&:hover": {
+      backgroundColor: colors.maikuu4,
+      color: colors.maikuu0,
+      opacity: "0.7",
+    },
   },
   lightSubmit: {
     backgroundColor: colors.maikuu4,
@@ -1341,7 +1069,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   disabledLightSubmit: {
-    backgroundColor: colors.maikuu5,
+    backgroundColor: "rgba(255, 255, 255, 0.3)",
     color: colors.maikuu0,
     marginTop: "10px",
     marginBottom: "20px",

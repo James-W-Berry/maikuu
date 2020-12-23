@@ -251,8 +251,9 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     position: "fixed",
     top: 0,
+    height: "55px",
     backgroundColor: colors.maikuu0,
-    boxShadow: "5px 5px  5px rgba(0,0,0,0.3)",
+    boxShadow: "5px 5px 5px rgba(0,0,0,0.3)",
   },
   drawer: {
     width: drawerWidth,

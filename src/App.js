@@ -55,7 +55,7 @@ function App() {
             key={location.pathname}
             style={
               location.pathname.match("signin|signup|forgotpassword") == null
-                ? { marginTop: "80px", height: "100%" }
+                ? { marginTop: "60px", height: "100%" }
                 : null
             }
             animate={{
