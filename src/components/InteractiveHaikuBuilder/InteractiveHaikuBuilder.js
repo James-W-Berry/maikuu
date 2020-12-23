@@ -630,7 +630,7 @@ export default function InteractiveHaikuBuilder(props) {
                     whileHover={{ scale: 1.3 }}
                     whileTap={{ scale: 0.9 }}
                     className={classes.marker}
-                    onClick={() => {
+                    onTap={() => {
                       setShowFirstLine(!showFirstLine);
                     }}
                     style={{
@@ -723,7 +723,7 @@ export default function InteractiveHaikuBuilder(props) {
                     whileHover={{ scale: 1.3 }}
                     whileTap={{ scale: 0.9 }}
                     className={classes.marker}
-                    onClick={() => {
+                    onTap={() => {
                       setShowSecondLine(!showSecondLine);
                     }}
                     style={{
@@ -816,7 +816,7 @@ export default function InteractiveHaikuBuilder(props) {
                     whileHover={{ scale: 1.3 }}
                     whileTap={{ scale: 0.9 }}
                     className={classes.marker}
-                    onClick={() => {
+                    onTap={() => {
                       setShowThirdLine(!showThirdLine);
                     }}
                     style={{

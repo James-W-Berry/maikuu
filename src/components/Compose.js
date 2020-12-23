@@ -401,7 +401,6 @@ export default function Compose(props) {
                 <div
                   style={{
                     display: "flex",
-                    cursor: "pointer",
                     justifyContent: "center",
                     alignItems: "center",
                     flexDirection: "column",
@@ -446,7 +445,7 @@ export default function Compose(props) {
                       }}
                     />
                   </label>
-                  <Typography style={{ fontSize: "14px" }}>
+                  <Typography style={{ fontSize: "14px", userSelect: "none" }}>
                     Pick your image
                   </Typography>
                 </div>
@@ -485,7 +484,7 @@ export default function Compose(props) {
                       }}
                     />
                   </label>
-                  <Typography style={{ fontSize: "14px" }}>
+                  <Typography style={{ fontSize: "14px", userSelect: "none" }}>
                     Use a sample
                   </Typography>
                 </div>
