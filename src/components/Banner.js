@@ -215,6 +215,7 @@ export default function Banner(props) {
             cursor: "pointer",
             alignItems: "center",
             marginLeft: "20px",
+            height: "100%",
           }}
           onClick={() => {
             setValue(2);
@@ -235,7 +236,7 @@ export default function Banner(props) {
               fontSize: "28px",
               color: colors.maikuu4,
               marginLeft: "10px",
-              alignSelf: "baseline",
+              marginTop: "10px",
             }}
           >
             Maikuu

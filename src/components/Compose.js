@@ -52,7 +52,7 @@ export default function Compose(props) {
       );
     } else {
       if (!window.localStorage.isReturningVisitor) {
-        //window.localStorage.isReturningVisitor = true;
+        window.localStorage.isReturningVisitor = true;
         setShowFirstTimeHelp(true);
       }
     }
