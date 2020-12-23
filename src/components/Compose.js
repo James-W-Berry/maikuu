@@ -39,23 +39,9 @@ export default function Compose(props) {
   const [videoBackground, setVideoBackground] = useState();
   const [backgroundImage, setBackgroundImage] = useState();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
-  const [showFirstTimeHelp, setShowFirstTimeHelp] = useState(false);
 
   useEffect(() => {
     fetchReflectionNoun();
-  }, []);
-
-  useEffect(() => {
-    if (!window.localStorage) {
-      console.log(
-        "no localStorage API found - will not show hints for new user"
-      );
-    } else {
-      if (!window.localStorage.isReturningVisitor) {
-        window.localStorage.isReturningVisitor = true;
-        setShowFirstTimeHelp(true);
-      }
-    }
   }, []);
 
   const fetchReflectionNoun = () => {
@@ -589,7 +575,6 @@ export default function Compose(props) {
                         backgroundImage={backgroundImage}
                         videoBackground={videoBackground}
                         uploadImage={uploadImage}
-                        showFirstTimeHelp={showFirstTimeHelp}
                       />
                     </motion.div>
                   </AnimatePresence>

@@ -28,6 +28,7 @@ import { motion } from "framer-motion";
 import "./InteractiveHaikuBuilder.css";
 import Tooltip from "@material-ui/core/Tooltip";
 import CloseIcon from "@material-ui/icons/Close";
+import OnboardingCarousel from "../OnboardingCarousel";
 
 export default function InteractiveHaikuBuilder(props) {
   const classes = useStyles();
@@ -36,6 +37,8 @@ export default function InteractiveHaikuBuilder(props) {
   const [backgroundImage, setBackgroundImage] = useState(props.backgroundImage);
   const theme = useTheme();
   const largerThanSm = useMediaQuery(theme.breakpoints.between("md", "xl"));
+  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
   const [anchorEl, setAnchorEl] = useState(
     document.querySelector("#backgroundImageGrid")
   );
@@ -79,7 +82,6 @@ export default function InteractiveHaikuBuilder(props) {
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
   const [hint, setHint] = useState("");
-  const [showHelpOne, setShowHelpOne] = useState(false);
   const [showFirstTimeHelp, setShowFirstTimeHelp] = useState(false);
   const AnonCheckbox = withStyles({
     root: {
@@ -97,8 +99,8 @@ export default function InteractiveHaikuBuilder(props) {
       );
     } else {
       if (!window.localStorage.isReturningVisitor) {
-        //window.localStorage.isReturningVisitor = true;
-        setShowHelpOne(true);
+        window.localStorage.isReturningVisitor = true;
+        setShowFirstTimeHelp(true);
       }
     }
   }, []);
@@ -107,7 +109,6 @@ export default function InteractiveHaikuBuilder(props) {
     setBackgroundImage(props.backgroundImage);
     setVideoBackground(props.videoBackground);
     setUploadImage(props.uploadImage);
-    setShowFirstTimeHelp(props.showFirstTimeHelp);
   }, [
     props.backgroundImage,
     props.videoBackground,
@@ -135,7 +136,6 @@ export default function InteractiveHaikuBuilder(props) {
     setShowSecondLine(false);
     setShowThirdLine(false);
     setShowTitle(false);
-    setShowHelpOne(false);
   };
 
   const closePreview = () => {
@@ -460,7 +460,7 @@ export default function InteractiveHaikuBuilder(props) {
         </div>
       </Dialog>
 
-      {backgroundImage ? (
+      {backgroundImage && (
         <Grid
           container
           spacing={2}
@@ -496,7 +496,6 @@ export default function InteractiveHaikuBuilder(props) {
               style={{
                 cursor: "none",
                 position: "relative",
-                boxShadow: showHelpOne ? "0 0 0 1000px rgba(0,0,0,0.8)" : null,
                 backgroundColor: "rgba(0,0,0,0.8)",
               }}
             >
@@ -545,46 +544,9 @@ export default function InteractiveHaikuBuilder(props) {
                 />
               )}
 
-              <Popover
-                open={showHelpOne}
-                anchorEl={document.querySelector("#backgroundImageGrid")}
-                onClose={handleClose}
-                clickHandle={handleClose}
-                style={{
-                  top: "10%",
-                }}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "center",
-                }}
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "center",
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    padding: "10px",
-                    zIndex: 110,
-                  }}
-                >
-                  <Typography style={{ color: colors.maikuu0 }}>
-                    Click and drag the markers to focus your reflections on
-                  </Typography>
-                  <Typography style={{ color: colors.maikuu0 }}>
-                    the image for each haiku line
-                  </Typography>
-                </div>
-              </Popover>
-
               <Draggable>
                 <div
                   className="handle"
-                  class={showHelpOne ? "markerPulse" : null}
                   style={{
                     position: "absolute",
                     cursor: "none",
@@ -950,36 +912,54 @@ export default function InteractiveHaikuBuilder(props) {
             </div>
           </Tooltip>
         </Grid>
-      ) : (
-        <Dialog aria-labelledby="hints" open={showFirstTimeHelp}>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              flexDirection: "column",
-              width: "100%",
-              height: "100%",
-              backgroundColor: colors.maikuu5,
-            }}
-          >
-            <IconButton
-              onClick={() => setShowFirstTimeHelp(false)}
-              aria-label="close carousel"
-              style={{
-                width: "40px",
-                alignSelf: "flex-end",
-                justifyContent: "flex-end",
-              }}
-            >
-              <CloseIcon />
-            </IconButton>
-            <Typography>
-              show helpful hints for first time users here
-            </Typography>
-          </div>
-        </Dialog>
       )}
+
+      <Dialog
+        fullScreen={fullScreen}
+        fullWidth={true}
+        aria-labelledby="customized-dialog-title"
+        open={showFirstTimeHelp}
+        PaperProps={{ style: { backgroundColor: colors.maikuu0 } }}
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexDirection: "column",
+            width: "100%",
+            backgroundColor: colors.maikuu0,
+            borderBottom: `1px solid ${colors.maikuu4}`,
+          }}
+        >
+          <div style={{ display: "flex", flexDirection: "row", width: "100%" }}>
+            <div style={{ flex: 10 }}>
+              <Typography
+                className={classes.lightHeading}
+                style={{ justifyContent: "flex-start", alignItems: "center" }}
+              >
+                First time tips
+              </Typography>
+            </div>
+
+            <div style={{ flex: 1 }}>
+              <IconButton
+                onClick={() => setShowFirstTimeHelp(false)}
+                aria-label="close carousel"
+                style={{
+                  width: "40px",
+                  alignSelf: "flex-end",
+                  justifyContent: "flex-end",
+                  color: colors.maikuu4,
+                }}
+              >
+                <CloseIcon />
+              </IconButton>
+            </div>
+          </div>
+        </div>
+        <OnboardingCarousel />
+      </Dialog>
     </div>
   );
 }
