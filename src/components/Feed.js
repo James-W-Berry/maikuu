@@ -252,10 +252,6 @@ export default function Main(props) {
             initial={{ opacity: 0 }}
             animate={{ opacity: [0.0, 1.0] }}
             exit={{ opacity: 0 }}
-            onClick={() => {
-              showFocusedCard(post);
-            }}
-            style={{ cursor: "pointer" }}
           >
             {post.id === lastVisiblePost?.id ? (
               <VizSensor
@@ -266,16 +262,20 @@ export default function Main(props) {
                   }
                 }}
               >
-                <Card
-                  className={classes.root}
-                  style={{
-                    backgroundImage: `url(${post.image})`,
-                    backgroundRepeat: "no-repeat",
-                    backgroundPosition: "center center",
-                    backgroundSize: "cover",
-                  }}
-                >
-                  <CardContent className={classes.content}>
+                <Card className={classes.root}>
+                  <CardContent
+                    className={classes.content}
+                    style={{
+                      backgroundImage: `url(${post.image})`,
+                      backgroundRepeat: "no-repeat",
+                      backgroundPosition: "center center",
+                      backgroundSize: "cover",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => {
+                      showFocusedCard(post);
+                    }}
+                  >
                     <Typography
                       color="textSecondary"
                       gutterBottom
@@ -417,6 +417,10 @@ export default function Main(props) {
                     backgroundRepeat: "no-repeat",
                     backgroundPosition: "center center",
                     backgroundSize: "cover",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => {
+                    showFocusedCard(post);
                   }}
                 >
                   <div
