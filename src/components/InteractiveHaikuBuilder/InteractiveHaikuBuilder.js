@@ -29,6 +29,10 @@ import "./InteractiveHaikuBuilder.css";
 import Tooltip from "@material-ui/core/Tooltip";
 import CloseIcon from "@material-ui/icons/Close";
 import OnboardingCarousel from "../OnboardingCarousel";
+import Lottie from "react-lottie";
+import checkAnim from "../../assets/check-animation.json";
+import { NavLink } from "react-router-dom";
+import PuffLoader from "react-spinners/PuffLoader";
 
 export default function InteractiveHaikuBuilder(props) {
   const classes = useStyles();
@@ -38,12 +42,13 @@ export default function InteractiveHaikuBuilder(props) {
   const theme = useTheme();
   const largerThanSm = useMediaQuery(theme.breakpoints.between("md", "xl"));
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
-
+  const [success, setSuccess] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const [anchorEl, setAnchorEl] = useState(
     document.querySelector("#backgroundImageGrid")
   );
   const [videoBackground, setVideoBackground] = useState(props.videoBackground);
-  const [uploadImage, setUploadImage] = useState();
+  const [uploadImage, setUploadImage] = useState(props.uploadImage);
   const [markers, setMarkers] = useState({
     one: { visible: "visible", x: "25%", y: "25%" },
     two: { visible: "visible", x: "50%", y: "50%" },
@@ -57,7 +62,6 @@ export default function InteractiveHaikuBuilder(props) {
   const placeMarkers = (newMarkers) => {
     setMarkers(newMarkers);
   };
-
   const [title, setTitle] = useState({ value: "" });
   const [firstLine, setFirstLine] = useState({
     value: null,
@@ -75,14 +79,20 @@ export default function InteractiveHaikuBuilder(props) {
     syllables: 0,
   });
   const [anon, setAnon] = useState(false);
-  const [isUploading, setIsUploading] = useState(false);
-  const [success, setSuccess] = useState(false);
   const [isPreviewVisible, setIsPreviewVisible] = useState(false);
   const [calculatedAuthor, setCalculatedAuthor] = useState(user.displayName);
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
   const [hint, setHint] = useState("");
   const [showFirstTimeHelp, setShowFirstTimeHelp] = useState(false);
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: checkAnim,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice",
+    },
+  };
   const AnonCheckbox = withStyles({
     root: {
       color: colors.maikuu4,
@@ -203,6 +213,7 @@ export default function InteractiveHaikuBuilder(props) {
       return "";
     }
   }
+
   async function handleConfirmSubmit() {
     handleClose();
     setIsUploading(true);
@@ -253,6 +264,51 @@ export default function InteractiveHaikuBuilder(props) {
 
   function showHint(event) {
     setAnchorEl(event.currentTarget);
+  }
+
+  if (success) {
+    return (
+      <div>
+        <Lottie options={defaultOptions} height={300} width={300} />
+        <Typography
+          onClick={() => {
+            setSuccess(false);
+            setTitle({ value: null });
+            setFirstLine({ value: "", valid: null, syllables: 0 });
+            setSecondLine({ value: "", valid: null, syllables: 0 });
+            setThirdLine({ value: "", valid: null, syllables: 0 });
+          }}
+          className={classes.text}
+        >
+          Compose another haiku
+        </Typography>
+        <NavLink
+          style={{
+            textDecoration: "none",
+          }}
+          to="/feed"
+        >
+          <Typography className={classes.text}>Return to feed</Typography>
+        </NavLink>
+      </div>
+    );
+  }
+
+  if (isUploading) {
+    return (
+      <div
+        style={{
+          height: "70vh",
+          display: "flex",
+          alignSelf: "center",
+          alignItems: "center",
+          justifyContent: "center",
+          flexDirection: "column",
+        }}
+      >
+        <PuffLoader color={"#A0C4F2"} />
+      </div>
+    );
   }
 
   return (

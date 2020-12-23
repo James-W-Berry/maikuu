@@ -140,7 +140,7 @@ export default function Compose(props) {
                         flexDirection: "row",
                         justifyContent: "center",
                         alignItems: "center",
-                        padding: "20px",
+                        padding: "10px",
                         textAlign: "center",
                         cursor: "pointer",
                         width: "100%",
@@ -554,7 +554,7 @@ export default function Compose(props) {
                       initial={{ opacity: 0 }}
                       animate={{ opacity: [0.0, 1.0] }}
                       exit={{ opacity: 0 }}
-                      style={{ height: "90%", width: "90%" }}
+                      style={{ height: "100%", width: "100%" }}
                     >
                       <HaikuBuilder user={user} setMode={setMode} />
                     </motion.div>
