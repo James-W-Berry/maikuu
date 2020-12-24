@@ -59,7 +59,6 @@ export default function InteractiveHaikuBuilder(props) {
   const [showFirstLine, setShowFirstLine] = useState(false);
   const [showSecondLine, setShowSecondLine] = useState(false);
   const [showThirdLine, setShowThirdLine] = useState(false);
-  let doc = document.querySelector("#backgroundImageGrid");
   const placeMarkers = (newMarkers) => {
     setMarkers(newMarkers);
   };
@@ -268,6 +267,7 @@ export default function InteractiveHaikuBuilder(props) {
         date: moment.now(),
         image: imageUrl,
         concept: concept,
+        markers: markers,
       })
       .then(() => {
         setSuccess(true);
@@ -287,6 +287,40 @@ export default function InteractiveHaikuBuilder(props) {
   function showHint(event) {
     setAnchorEl(event.currentTarget);
   }
+  const imageContainer = document.querySelector("#backgroundImageGrid");
+
+  const onDragStop = (e, position, marker) => {
+    let newMarkers = markers;
+    switch (marker) {
+      case "one":
+        markers.one.x = `${
+          25 + (position.x / imageContainer.clientWidth) * 100
+        }%`;
+        markers.one.y = `${
+          25 + (position.y / imageContainer.clientHeight) * 100
+        }%`;
+        break;
+      case "two":
+        markers.two.x = `${
+          50 + (position.x / imageContainer.clientWidth) * 100
+        }%`;
+        markers.two.y = `${
+          50 + (position.y / imageContainer.clientHeight) * 100
+        }%`;
+        break;
+      case "three":
+        markers.three.x = `${
+          75 + (position.x / imageContainer.clientWidth) * 100
+        }%`;
+        markers.three.y = `${
+          75 + (position.y / imageContainer.clientHeight) * 100
+        }%`;
+        break;
+      default:
+        break;
+    }
+    setMarkers(newMarkers);
+  };
 
   if (success) {
     return (
@@ -554,7 +588,7 @@ export default function InteractiveHaikuBuilder(props) {
             flexDirection: "row",
           }}
         >
-          <Cursor placeMarkers={placeMarkers} />
+          <Cursor />
           <Grid
             key="selected"
             item
@@ -622,15 +656,19 @@ export default function InteractiveHaikuBuilder(props) {
                 />
               )}
 
-              <Draggable>
+              <Draggable
+                onStop={(e, position) => {
+                  onDragStop(e, position, "one");
+                }}
+              >
                 <div
                   className="handle"
                   style={{
                     position: "absolute",
                     cursor: "none",
                     zIndex: 100,
-                    left: markers.one.x,
-                    top: markers.one.y,
+                    left: "25%",
+                    top: "25%",
                     visibility: markers.one.visible,
                   }}
                 >
@@ -660,7 +698,7 @@ export default function InteractiveHaikuBuilder(props) {
 
               <Popover
                 open={showFirstLine}
-                anchorEl={doc}
+                anchorEl={imageContainer}
                 onClose={handleClose}
                 clickHandle={handleClose}
                 anchorOrigin={{
@@ -715,15 +753,19 @@ export default function InteractiveHaikuBuilder(props) {
                 </div>
               </Popover>
 
-              <Draggable>
+              <Draggable
+                onStop={(e, position) => {
+                  onDragStop(e, position, "two");
+                }}
+              >
                 <div
                   className="handle"
                   style={{
                     cursor: "none",
                     position: "absolute",
                     zIndex: 100,
-                    left: markers.two.x,
-                    top: markers.two.y,
+                    left: "50%",
+                    top: "50%",
                     visibility: markers.two.visible,
                   }}
                 >
@@ -753,7 +795,7 @@ export default function InteractiveHaikuBuilder(props) {
 
               <Popover
                 open={showSecondLine}
-                anchorEl={doc}
+                anchorEl={imageContainer}
                 onClose={handleClose}
                 clickHandle={handleClose}
                 anchorOrigin={{
@@ -808,15 +850,19 @@ export default function InteractiveHaikuBuilder(props) {
                 </div>
               </Popover>
 
-              <Draggable>
+              <Draggable
+                onStop={(e, position) => {
+                  onDragStop(e, position, "three");
+                }}
+              >
                 <div
                   className="handle"
                   style={{
                     cursor: "none",
                     position: "absolute",
                     zIndex: 100,
-                    left: `${markers.three.x}`,
-                    top: markers.three.y,
+                    left: "75%",
+                    top: "75%",
                     visibility: markers.three.visible,
                   }}
                 >
@@ -846,7 +892,7 @@ export default function InteractiveHaikuBuilder(props) {
 
               <Popover
                 open={showThirdLine}
-                anchorEl={doc}
+                anchorEl={imageContainer}
                 onClose={handleClose}
                 clickHandle={handleClose}
                 anchorOrigin={{

@@ -27,6 +27,7 @@ import { red, blue } from "@material-ui/core/colors";
 import VizSensor from "react-visibility-sensor";
 import PuffLoader from "react-spinners/PuffLoader";
 import CloseIcon from "@material-ui/icons/Close";
+import Cursor from "./Cursor/Cursor";
 
 const SORT_OPTIONS = {
   LIKES_ASC: { column: "likes", direction: "asc" },
@@ -615,77 +616,217 @@ export default function Main(props) {
                   <Typography className={classes.focusHeading}>
                     {focusedPost.concept}
                   </Typography>
-                  <Card
-                    className={classes.root}
-                    style={{
-                      backgroundColor: colors.maikuu0,
-                      backgroundImage: `url(${focusedPost.image})`,
-                      backgroundRepeat: "no-repeat",
-                      backgroundPosition: "center center",
-                      backgroundSize: "contain",
-                      width: "100vw",
-                      height: "100vw",
-                      maxHeight: "75vh",
-                    }}
-                  >
-                    <CardContent className={classes.content}>
-                      <Typography
-                        color="textSecondary"
-                        gutterBottom
-                        className={classes.post}
-                      >
-                        {focusedPost.title}
-                      </Typography>
-                      <Typography
-                        gutterBottom
-                        variant="h5"
-                        component="h2"
-                        className={classes.post}
-                      >
-                        {focusedPost.line_1}
-                      </Typography>
 
-                      <Typography
-                        gutterBottom
-                        variant="h5"
-                        component="h2"
-                        className={classes.post}
-                      >
-                        {focusedPost.line_2}
-                      </Typography>
+                  {focusPointsVisible && <Cursor />}
 
-                      <Typography
-                        gutterBottom
-                        variant="h5"
-                        component="h2"
-                        className={classes.post}
-                      >
-                        {focusedPost.line_3}
-                      </Typography>
-
-                      <Typography
-                        className={classes.title}
-                        color="textSecondary"
-                      >
-                        {`-${focusedPost.author}`}
-                      </Typography>
-                    </CardContent>
-                  </Card>
-
-                  <FormControlLabel
-                    control={
-                      <FocusPointsCheckbox
-                        checked={focusPointsVisible}
-                        onChange={(event) => {
-                          setFocusPointsVisible(!focusPointsVisible);
-                          console.log("toggle focus points");
+                  {focusPointsVisible ? (
+                    <div
+                      id="backgroundImageGrid"
+                      style={{
+                        cursor: "none",
+                        position: "relative",
+                        backgroundColor: "rgba(0,0,0,0.8)",
+                      }}
+                    >
+                      <img
+                        src={focusedPost.image}
+                        alt="inspiration"
+                        style={{
+                          padding: "0px",
+                          backgroundColor: "rgba(0,0,0,0)",
+                          maxHeight: "90vh",
+                          maxWidth: "100vw",
                         }}
-                        name="checkedG"
+                        draggable="false"
                       />
-                    }
-                    label="Focus Points"
-                    className={classes.lightHeading}
-                  />
+
+                      <div
+                        className="handle"
+                        style={{
+                          position: "absolute",
+                          cursor: "none",
+                          zIndex: 100,
+                          left: focusedPost.markers?.one.x,
+                          top: focusedPost.markers?.one.y,
+                          visibility:
+                            focusPointsVisible && focusedPost.markers
+                              ? "visible"
+                              : "hidden",
+                        }}
+                      >
+                        <motion.button
+                          whileHover={{ scale: 1.3 }}
+                          whileTap={{ scale: 0.9 }}
+                          className={classes.marker}
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            outlineWidth: 0,
+                            cursor: "none",
+                          }}
+                        >
+                          <Typography
+                            style={{
+                              textAlign: "center",
+                              color: colors.maikuu0,
+                            }}
+                          >
+                            1
+                          </Typography>
+                        </motion.button>
+                      </div>
+                      <div
+                        className="handle"
+                        style={{
+                          position: "absolute",
+                          cursor: "none",
+                          zIndex: 100,
+                          left: focusedPost.markers?.two.x,
+                          top: focusedPost.markers?.two.y,
+                          visibility:
+                            focusPointsVisible && focusedPost.markers
+                              ? "visible"
+                              : "hidden",
+                        }}
+                      >
+                        <motion.button
+                          whileHover={{ scale: 1.3 }}
+                          whileTap={{ scale: 0.9 }}
+                          className={classes.marker}
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            outlineWidth: 0,
+                            cursor: "none",
+                          }}
+                        >
+                          <Typography
+                            style={{
+                              textAlign: "center",
+                              color: colors.maikuu0,
+                            }}
+                          >
+                            2
+                          </Typography>
+                        </motion.button>
+                      </div>
+                      <div
+                        className="handle"
+                        style={{
+                          position: "absolute",
+                          cursor: "none",
+                          zIndex: 100,
+                          left: focusedPost.markers?.three.x,
+                          top: focusedPost.markers?.three.y,
+                          visibility:
+                            focusPointsVisible && focusedPost.markers
+                              ? "visible"
+                              : "hidden",
+                        }}
+                      >
+                        <motion.button
+                          whileHover={{ scale: 1.3 }}
+                          whileTap={{ scale: 0.9 }}
+                          className={classes.marker}
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            outlineWidth: 0,
+                            cursor: "none",
+                          }}
+                        >
+                          <Typography
+                            style={{
+                              textAlign: "center",
+                              color: colors.maikuu0,
+                            }}
+                          >
+                            3
+                          </Typography>
+                        </motion.button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div
+                      style={{
+                        position: "relative",
+                        backgroundColor: "rgba(0,0,0,0.8)",
+                      }}
+                    >
+                      <Card
+                        className={classes.root}
+                        style={{
+                          backgroundColor: colors.maikuu0,
+                          backgroundImage: `url(${focusedPost.image})`,
+                          backgroundRepeat: "no-repeat",
+                          backgroundPosition: "center center",
+                          backgroundSize: "contain",
+                          width: "100vw",
+                          height: "100vw",
+                          maxHeight: "75vh",
+                        }}
+                      >
+                        <CardContent className={classes.content}>
+                          <Typography
+                            color="textSecondary"
+                            gutterBottom
+                            className={classes.post}
+                          >
+                            {focusedPost.title}
+                          </Typography>
+                          <Typography
+                            gutterBottom
+                            variant="h5"
+                            component="h2"
+                            className={classes.post}
+                          >
+                            {focusedPost.line_1}
+                          </Typography>
+                          <Typography
+                            gutterBottom
+                            variant="h5"
+                            component="h2"
+                            className={classes.post}
+                          >
+                            {focusedPost.line_2}
+                          </Typography>
+                          <Typography
+                            gutterBottom
+                            variant="h5"
+                            component="h2"
+                            className={classes.post}
+                          >
+                            {focusedPost.line_3}
+                          </Typography>
+                          <Typography
+                            className={classes.title}
+                            color="textSecondary"
+                          >
+                            {`-${focusedPost.author}`}
+                          </Typography>
+                        </CardContent>
+                      </Card>
+                    </div>
+                  )}
+
+                  {focusedPost.markers && (
+                    <FormControlLabel
+                      control={
+                        <FocusPointsCheckbox
+                          checked={focusPointsVisible}
+                          onChange={(event) => {
+                            setFocusPointsVisible(!focusPointsVisible);
+                          }}
+                          name="checkedG"
+                        />
+                      }
+                      label="Focus Points"
+                      className={classes.lightHeading}
+                    />
+                  )}
                 </div>
               </Dialog>
 
@@ -823,5 +964,13 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     alignItems: "center",
     padding: "10px",
+  },
+  marker: {
+    color: colors.maikuu4,
+    borderRadius: "17px",
+    backgroundColor: colors.lightBlue,
+    height: 35,
+    width: 35,
+    outlineWidth: 0,
   },
 }));
