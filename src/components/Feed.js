@@ -47,6 +47,10 @@ export default function Main(props) {
   const [focusedCardVisible, setFocusedCardVisible] = useState(false);
   const [focusedPost, setFocusedPost] = useState({});
   const [focusPointsVisible, setFocusPointsVisible] = useState(false);
+  const imageContainer = document.querySelector("#backgroundImageGrid");
+  const [showLine1, setShowLine1] = useState(false);
+  const [showLine2, setShowLine2] = useState(false);
+  const [showLine3, setShowLine3] = useState(false);
 
   const FocusPointsCheckbox = withStyles({
     root: {
@@ -571,6 +575,7 @@ export default function Main(props) {
                   alignItems: "center",
                   alignSelf: "center",
                 }}
+                PaperProps={{ style: { backgroundColor: colors.maikuu0 } }}
                 open={focusedCardVisible}
                 onClose={() => {
                   setFocusedCardVisible(false);
@@ -601,7 +606,10 @@ export default function Main(props) {
                     }}
                   >
                     <IconButton
-                      onClick={() => setFocusedCardVisible(false)}
+                      onClick={() => {
+                        setFocusedCardVisible(false);
+                        setFocusPointsVisible(false);
+                      }}
                       aria-label="close carousel"
                       style={{
                         width: "40px",
@@ -626,6 +634,8 @@ export default function Main(props) {
                         cursor: "none",
                         position: "relative",
                         backgroundColor: "rgba(0,0,0,0.8)",
+                        justifyContent: "center",
+                        alignItems: "center",
                       }}
                     >
                       <img
@@ -634,126 +644,209 @@ export default function Main(props) {
                         style={{
                           padding: "0px",
                           backgroundColor: "rgba(0,0,0,0)",
-                          maxHeight: "90vh",
+                          maxHeight: "75vh",
                           maxWidth: "100vw",
                         }}
                         draggable="false"
                       />
 
-                      <div
-                        className="handle"
-                        style={{
-                          position: "absolute",
-                          cursor: "none",
-                          zIndex: 100,
-                          left: focusedPost.markers?.one.x,
-                          top: focusedPost.markers?.one.y,
-                          visibility:
-                            focusPointsVisible && focusedPost.markers
-                              ? "visible"
-                              : "hidden",
+                      <Tooltip
+                        open={showLine1}
+                        classes={{
+                          tooltip: classes.tooltip,
                         }}
+                        title={
+                          <Typography
+                            gutterBottom
+                            variant="h5"
+                            component="h2"
+                            className={classes.focusedPost}
+                          >
+                            {focusedPost.line_1}
+                          </Typography>
+                        }
+                        arrow
                       >
-                        <motion.button
-                          whileHover={{ scale: 1.3 }}
-                          whileTap={{ scale: 0.9 }}
-                          className={classes.marker}
+                        <div
+                          className="handle"
                           style={{
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            outlineWidth: 0,
+                            position: "absolute",
                             cursor: "none",
+                            zIndex: 100,
+                            left: focusedPost.markers?.one.x,
+                            top: focusedPost.markers?.one.y,
+                            visibility:
+                              focusPointsVisible && focusedPost.markers
+                                ? "visible"
+                                : "hidden",
                           }}
                         >
-                          <Typography
+                          <motion.button
+                            whileHover={{ scale: 1.3 }}
+                            onHoverStart={() => {
+                              setShowLine1(true);
+                            }}
+                            onHoverEnd={() => {
+                              setShowLine1(false);
+                            }}
+                            whileTap={{ scale: 0.9 }}
+                            onTap={() => {
+                              setShowLine1(!showLine1);
+                            }}
+                            className={classes.marker}
                             style={{
-                              textAlign: "center",
-                              color: colors.maikuu0,
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              outlineWidth: 0,
+                              cursor: "none",
                             }}
                           >
-                            1
-                          </Typography>
-                        </motion.button>
-                      </div>
-                      <div
-                        className="handle"
-                        style={{
-                          position: "absolute",
-                          cursor: "none",
-                          zIndex: 100,
-                          left: focusedPost.markers?.two.x,
-                          top: focusedPost.markers?.two.y,
-                          visibility:
-                            focusPointsVisible && focusedPost.markers
-                              ? "visible"
-                              : "hidden",
+                            <Typography
+                              style={{
+                                textAlign: "center",
+                                color: colors.maikuu0,
+                              }}
+                            >
+                              1
+                            </Typography>
+                          </motion.button>
+                        </div>
+                      </Tooltip>
+
+                      <Tooltip
+                        open={showLine2}
+                        classes={{
+                          tooltip: classes.tooltip,
                         }}
+                        title={
+                          <Typography
+                            gutterBottom
+                            variant="h5"
+                            component="h2"
+                            className={classes.focusedPost}
+                          >
+                            {focusedPost.line_2}
+                          </Typography>
+                        }
+                        arrow
                       >
-                        <motion.button
-                          whileHover={{ scale: 1.3 }}
-                          whileTap={{ scale: 0.9 }}
-                          className={classes.marker}
+                        <div
+                          className="handle"
                           style={{
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            outlineWidth: 0,
+                            position: "absolute",
                             cursor: "none",
+                            zIndex: 100,
+                            left: focusedPost.markers?.two.x,
+                            top: focusedPost.markers?.two.y,
+                            visibility:
+                              focusPointsVisible && focusedPost.markers
+                                ? "visible"
+                                : "hidden",
                           }}
                         >
-                          <Typography
+                          <motion.button
+                            whileHover={{ scale: 1.3 }}
+                            onHoverStart={() => {
+                              setShowLine2(true);
+                            }}
+                            onHoverEnd={() => {
+                              setShowLine2(false);
+                            }}
+                            whileTap={{ scale: 0.9 }}
+                            onTap={() => {
+                              setShowLine2(!showLine2);
+                            }}
+                            className={classes.marker}
                             style={{
-                              textAlign: "center",
-                              color: colors.maikuu0,
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              outlineWidth: 0,
+                              cursor: "none",
                             }}
                           >
-                            2
-                          </Typography>
-                        </motion.button>
-                      </div>
-                      <div
-                        className="handle"
-                        style={{
-                          position: "absolute",
-                          cursor: "none",
-                          zIndex: 100,
-                          left: focusedPost.markers?.three.x,
-                          top: focusedPost.markers?.three.y,
-                          visibility:
-                            focusPointsVisible && focusedPost.markers
-                              ? "visible"
-                              : "hidden",
+                            <Typography
+                              style={{
+                                textAlign: "center",
+                                color: colors.maikuu0,
+                              }}
+                            >
+                              2
+                            </Typography>
+                          </motion.button>
+                        </div>
+                      </Tooltip>
+
+                      <Tooltip
+                        open={showLine3}
+                        classes={{
+                          tooltip: classes.tooltip,
                         }}
+                        title={
+                          <Typography
+                            gutterBottom
+                            variant="h5"
+                            component="h2"
+                            className={classes.focusedPost}
+                          >
+                            {focusedPost.line_3}
+                          </Typography>
+                        }
+                        arrow
                       >
-                        <motion.button
-                          whileHover={{ scale: 1.3 }}
-                          whileTap={{ scale: 0.9 }}
-                          className={classes.marker}
+                        <div
+                          className="handle"
                           style={{
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            outlineWidth: 0,
+                            position: "absolute",
                             cursor: "none",
+                            zIndex: 100,
+                            left: focusedPost.markers?.three.x,
+                            top: focusedPost.markers?.three.y,
+                            visibility:
+                              focusPointsVisible && focusedPost.markers
+                                ? "visible"
+                                : "hidden",
                           }}
                         >
-                          <Typography
+                          <motion.button
+                            whileHover={{ scale: 1.3 }}
+                            onHoverStart={() => {
+                              setShowLine3(true);
+                            }}
+                            onHoverEnd={() => {
+                              setShowLine3(false);
+                            }}
+                            whileTap={{ scale: 0.9 }}
+                            onTap={() => {
+                              setShowLine3(!showLine3);
+                            }}
+                            className={classes.marker}
                             style={{
-                              textAlign: "center",
-                              color: colors.maikuu0,
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              outlineWidth: 0,
+                              cursor: "none",
                             }}
                           >
-                            3
-                          </Typography>
-                        </motion.button>
-                      </div>
+                            <Typography
+                              style={{
+                                textAlign: "center",
+                                color: colors.maikuu0,
+                              }}
+                            >
+                              3
+                            </Typography>
+                          </motion.button>
+                        </div>
+                      </Tooltip>
                     </div>
                   ) : (
                     <div
                       style={{
                         position: "relative",
-                        backgroundColor: "rgba(0,0,0,0.8)",
+                        backgroundColor: colors.maikuu0,
                       }}
                     >
                       <Card
@@ -769,7 +862,14 @@ export default function Main(props) {
                           maxHeight: "75vh",
                         }}
                       >
-                        <CardContent className={classes.content}>
+                        <CardContent
+                          className={classes.content}
+                          style={{
+                            width: imageContainer
+                              ? imageContainer.clientWidth
+                              : "75vh",
+                          }}
+                        >
                           <Typography
                             color="textSecondary"
                             gutterBottom
@@ -893,9 +993,9 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     backgroundColor: "rgba(0,0,0, 0.5)",
-    width: "100%",
     display: "flex",
     flexDirection: "column",
+    width: "100%",
     alignItems: "center",
     justifyContent: "center",
   },
@@ -927,6 +1027,12 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 14,
     textAlign: "left",
   },
+  tooltip: {
+    backgroundColor: colors.maikuu0,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
   heading: {
     color: colors.maikuu0,
     userSelect: "none",
@@ -944,6 +1050,13 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center",
     fontFamily: "BadScript",
     color: colors.maikuu4,
+  },
+  focusedPost: {
+    align: "center",
+    textAlign: "center",
+    fontFamily: "BadScript",
+    color: colors.maikuu4,
+    backgroundColor: colors.maikuu0,
   },
   lightSubmit: {
     backgroundColor: colors.maikuu4,
