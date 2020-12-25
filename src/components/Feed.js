@@ -51,6 +51,7 @@ export default function Main(props) {
   const [showLine1, setShowLine1] = useState(false);
   const [showLine2, setShowLine2] = useState(false);
   const [showLine3, setShowLine3] = useState(false);
+  const contentDiv = document.querySelector("#content");
 
   const FocusPointsCheckbox = withStyles({
     root: {
@@ -236,7 +237,14 @@ export default function Main(props) {
 
   function showFocusedCard(post) {
     setFocusedPost(post);
+    contentDiv.style.overflow = "hidden";
     setFocusedCardVisible(true);
+  }
+
+  function hideFocusedCard() {
+    setFocusedPost({});
+    contentDiv.style.overflow = "auto";
+    setFocusedCardVisible(false);
   }
 
   function createFeedPost(post, userInfo) {
@@ -557,7 +565,10 @@ export default function Main(props) {
   return (
     <AnimatePresence>
       <motion.div
-        style={{ marginBottom: "60px", marginTop: "10px" }}
+        style={{
+          marginBottom: "60px",
+          marginTop: "10px",
+        }}
         key="success"
         initial={{ opacity: 0 }}
         animate={{ opacity: [0.0, 1.0] }}
@@ -575,10 +586,11 @@ export default function Main(props) {
                   alignItems: "center",
                   alignSelf: "center",
                 }}
+                scroll="paper"
                 PaperProps={{ style: { backgroundColor: colors.maikuu0 } }}
                 open={focusedCardVisible}
                 onClose={() => {
-                  setFocusedCardVisible(false);
+                  hideFocusedCard();
                 }}
                 fullScreen
                 fullWidth
@@ -607,7 +619,7 @@ export default function Main(props) {
                   >
                     <IconButton
                       onClick={() => {
-                        setFocusedCardVisible(false);
+                        hideFocusedCard();
                         setFocusPointsVisible(false);
                       }}
                       aria-label="close carousel"
