@@ -246,7 +246,8 @@ export default function InteractiveHaikuBuilder(props) {
     }
 
     let imageUrl;
-    if (uploadImage.includes("inspiration_")) {
+
+    if (uploadImage.name.includes("inspiration_")) {
       imageUrl = await getTemplateImageUrl(uploadImage);
     } else {
       imageUrl = await uploadPic(id);
@@ -362,6 +363,7 @@ export default function InteractiveHaikuBuilder(props) {
           flexDirection: "column",
         }}
       >
+        <Typography className={classes.heading}>Posting your haiku</Typography>
         <PuffLoader color={"#A0C4F2"} />
       </div>
     );
@@ -1311,5 +1313,14 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": {
       opacity: "0.7",
     },
+  },
+  heading: {
+    color: colors.maikuu0,
+    userSelect: "none",
+    fontSize: "30px",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: "10px",
   },
 }));

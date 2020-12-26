@@ -52,8 +52,9 @@ export default function Main(props) {
   const [showLine2, setShowLine2] = useState(false);
   const [showLine3, setShowLine3] = useState(false);
   const contentDiv = document.querySelector("#content");
+  const [showHaikuOnImage, setShowHaikuOnImage] = useState(true);
 
-  const FocusPointsCheckbox = withStyles({
+  const MaikuuCheckbox = withStyles({
     root: {
       color: colors.maikuu4,
       "&$checked": {
@@ -880,6 +881,7 @@ export default function Main(props) {
                             width: imageContainer
                               ? imageContainer.clientWidth
                               : "75vh",
+                            visibility: showHaikuOnImage ? "visible" : "hidden",
                           }}
                         >
                           <Typography
@@ -924,28 +926,46 @@ export default function Main(props) {
                     </div>
                   )}
 
-                  {focusedPost.markers && (
-                    <FormControlLabel
-                      control={
-                        <FocusPointsCheckbox
-                          checked={focusPointsVisible}
-                          onChange={(event) => {
-                            setFocusPointsVisible(!focusPointsVisible);
-                          }}
-                          name="checkedG"
-                        />
-                      }
-                      label="Focus Points"
-                      className={classes.lightHeading}
-                    />
-                  )}
+                  <div style={{ display: "flex", direction: "row" }}>
+                    {focusedPost.markers && (
+                      <FormControlLabel
+                        control={
+                          <MaikuuCheckbox
+                            checked={focusPointsVisible}
+                            onChange={(event) => {
+                              setFocusPointsVisible(!focusPointsVisible);
+                            }}
+                            name="checkedG"
+                          />
+                        }
+                        label="Show Focus Points"
+                        className={classes.lightHeading}
+                      />
+                    )}
+
+                    {!focusPointsVisible && (
+                      <FormControlLabel
+                        control={
+                          <MaikuuCheckbox
+                            checked={showHaikuOnImage}
+                            onChange={(event) => {
+                              setShowHaikuOnImage(!showHaikuOnImage);
+                            }}
+                            name="haikuVisibleCheckbox"
+                          />
+                        }
+                        label="Show Haiku"
+                        className={classes.lightHeading}
+                      />
+                    )}
+                  </div>
                 </div>
               </Dialog>
 
               <div
                 style={{
                   display: "flex",
-                  justifyContent: "center",
+                  justifyContent: "flex-start",
                   alignItems: "center",
                   margin: "15px",
                 }}
