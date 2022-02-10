@@ -135,6 +135,7 @@ yarn-error.log*
 **/.firebaserc
 */npm-debug.log
 lerna-debug.log
+storage.rules
 *~
 service-account-credentials.json
 **/package-lock.json
