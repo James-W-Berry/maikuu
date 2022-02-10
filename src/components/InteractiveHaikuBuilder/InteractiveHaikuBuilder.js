@@ -59,9 +59,6 @@ export default function InteractiveHaikuBuilder(props) {
   const [showFirstLine, setShowFirstLine] = useState(false);
   const [showSecondLine, setShowSecondLine] = useState(false);
   const [showThirdLine, setShowThirdLine] = useState(false);
-  const placeMarkers = (newMarkers) => {
-    setMarkers(newMarkers);
-  };
   const [title, setTitle] = useState({ value: "" });
   const [firstLine, setFirstLine] = useState({
     value: null,
@@ -247,7 +244,7 @@ export default function InteractiveHaikuBuilder(props) {
 
     let imageUrl;
 
-    if (uploadImage.name.includes("inspiration_")) {
+    if (uploadImage.includes("inspiration_")) {
       imageUrl = await getTemplateImageUrl(uploadImage);
     } else {
       imageUrl = await uploadPic(id);
@@ -326,7 +323,12 @@ export default function InteractiveHaikuBuilder(props) {
   if (success) {
     return (
       <div>
-        <Lottie options={defaultOptions} height={300} width={300} />
+        <Lottie
+          options={defaultOptions}
+          height={300}
+          width={300}
+          isClickToPauseDisabled={true}
+        />
         <Typography
           onClick={() => {
             setSuccess(false);

@@ -101,7 +101,6 @@ export default function Main(props) {
   }, [user.loggedIn]);
 
   const retrieveMorePosts = () => {
-    console.log("retrieving more posts");
     setLoadingMorePosts(true);
     try {
       setLoadingMorePosts(true);
